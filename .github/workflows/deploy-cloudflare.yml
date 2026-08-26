@@ -26,10 +26,16 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: Test
         run: npm test
+
+      - name: Check Cloudflare token
+        if: env.CLOUDFLARE_API_TOKEN == ''
+        run: |
+          echo "::error::Missing GitHub secret CLOUDFLARE_API_TOKEN. Add a Cloudflare API token with Workers Scripts, D1, and R2 write access for account 109e58aae44502c4009b0028538fc329."
+          exit 1
 
       - name: Apply D1 migrations
         run: npx wrangler@4.126.0 d1 migrations apply nitrate --remote
