@@ -4,6 +4,11 @@
   "main": "worker/index.mjs",
   "compatibility_date": "2026-08-26",
   "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*", "/healthz"]
+  },
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
@@ -12,7 +17,7 @@
     {
       "binding": "DB",
       "database_name": "nitrate",
-      "database_id": "replace-with-d1-database-id"
+      "database_id": "a2ea4c5e-dfb2-4508-b48a-95d447cfec79"
     }
   ],
   "r2_buckets": [
@@ -22,6 +27,6 @@
     }
   ],
   "vars": {
-    "NITRATE_PUBLIC_BASE_URL": "http://127.0.0.1:8787"
+    "NITRATE_PUBLIC_BASE_URL": "https://nitrate.techtools-1be.workers.dev"
   }
 }
