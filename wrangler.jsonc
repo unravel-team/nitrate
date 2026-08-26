@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "nitrate",
+  "account_id": "109e58aae44502c4009b0028538fc329",
   "main": "worker/index.mjs",
   "compatibility_date": "2026-08-26",
   "compatibility_flags": ["nodejs_compat"],
@@ -17,7 +18,7 @@
     {
       "binding": "DB",
       "database_name": "nitrate",
-      "database_id": "a2ea4c5e-dfb2-4508-b48a-95d447cfec79"
+      "database_id": "239ccef4-29bf-4038-89bf-34f6143cdfc0"
     }
   ],
   "r2_buckets": [
@@ -27,6 +28,6 @@
     }
   ],
   "vars": {
-    "NITRATE_PUBLIC_BASE_URL": "https://nitrate.techtools-1be.workers.dev"
+    "NITRATE_PUBLIC_BASE_URL": "https://nitrate.unravel-tech.workers.dev"
   }
 }
