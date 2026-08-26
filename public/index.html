@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>nitrate - collaboration for AI media teams</title>
+  <meta name="description" content="nitrate starts as a clanker plugin. Log in from the plugin, receive briefs and assets in your AI workspace, then sync finished work back for lead review.">
+  <link rel="stylesheet" href="/styles/reel.css">
+</head>
+<body>
+  <!--
+  SURFACE: landing
+  THESIS: nitrate starts inside the creator's clanker plugin, where login unlocks team briefs, assets, and return sync.
+  OWN-WORLD: plugin login, production packet, dispatch board, clanker inboxes, and returned outputs rendered as a practical studio operating surface.
+  STORY: creators install the plugin and log in; leads then push packets to every clanker and review returned work in one place.
+  FIRST VIEWPORT: product name and direct offer on the left, live dispatch board on the right showing brief, assets, output contract, creators, and returns.
+  FORM: code-led replacement direction, seed nitrate-brief-dispatch.
+  FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md.
+  -->
+  <header class="header">
+    <a class="brand" href="/" aria-label="nitrate home"><span class="brand-mark" aria-hidden="true"></span><span>nitrate</span></a>
+    <nav class="nav" aria-label="Primary">
+      <a class="nav-link" href="/use/">Use cases</a>
+      <a class="nav-link" href="/press">Press</a>
+      <a class="button small primary" href="#plugin">Install plugin</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page hero">
+      <div>
+        <h1>nitrate</h1>
+        <p class="lede">nitrate starts as a clanker plugin. Each creator installs it, logs in, and receives the team lead's brief, input assets, and expected output structure inside their AI workspace. Finished work syncs back for lead review.</p>
+        <div class="actions">
+          <a class="button primary" href="#plugin">Install clanker plugin</a>
+          <a class="button ghost" href="/app">Open command center</a>
+        </div>
+      </div>
+      <figure class="dispatch-board" aria-label="nitrate brief dispatch board">
+        <figcaption class="bench-bar"><strong>Plugin session</strong><span>Logged in · Launch film packet ready</span></figcaption>
+        <div class="packet">
+          <div class="packet-main">
+            <strong>nitrate clanker plugin</strong>
+            <span>Sign in to pull team packets into this creator's AI workspace and sync returns back.</span>
+          </div>
+        </div>
+        <div class="packet">
+          <div class="packet-main">
+            <strong>Brief</strong>
+            <span>Make six launch-film candidates using the supplied bottle macro, city plate, and VO scratch.</span>
+          </div>
+          <div class="packet-main">
+            <strong>Output contract</strong>
+            <span>/renders, /stills, /prompts, /notes, /handoff</span>
+          </div>
+        </div>
+        <div class="clanker-grid" aria-hidden="true">
+          <div class="clanker ready"><strong>Maya's clanker</strong><span>Returned 6 files</span></div>
+          <div class="clanker working"><strong>Jonas' clanker</strong><span>Generating pass 2</span></div>
+          <div class="clanker ready"><strong>Asha's clanker</strong><span>Returned prompts</span></div>
+          <div class="clanker waiting"><strong>Leo's clanker</strong><span>Brief delivered</span></div>
+        </div>
+        <div class="provenance"><span>Input assets locked</span><span>Directory structure enforced</span><span>Returns ready for lead review</span></div>
+      </figure>
+    </section>
+
+    <section class="page section" id="plugin" aria-labelledby="plugin-title">
+      <div class="section-head">
+        <h2 id="plugin-title">Start in the clanker plugin.</h2>
+        <p class="lede">The browser is the command center. The creator entry point is the nitrate plugin running inside the clanker.</p>
+      </div>
+      <div class="grid cols-3">
+        <article class="card"><h3>Install the plugin</h3><p>Add nitrate to the clanker each creator already uses for Claude, Claude Code, Higgsfield Supercomputer, and local media runs.</p></article>
+        <article class="card"><h3>Log in</h3><p>The plugin asks the creator to log in, then shows packets assigned to them by the team lead.</p></article>
+        <article class="card"><h3>Sync returns</h3><p>When the creator finishes, the plugin sends media, prompts, notes, and handoff folders back to the lead's review room.</p></article>
+      </div>
+    </section>
+
+    <section class="page section" id="platforms" aria-labelledby="platforms-title">
+      <div class="section-head">
+        <h2 id="platforms-title">Keep the creation tools. Add team control.</h2>
+        <p class="lede">nitrate does not ask AI creators to stop using their own tools. It gives the team a shared operating layer around the work those tools produce.</p>
+      </div>
+      <ul class="platform-grid">
+        <li class="platform-item"><strong>Claude</strong><span>Push brief context and collect generated media back into the project.</span></li>
+        <li class="platform-item"><strong>Claude Code</strong><span>Send structured work packets to agentic media workflows.</span></li>
+        <li class="platform-item"><strong>Higgsfield Supercomputer</strong><span>Coordinate high-volume candidate generation without losing direction.</span></li>
+        <li class="platform-item"><strong>Local clankers</strong><span>Every creator gets the same inputs, folder contract, and return path.</span></li>
+      </ul>
+      <p class="platform-status">The MVP demonstrates the plugin login and file-return flow. Direct clanker sync and product integrations are the production path.</p>
+    </section>
+
+    <section class="page section" id="workflow" aria-labelledby="workflow-title">
+      <div class="section-head">
+        <h2 id="workflow-title">The missing shared drive for AI creators.</h2>
+        <p class="lede">Shared drives store files after the fact. nitrate starts earlier: it tells every creator what to make, what inputs to use, how to organize the output, and where the work comes back.</p>
+      </div>
+      <div class="grid cols-3">
+        <article class="card"><h3>Lead writes the packet</h3><p>Brief, input assets, references, constraints, and expected folders are defined once by the team leader.</p></article>
+        <article class="card"><h3>Plugin pulls the packet</h3><p>The creator logs in through the clanker plugin and sees the assigned brief, assets, and output contract.</p></article>
+        <article class="card"><h3>Finished work returns cleanly</h3><p>Outputs come back in the required structure, attached to the creator, prompt notes, and review status.</p></article>
+      </div>
+    </section>
+
+    <section class="page section" id="use-cases" aria-labelledby="use-cases-title">
+      <div class="section-head">
+        <h2 id="use-cases-title">Where collaboration breaks today.</h2>
+      </div>
+      <div class="grid cols-3">
+        <article class="card"><h3>Everyone used Claude, nobody shares context</h3><p>Each creator has useful media in a private chat or local folder. nitrate turns those isolated runs into one team project.</p></article>
+        <article class="card"><h3>The lead wants the same structure back</h3><p>Instead of chasing "send me the prompt and finals," the output contract is part of the assignment.</p></article>
+        <article class="card"><h3>The best pass came from a side experiment</h3><p>Returned work still carries the creator, inputs, notes, and status so the lead can decide what moves forward.</p></article>
+      </div>
+      <div class="actions" style="margin-top:2rem;">
+        <a class="button ghost" href="/use/">Explore use cases</a>
+      </div>
+      <div class="metrics" aria-label="What nitrate gives media teams">
+        <div class="metric"><strong>1 packet</strong><span>Brief, assets, references, and expected folders</span></div>
+        <div class="metric"><strong>Every clanker</strong><span>Receives the same production context</span></div>
+        <div class="metric"><strong>Clean returns</strong><span>Outputs come back ready to inspect</span></div>
+        <div class="metric"><strong>Lead control</strong><span>Direction stays with the person accountable for the brief</span></div>
+      </div>
+    </section>
+
+    <section class="page section" id="waitlist">
+      <div class="section-head">
+        <h2>Bring one AI media project that is scattered across the team.</h2>
+        <p class="lede">We will help you set up the clanker plugin login, create a nitrate packet, assign creators, and review the first synced returns.</p>
+      </div>
+      <form class="form" id="waitlist-form" novalidate>
+        <label class="field" for="email"><span class="visually-hidden">Work email</span><input id="email" name="email" type="email" autocomplete="email" placeholder="you@studio.com" required></label>
+        <label class="select visually-labelled" for="teamSize"><span class="visually-hidden">Team size</span>
+          <select id="teamSize" name="teamSize"><option value="">Team size</option><option>1-5</option><option>6-20</option><option>21-80</option><option>80+</option></select>
+        </label>
+        <label class="select visually-labelled" for="workflow"><span class="visually-hidden">Where do you create?</span>
+          <select id="workflow" name="workflow"><option value="">Where do you create?</option><option>Claude</option><option>Claude Code</option><option>Higgsfield Supercomputer</option><option>Multiple tools</option><option>Other</option></select>
+        </label>
+        <button class="button primary" type="submit">Get plugin access</button>
+        <p class="form-note" id="waitlist-status" role="status"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="page" style="padding-bottom:2rem;border-top:1px solid var(--line);">
+    <div class="cols-2 grid" style="align-items:center;padding-top:1.5rem;">
+      <p style="margin:0;"><strong>nitrate</strong><br>Briefs out. Work back. One team.</p>
+      <p style="text-align:right;"><a href="mailto:hello@nitrate.media">hello@nitrate.media</a> · <a href="/press">Press kit</a> · <a href="/app">MVP</a></p>
+    </div>
+  </footer>
+<script>
+document.getElementById('waitlist-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const status = document.getElementById('waitlist-status');
+  const data = Object.fromEntries(new FormData(form));
+  status.textContent = 'Submitting...';
+  try {
+    const response = await fetch('/api/waitlist', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    const result = await response.json();
+    status.textContent = response.ok ? result.message : result.error;
+    if (response.ok) form.reset();
+  } catch { status.textContent = 'Network unavailable. Try again.'; }
+});
+</script>
+</body>
+</html>

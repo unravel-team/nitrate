@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "nitrate": {
+      "command": "node",
+      "args": ["scripts/mcp-server.mjs"],
+      "env": {
+        "NITRATE_API_URL": "${NITRATE_API_URL}",
+        "NITRATE_TOKEN": "${NITRATE_TOKEN}"
+      }
+    }
+  }
+}

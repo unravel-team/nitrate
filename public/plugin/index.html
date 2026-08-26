@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>nitrate clanker plugin</title>
+  <link rel="stylesheet" href="/styles/reel.css">
+  <style>
+    .plugin-shell { min-height:100vh; display:grid; grid-template-rows:auto 1fr; }
+    .plugin-grid { display:grid; grid-template-columns:360px minmax(0,1fr); min-height:calc(100vh - 66px); }
+    .plugin-panel { border-right:1px solid var(--line); padding:1rem; background:color-mix(in srgb,var(--paper-2) 74%,transparent); }
+    .plugin-main { padding:1.2rem; overflow:auto; }
+    .mode-tabs { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; margin:1rem 0; }
+    .login-card { border:1px solid var(--line); border-radius:10px; padding:1rem; background:var(--paper-2); }
+    .packet-row { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:1rem; align-items:start; border:1px solid var(--line); border-radius:10px; padding:1rem; background:var(--paper-2); margin-bottom:1rem; }
+    .packet-meta { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.65rem; }
+    .packet-meta span { border:1px solid var(--line); border-radius:999px; padding:.22rem .45rem; font-size:.82rem; }
+    .assignment-card { border:1px solid var(--line); border-radius:8px; padding:.8rem; background:var(--paper); }
+    .assignment-card + .assignment-card { margin-top:.65rem; }
+    .plugin-status { display:inline-flex; align-items:center; border-radius:999px; padding:.22rem .55rem; background:color-mix(in srgb,var(--signal) 10%,transparent); color:var(--signal-strong); font-size:.82rem; font-weight:700; }
+    .plugin-form-grid { display:grid; gap:.65rem; margin-top:.8rem; }
+    @media(max-width:900px){ .plugin-grid{grid-template-columns:1fr;} .plugin-panel{border-right:0;border-bottom:1px solid var(--line);} .packet-row{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+  <div class="plugin-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="nitrate home"><span class="brand-mark" aria-hidden="true"></span><span>nitrate plugin</span></a>
+      <div class="actions"><a class="button small ghost" href="/app">Command center</a><a class="button small ghost" href="/">Product</a></div>
+    </header>
+
+    <div class="plugin-grid">
+      <aside class="plugin-panel">
+        <h1 style="font-size:2.2rem;">Clanker plugin</h1>
+        <p>This is the creator entry point. Log in, pull assigned packets, work inside the clanker, then sync returns.</p>
+        <div class="mode-tabs" role="tablist" aria-label="Plugin workflow mode">
+          <button class="button small primary" id="leader-mode" type="button" aria-pressed="true">Leader</button>
+          <button class="button small ghost" id="member-mode" type="button" aria-pressed="false">Team member</button>
+        </div>
+        <form class="login-card" id="login-form">
+          <h3>Plugin login</h3>
+          <div class="plugin-form-grid">
+            <label class="field">Name<input name="name" required value="Maya Chen"></label>
+            <label class="field">Work email<input name="email" type="email" required value="maya@studio.test"></label>
+            <label class="field">Clanker name<input name="clanker" required value="maya-clanker"></label>
+            <label class="field">Creation surface<select name="surface"><option>Claude</option><option>Claude Code</option><option>Higgsfield Supercomputer</option><option>Local clanker</option></select></label>
+          </div>
+          <button class="button primary" style="width:100%;margin-top:.8rem;" type="submit">Log in plugin</button>
+          <p class="form-note" id="session-status" role="status"></p>
+        </form>
+      </aside>
+
+      <main class="plugin-main">
+        <section id="leader-view" aria-labelledby="leader-title">
+          <div class="section-head" style="margin-bottom:1.5rem;">
+            <h2 id="leader-title">Leader workflow</h2>
+            <p class="lede">Create or pick a packet, assign creators, and push it to their clankers.</p>
+          </div>
+          <div id="leader-packets"></div>
+        </section>
+
+        <section id="member-view" aria-labelledby="member-title" hidden>
+          <div class="section-head" style="margin-bottom:1.5rem;">
+            <h2 id="member-title">Team member workflow</h2>
+            <p class="lede">Pull assigned packets into this clanker, mark work status, and sync returned files.</p>
+          </div>
+          <div id="member-packets"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+  <script src="/plugin/plugin.js"></script>
+</body>
+</html>

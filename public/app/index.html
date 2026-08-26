@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>nitrate · AI media team workspace</title>
+  <link rel="stylesheet" href="/styles/reel.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:.8rem;">
+        <a class="brand" href="/" aria-label="nitrate home"><span class="brand-mark" aria-hidden="true"></span><span>nitrate</span></a>
+        <label class="visually-labelled" for="project-select"><span class="visually-hidden">Project</span>
+          <select class="field" style="min-height:38px;border-color:var(--line)" id="project-select"></select>
+        </label>
+        <button class="button small ghost" id="new-project" type="button">New</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:.55rem;">
+        <button class="button small ghost" id="theme-toggle" type="button" aria-pressed="false">Dark</button>
+        <label class="visually-labelled" for="user-select"><span class="visually-hidden">Demo identity</span>
+          <select class="field" style="min-height:38px;border-color:var(--line)" id="user-select"></select>
+        </label>
+        <button class="button small ghost" id="plugin-login" type="button">Plugin login</button>
+        <button class="button small primary" id="import-button" type="button">Return work</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside class="rail" aria-label="Workspace navigation">
+        <section class="rail-section" aria-labelledby="today-title">
+          <h2 class="rail-title" id="today-title"><span>Packet</span><span id="streak"></span></h2>
+          <p style="font-size:.94rem;margin:.6rem 0;"><strong id="queue-count">0</strong> returns need a decision<br><span id="oldest-take"></span></p>
+        </section>
+        <section class="rail-section" aria-labelledby="brief-title">
+          <h2 class="rail-title" id="brief-title"><span>Brief</span></h2>
+          <p id="brief-summary" style="font-size:.94rem;margin:.6rem 0;"></p>
+          <div class="contract-list" id="output-structure"></div>
+        </section>
+        <section class="rail-section" aria-labelledby="clanker-title">
+          <h2 class="rail-title" id="clanker-title"><span>Clankers</span><span id="clanker-count"></span></h2>
+          <ul class="queue-list" id="clanker-list"></ul>
+        </section>
+        <section class="rail-section" aria-labelledby="queue-title">
+          <h2 class="rail-title" id="queue-title"><span>Queue</span><button class="button small ghost" id="all-filter" type="button">All</button></h2>
+          <ul class="queue-list" id="status-list"></ul>
+        </section>
+        <section class="rail-section" aria-labelledby="branch-title">
+          <h2 class="rail-title" id="branch-title"><span>Passes</span><span id="branch-count"></span></h2>
+          <ul class="queue-list" id="branch-list"></ul>
+        </section>
+        <section class="rail-section" aria-labelledby="template-title">
+          <h2 class="rail-title" id="template-title"><span>Packet templates</span></h2>
+          <ul class="queue-list" id="template-list"></ul>
+        </section>
+        <section class="rail-section" aria-labelledby="activity-title">
+          <h2 class="rail-title" id="activity-title"><span>Activity</span></h2>
+          <ul class="timeline" id="activity-list"></ul>
+        </section>
+        <section class="rail-section">
+          <h2 class="rail-title"><span>Shortcuts</span></h2>
+          <p style="font-size:.86rem;color:var(--muted);">J / K move - A approve<br>R reject - C changes - I return</p>
+        </section>
+      </aside>
+
+      <main class="content" id="main" tabindex="-1">
+        <div class="toolbar">
+          <label class="search visually-labelled" for="search"><span class="visually-hidden">Search returns</span><input id="search" type="search" placeholder="Search returns, prompts, creators..." autocomplete="off"></label>
+          <button class="button small ghost" id="compare-open" type="button" disabled>Compare</button>
+          <button class="button small ghost" id="share-project" type="button">Share</button>
+        </div>
+        <p id="result-summary" class="eyebrow" aria-live="polite"></p>
+        <div class="contact-sheet" id="takes" aria-live="polite"></div>
+      </main>
+    </div>
+  </div>
+
+  <div class="drawer" id="detail-drawer" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+    <button class="drawer-backdrop" data-close type="button" aria-label="Close details"></button>
+    <div class="drawer-panel">
+      <button class="button small ghost drawer-close" data-close type="button">Close</button>
+      <article id="detail-content"></article>
+    </div>
+  </div>
+
+  <div class="modal" id="upload-modal" role="dialog" aria-modal="true" aria-labelledby="upload-title">
+    <form class="modal-card" id="upload-form">
+      <h3 id="upload-title">Return work from a clanker</h3>
+      <p style="margin-top:.4rem;">The file, prompt, creator, and assignment stay together for lead review.</p>
+      <div class="dropzone" id="dropzone">
+        <p><strong>Drop media here</strong><br>or choose image, video, or audio up to 100 MB.</p>
+        <input id="file-input" type="file" accept="image/*,video/*,audio/*" required>
+      </div>
+      <div class="grid cols-2" style="margin-top:1rem;">
+        <label class="field">Return name<input name="assetName" placeholder="Hero opening from Maya"></label>
+        <label class="field">Pass<input name="branch" list="branch-options" value="Launch">
+          <datalist id="branch-options"></datalist>
+        </label>
+        <label class="field">Made with *<input name="model" list="model-options" required placeholder="Claude, Higgsfield Supercomputer, Runway..."></label>
+        <label class="field">Seed<input name="seed" placeholder="184320"></label>
+        <label class="field" style="grid-column:1/-1;">Workflow<input name="pipeline" placeholder="nitrate packet / creator clanker"></label>
+        <label class="field" style="grid-column:1/-1;">Prompt *<textarea class="textarea" name="prompt" rows="4" required placeholder="Use the input assets and return /renders, /stills, /prompts..."></textarea></label>
+        <label class="field" style="grid-column:1/-1;">Return note<textarea class="textarea" name="notes" rows="2" placeholder="What changed, what worked, and what the lead should inspect"></textarea></label>
+      </div>
+      <input type="hidden" name="projectId"><input type="hidden" name="assetId"><input type="hidden" name="parentVersionId">
+      <p id="upload-parent" class="form-note"></p>
+      <div class="review-actions"><button class="button primary" type="submit">Submit return</button><button class="button ghost" type="button" data-close>Cancel</button></div>
+    </form>
+  </div>
+
+  <div class="modal" id="plugin-modal" role="dialog" aria-modal="true" aria-labelledby="plugin-title">
+    <form class="modal-card" id="plugin-form">
+      <h3 id="plugin-title">Log in from the clanker plugin</h3>
+      <p style="margin-top:.4rem;">Creators start here: authenticate the plugin, pull assigned packets, then sync finished work back to the lead.</p>
+      <div class="grid" style="margin-top:1rem;">
+        <label class="field">Work email<input name="email" type="email" required placeholder="creator@studio.com"></label>
+        <label class="field">Clanker name<input name="clanker" required placeholder="maya-clanker"></label>
+        <label class="field">Creation surface<select name="surface"><option>Claude</option><option>Claude Code</option><option>Higgsfield Supercomputer</option><option>Local clanker</option></select></label>
+      </div>
+      <div class="review-actions"><button class="button primary" type="submit">Log in plugin</button><button class="button ghost" type="button" data-close>Cancel</button></div>
+      <p class="form-note" id="plugin-status" role="status"></p>
+    </form>
+  </div>
+
+  <div class="modal" id="project-modal" role="dialog" aria-modal="true" aria-labelledby="project-title">
+    <form class="modal-card" id="project-form">
+      <h3 id="project-title">New project</h3>
+      <div class="grid" style="margin-top:1rem;">
+        <label class="field">Packet name<input name="name" required minlength="2" maxlength="80" placeholder="Q4 launch film"></label>
+        <label class="field">Client<input name="client" maxlength="100" placeholder="Northwind"></label>
+        <label class="field">Brief<textarea class="textarea" name="brief" rows="3" maxlength="600"></textarea></label>
+        <label class="field">Input assets<textarea class="textarea" name="inputAssets" rows="3" placeholder="bottle_macro.mov&#10;city_plate.exr&#10;brand_reference.pdf"></textarea></label>
+        <label class="field">Expected output folders<textarea class="textarea" name="outputStructure" rows="3" placeholder="/inputs&#10;/renders&#10;/stills&#10;/prompts&#10;/notes&#10;/handoff"></textarea></label>
+        <label class="field">Template<select name="templateId" id="project-template"></select></label>
+      </div>
+      <div class="review-actions"><button class="button primary" type="submit">Create packet</button><button class="button ghost" type="button" data-close>Cancel</button></div>
+    </form>
+  </div>
+
+  <div class="modal" id="compare-modal" role="dialog" aria-modal="true" aria-labelledby="compare-title">
+    <div class="modal-card" style="width:min(1080px,96vw)">
+      <h3 id="compare-title">Compare takes</h3>
+      <div class="grid cols-2" id="compare-grid" style="margin-top:1rem;"></div>
+      <div class="review-actions"><button class="button ghost" type="button" data-close>Close comparison</button></div>
+    </div>
+  </div>
+
+  <div class="modal" id="share-modal" role="dialog" aria-modal="true" aria-labelledby="share-title">
+    <form class="modal-card" id="share-form">
+      <h3 id="share-title">Create share link</h3>
+      <div class="grid" style="margin-top:1rem;">
+        <p id="share-target"></p>
+        <label class="field"><input type="checkbox" name="allowDownload" value="true"> Allow download</label>
+      </div>
+      <div class="review-actions"><button class="button primary" type="submit">Create link</button><button class="button ghost" type="button" data-close>Cancel</button></div>
+    </form>
+  </div>
+
+  <div class="modal" id="confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-body">
+    <div class="modal-card">
+      <h3 id="confirm-title">Confirm</h3>
+      <p id="confirm-body"></p>
+      <div class="review-actions"><button class="button danger" id="confirm-yes" type="button">Yes, continue</button><button class="button ghost" type="button" data-close>Cancel</button></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+  <datalist id="model-options"><option>Claude</option><option>Claude Code</option><option>Higgsfield Supercomputer</option><option>Runway</option><option>Kling</option><option>Luma Dream Machine</option><option>Ideogram</option></datalist>
+  <script src="/app/app.js"></script>
+</body>
+</html>

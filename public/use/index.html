@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Generating understanding - nitrate use cases</title>
+  <meta name="description" content="How nitrate's clanker plugin helps AI media teams turn scattered Claude, Claude Code, Higgsfield Supercomputer, and local clanker work into shared understanding.">
+  <link rel="stylesheet" href="/styles/reel.css">
+  <style>
+    .use-hero { display:grid; grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr); gap:3rem; align-items:center; padding:4.5rem 0 4rem; }
+    .understanding-stack { display:grid; gap:.8rem; }
+    .understanding-layer { padding:1rem 1.1rem; border:1px solid var(--line); border-radius:8px; background:var(--paper-2); box-shadow:0 12px 36px rgba(23,26,32,.08); }
+    .understanding-layer strong { display:block; margin-bottom:.3rem; }
+    .understanding-layer span { display:block; color:var(--muted); font-size:.92rem; }
+    .case-grid { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:2rem 1.4rem; }
+    .case { grid-column:span 6; padding-top:1.4rem; border-top:1px solid var(--line); }
+    .case:nth-child(1), .case:nth-child(6) { grid-column:span 12; }
+    .case h3 { font-size:1.8rem; max-width:28ch; }
+    .case-scene { margin-top:.8rem; color:var(--ink); font-size:1rem; max-width:75ch; }
+    .case-answer { margin-top:.55rem; color:var(--muted); font-size:.96rem; max-width:75ch; }
+    .case-outcome { display:inline-block; margin-top:.8rem; padding:.42rem .65rem; border-radius:999px; background:color-mix(in srgb,var(--signal) 10%,transparent); color:var(--signal-strong); font-size:.8rem; font-weight:700; }
+    .question-list { display:grid; grid-template-columns:repeat(4,1fr); gap:1.4rem; margin:0; padding:0; list-style:none; }
+    .question-list li { padding-top:1.2rem; border-top:1px solid var(--line); }
+    .question-list strong { display:block; font-size:1.05rem; margin-bottom:.4rem; }
+    .question-list span { color:var(--muted); font-size:.92rem; }
+    .use-close { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:2rem; align-items:center; padding-top:1.4rem; border-top:1px solid var(--line); }
+    @media(max-width:900px){ .use-hero,.use-close{grid-template-columns:1fr;} .case,.case:nth-child(1),.case:nth-child(6){grid-column:1/-1;} .question-list{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+  <!--
+  SURFACE: /use/
+  THESIS: generating understanding starts when each creator logs into the nitrate clanker plugin and receives the same team packet.
+  OWN-WORLD: packet layers, clanker returns, folder contracts, and decision history in the nitrate production system.
+  STORY: media leads recognize the recurring collaboration breaks and see how nitrate changes the operating loop.
+  FIRST VIEWPORT: headline "Generating understanding" beside four layers: brief, assets, clankers, returned work.
+  FORM: code-led replacement direction, seed nitrate-generating-understanding.
+  FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md.
+  -->
+  <header class="header">
+    <a class="brand" href="/" aria-label="nitrate home"><span class="brand-mark" aria-hidden="true"></span><span>nitrate</span></a>
+    <nav class="nav" aria-label="Primary">
+      <a class="nav-link" href="/">Product</a>
+      <a class="nav-link" href="/use/" aria-current="page">Use cases</a>
+      <a class="nav-link" href="/press">Press</a>
+      <a class="button small primary" href="/#plugin">Install plugin</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page use-hero">
+      <div>
+        <h1>Generating understanding.</h1>
+        <p class="lede">AI media teams do not only need more output. They need every creator to log into the same team context from their clanker plugin, receive the same brief and inputs, return work in the same structure, and make decisions from the same evidence.</p>
+        <div class="actions">
+          <a class="button primary" href="#cases">See the use cases</a>
+          <a class="button ghost" href="/#plugin">Install plugin</a>
+        </div>
+      </div>
+      <div class="understanding-stack" aria-label="How nitrate generates understanding">
+        <div class="understanding-layer"><strong>The lead's intent</strong><span>Brief, constraints, references, and review criteria are written once.</span></div>
+        <div class="understanding-layer"><strong>The shared inputs</strong><span>Input assets and expected folders travel with the packet.</span></div>
+        <div class="understanding-layer"><strong>The plugin login</strong><span>Each teammate signs in from their clanker and receives the same context.</span></div>
+        <div class="understanding-layer"><strong>The returned work</strong><span>Outputs, prompts, notes, and decisions come back into one review room.</span></div>
+      </div>
+    </section>
+
+    <section class="page section" id="questions" aria-labelledby="questions-title">
+      <div class="section-head">
+        <h2 id="questions-title">Every assignment answers four questions.</h2>
+        <p class="lede">Generation creates options. nitrate creates the shared understanding that lets a team coordinate those options.</p>
+      </div>
+      <ul class="question-list">
+        <li><strong>What are we making?</strong><span>The lead's brief and success criteria are attached to the packet.</span></li>
+        <li><strong>What do we use?</strong><span>Input media, references, and constraints go to every creator.</span></li>
+        <li><strong>Where does work go?</strong><span>The output structure is explicit before anyone starts generating.</span></li>
+        <li><strong>What came back?</strong><span>Returns are tied to plugin login, creator, clanker, prompt notes, and review status.</span></li>
+      </ul>
+    </section>
+
+    <section class="page section" id="cases" aria-labelledby="cases-title">
+      <div class="section-head">
+        <h2 id="cases-title">Six collaboration breaks nitrate is built for.</h2>
+      </div>
+      <div class="case-grid">
+        <article class="case">
+          <h3>Everyone on the team used Claude, but nobody has the same project.</h3>
+          <p class="case-scene">A producer asks for the latest AI media work and gets four different chat exports, a Drive folder, and two local downloads folders.</p>
+          <p class="case-answer">nitrate gives the lead a shared packet first, then pulls creator returns back into one review surface.</p>
+          <span class="case-outcome">Private runs become a team project.</span>
+        </article>
+        <article class="case">
+          <h3>The lead needs to dictate how the brief is worked upon.</h3>
+          <p class="case-scene">The brief needs specific input assets, naming rules, folder structure, and review expectations. Sending that as a chat message is too easy to misread.</p>
+          <p class="case-answer">nitrate makes the output contract part of the assignment: what goes in /renders, /stills, /prompts, /notes, and /handoff.</p>
+          <span class="case-outcome">Direction survives the handoff.</span>
+        </article>
+        <article class="case">
+          <h3>Each creator has their own clanker.</h3>
+          <p class="case-scene">One teammate works in Claude, another in Claude Code, another in Higgsfield Supercomputer, and each local setup has its own habits.</p>
+          <p class="case-answer">nitrate meets that reality. The creator logs into the plugin inside their clanker, receives the packet, and syncs the work back cleanly.</p>
+          <span class="case-outcome">Tool choice stops fragmenting the project.</span>
+        </article>
+        <article class="case">
+          <h3>The output is good, but the notes are missing.</h3>
+          <p class="case-scene">A strong take arrives with no prompt, no source inputs, and no explanation of what changed from the brief.</p>
+          <p class="case-answer">nitrate treats prompts, notes, and handoff files as part of the expected return, not optional memory.</p>
+          <span class="case-outcome">The lead reviews work with context.</span>
+        </article>
+        <article class="case">
+          <h3>A late change needs to reach everyone.</h3>
+          <p class="case-scene">The client changes the product angle halfway through exploration. The lead needs every creator to work from the new direction.</p>
+          <p class="case-answer">The packet becomes the source of current instruction, and the next pass is pushed from the lead rather than reconstructed by each creator.</p>
+          <span class="case-outcome">Iteration has a command center.</span>
+        </article>
+        <article class="case">
+          <h3>The campaign ends, but the team's understanding should compound.</h3>
+          <p class="case-scene">The winning looks, rejected paths, creator notes, and folder structure usually disappear into scattered archives.</p>
+          <p class="case-answer">nitrate keeps the packet and returns together, so the next brief starts from what the team already learned.</p>
+          <span class="case-outcome">The next team starts with shared judgment.</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="page section" aria-labelledby="close-title">
+      <div class="use-close">
+        <div>
+          <h2 id="close-title">Bring one scattered AI media project.</h2>
+          <p class="lede">We will turn it into a nitrate plugin flow with login, inputs, clanker assignments, expected output folders, returns, and review status.</p>
+        </div>
+        <div class="actions">
+          <a class="button primary" href="/#plugin">Install plugin</a>
+          <a class="button ghost" href="/app">Open command center</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

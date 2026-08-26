@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Shared view - nitrate</title>
+  <link rel="stylesheet" href="/styles/reel.css">
+</head>
+<body>
+  <header class="header">
+    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span><span>nitrate</span></a>
+    <span class="eyebrow">Shared review</span>
+  </header>
+  <main class="page section" aria-live="polite">
+    <div id="share-content"><div class="empty"><h3>Loading shared work...</h3></div></div>
+  </main>
+<script>
+const token = location.pathname.split('/').pop();
+const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+const label = {queued:'New',review:'Needs review',approved:'Approved',rejected:'Rejected',changes_requested:'Changes requested'};
+fetch(`/api/shared/${token}`).then(async response => {
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || 'Share unavailable');
+  const versions = data.versions.map(version => {
+    const asset = data.assets.find(item => item.id === version.assetId) || {};
+    return `<article class="card" style="margin-bottom:1rem;">
+      <div class="preview-frame"><img src="/api/media/${version.id}" alt="${escape(asset.name || version.filename)} preview"></div>
+      <div style="display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;">
+        <div><h3>${escape(asset.name || version.filename)}</h3><p class="eyebrow">${escape(version.branch)} - ${label[version.status] || version.status}</p></div>
+        ${data.share.allowDownload ? `<a class="button small ghost" href="/api/media/${version.id}" download="${escape(version.filename)}">Download</a>` : ''}
+      </div>
+      <p style="margin-top:.8rem;"><strong>Return context:</strong> ${escape(version.metadata.prompt)}<br><span class="eyebrow">${escape(version.metadata.model)} - seed ${escape(version.metadata.seed || 'not recorded')}</span></p>
+    </article>`;
+  }).join('');
+  document.getElementById('share-content').innerHTML = `
+    <p class="kicker">${data.share.scope === 'project' ? 'Packet share' : 'Return share'}</p>
+    <h2>${escape(data.share.label)}</h2>
+    <p class="lede">Shared by ${escape(data.share.createdBy)}. The prompt notes, creator context, and approval state stay with each return.</p>
+    <div style="margin-top:2rem;">${versions || '<div class="empty">No media is attached to this share.</div>'}</div>`;
+}).catch(error => {
+  document.getElementById('share-content').innerHTML = `<div class="empty"><h3>This link is not available</h3><p>${escape(error.message)}</p></div>`;
+});
+</script>
+</body>
+</html>

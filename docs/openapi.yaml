@@ -1,0 +1,210 @@
+openapi: 3.0.3
+info:
+  title: nitrate AI Media Collaboration API
+  version: 0.1.0
+  description: >-
+    Prototype contract for creating brief packets, collecting returned AI media
+    from creators' clankers, and recording lead review. The production API will
+    preserve these domain objects while adding authentication, tenant scoping,
+    direct clanker sync, signed uploads, and cursor pagination.
+servers:
+  - url: http://127.0.0.1:4173
+paths:
+  /healthz:
+    get:
+      summary: Check service health
+      responses:
+        '200': { description: Service is ready }
+  /api/state:
+    get:
+      summary: Read the demo packet workspace snapshot
+      responses:
+        '200': { description: Workspace packets, assets, returns, assignments, templates, and activity }
+  /api/projects:
+    post:
+      summary: Create a brief packet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string, minLength: 2, maxLength: 80 }
+                client: { type: string, maxLength: 100 }
+                brief: { type: string, maxLength: 600 }
+                inputAssets: { type: string, description: Newline-separated input assets }
+                outputStructure: { type: string, description: Newline-separated expected output folders }
+                templateId: { type: string }
+      responses:
+        '201': { description: Packet created }
+        '400': { description: Invalid packet }
+  /api/plugin/login:
+    post:
+      summary: Log in from the clanker plugin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, clanker]
+              properties:
+                role: { type: string, enum: [leader, member] }
+                name: { type: string }
+                email: { type: string, format: email }
+                clanker: { type: string }
+                surface: { type: string, description: Claude, Claude Code, Higgsfield Supercomputer, or local clanker }
+      responses:
+        '201': { description: Plugin session created }
+        '400': { description: Invalid login }
+  /api/plugin/packets:
+    get:
+      summary: Pull packets available to the logged-in plugin
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Plugin session, user, mode, packets, assignments, and returns }
+        '401': { description: Plugin login required }
+  /api/plugin/push:
+    post:
+      summary: Push a packet to one or more creator clankers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [projectId, assignments]
+              properties:
+                projectId: { type: string }
+                assignments:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name: { type: string }
+                      email: { type: string, format: email }
+                      clanker: { type: string }
+                      task: { type: string }
+      responses:
+        '201': { description: Packet pushed to clankers }
+        '400': { description: Invalid assignment }
+  /api/plugin/assignments/{assignmentId}:
+    patch:
+      summary: Update assignment status from the plugin
+      parameters:
+        - name: assignmentId
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status: { type: string, enum: [delivered, pulled, working, returned, blocked] }
+      responses:
+        '200': { description: Assignment status updated }
+        '400': { description: Invalid status }
+  /api/uploads:
+    post:
+      summary: Submit a returned media file and its context
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [projectId, file, prompt, model]
+              properties:
+                projectId: { type: string }
+                assetId: { type: string }
+                assetName: { type: string }
+                filename: { type: string }
+                mime: { type: string }
+                branch: { type: string }
+                prompt: { type: string }
+                model: { type: string }
+                seed: { type: string }
+                pipeline: { type: string }
+                notes: { type: string }
+                parentVersionId: { type: string }
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201': { description: Return submitted; identical bytes are deduplicated }
+        '400': { description: Invalid media or incomplete prompt/model context }
+        '413': { description: Upload exceeds 100 MiB }
+  /api/versions/{versionId}:
+    parameters:
+      - name: versionId
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      summary: Read one returned media item
+      responses:
+        '200': { description: Return found }
+        '404': { description: Return not found }
+    patch:
+      summary: Add a comment, edit return metadata, or record a review decision
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  enum: [approve, reject, request_changes, reopen]
+                note: { type: string }
+                comment: { type: string }
+                metadata:
+                  type: object
+                  properties:
+                    prompt: { type: string }
+                    model: { type: string }
+                    seed: { type: string }
+                    pipeline: { type: string }
+                    notes: { type: string }
+      responses:
+        '200': { description: Return updated }
+        '400': { description: Invalid update }
+        '404': { description: Return not found }
+  /api/shares:
+    post:
+      summary: Create a local tokenized share
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [scope, targetId]
+              properties:
+                scope: { type: string, enum: [version, project] }
+                targetId: { type: string }
+                allowDownload: { type: boolean }
+      responses:
+        '201': { description: Share created }
+  /api/shared/{token}:
+    get:
+      summary: Read a shared view
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Shared returns and assets }
+        '404': { description: Share unavailable }

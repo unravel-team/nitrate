@@ -1,0 +1,24 @@
+{
+  "name": "nitrate",
+  "version": "0.1.0",
+  "private": false,
+  "description": "nitrate - clanker plugin and collaboration layer for AI media teams.",
+  "type": "commonjs",
+  "bin": {
+    "nitrate": "./bin/nitrate.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test",
+    "worker:dev": "wrangler dev",
+    "worker:deploy": "wrangler deploy",
+    "db:migrate:local": "wrangler d1 migrations apply nitrate --local",
+    "db:migrate:remote": "wrangler d1 migrations apply nitrate --remote"
+  },
+  "keywords": ["ai-media", "cloudflare", "r2", "d1", "claude-code", "codex", "mcp"],
+  "license": "Apache-2.0"
+}

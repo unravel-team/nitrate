@@ -1,0 +1,19 @@
+{
+  "name": "nitrate",
+  "version": "0.1.0",
+  "description": "nitrate clanker plugin for packet sync and AI media collaboration",
+  "author": {
+    "name": "nitrate"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "nitrate",
+    "shortDescription": "Sync AI media packets and clanker returns from Codex.",
+    "longDescription": "nitrate lets leaders push brief packets to creator clankers and lets team members pull assignments, update status, and sync returned media through the shared nitrate backend.",
+    "developerName": "nitrate",
+    "category": "Productivity",
+    "capabilities": ["mcp", "cli"],
+    "defaultPrompt": "Use nitrate to inspect assigned packets, update clanker status, and help sync returned media."
+  },
+  "mcpServers": "./.mcp.json"
+}

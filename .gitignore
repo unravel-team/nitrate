@@ -1,0 +1,12 @@
+node_modules/
+.DS_Store
+.reel-data/
+.wrangler/
+.dev.vars
+.env
+.env.*
+!.env.example
+.impeccable/
+coverage/
+dist/
+*.log
