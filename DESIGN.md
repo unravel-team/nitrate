@@ -33,7 +33,7 @@ Motion confirms workflow changes: packet dispatch, clanker return, drawer entran
 
 ## Surface strategy
 
-- **Landing:** make the offer clear within seconds: nitrate pushes briefs and assets to creators' clankers, then collects finished work back for lead review.
+- **Landing:** position nitrate as DAM for agents. Lead with the contrast: old DAMs organize approved files; nitrate organizes agent work before the file exists. The first viewport must show the packet-to-agent-to-return loop, not a generic dashboard.
 - **Use cases:** lead with moments where scattered AI work becomes shared understanding.
 - **App:** optimize the daily lead loop: inspect packet, see clanker status, review returned work, send next pass, approve or reject.
 - **Press:** separate shipped MVP facts from roadmap items such as direct clanker sync, production integrations, and compliance reporting.

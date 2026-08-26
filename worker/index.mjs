@@ -130,6 +130,25 @@ async function pluginLogin(request, env) {
   }, 201);
 }
 
+async function joinWaitlist(request, env) {
+  const input = await bodyJson(request);
+  const email = normalizeEmail(input.email);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return fail(400, 'Enter a valid work email.');
+  const entry = {
+    id: id('wait'),
+    email,
+    teamSize: String(input.teamSize || '').slice(0, 40),
+    workflow: String(input.workflow || '').slice(0, 80),
+    at: now()
+  };
+  await env.DB.prepare(
+    `INSERT INTO waitlist (id, email, team_size, workflow, created_at)
+     VALUES (?, ?, ?, ?, ?)
+     ON CONFLICT(email) DO UPDATE SET team_size = excluded.team_size, workflow = excluded.workflow`
+  ).bind(entry.id, entry.email, entry.teamSize, entry.workflow, entry.at).run();
+  return json({ message: 'You are on the Nitrate access list. We will follow up with plugin setup.' });
+}
+
 async function createPacket(request, env) {
   const { user } = await requireSession(request, env);
   if (user.role !== 'team_lead') return fail(403, 'Only leaders can create packets');
@@ -314,6 +333,7 @@ async function route(request, env) {
   const url = new URL(request.url);
   if (request.method === 'OPTIONS') return new Response(null, { status: 204 });
   if (request.method === 'GET' && url.pathname === '/healthz') return json({ ok: true });
+  if (request.method === 'POST' && url.pathname === '/api/waitlist') return joinWaitlist(request, env);
   if (request.method === 'POST' && url.pathname === '/api/plugin/login') return pluginLogin(request, env);
   if (request.method === 'GET' && url.pathname === '/api/plugin/packets') return packets(request, env);
   if (request.method === 'POST' && url.pathname === '/api/packets') return createPacket(request, env);

@@ -22,7 +22,7 @@ nitrate is a clanker plugin and collaboration layer for AI media teams. The crea
 
 ## Positioning
 
-nitrate is the missing plugin, shared drive, and command center for AI creators. Shared drives store files after the fact; nitrate starts inside the clanker before generation by asking the creator to log in, pulling the team packet, and making the brief, inputs, folder contract, and return path explicit. It does not replace Claude, Claude Code, Higgsfield Supercomputer, or local creator workflows. It coordinates them.
+nitrate is DAM for agents: the asset system for AI media work before the final file exists. Traditional DAMs organize approved assets after production; nitrate starts inside the clanker before generation by asking the creator to log in, pulling the team packet, and making the brief, inputs, folder contract, agent workspace, return path, prompts, notes, and review decisions explicit. It does not replace Claude, Claude Code, Higgsfield Supercomputer, or local creator workflows. It coordinates them.
 
 ## Operating Context
 
