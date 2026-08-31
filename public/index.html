@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>nitrate — DAM for agents</title>
-  <meta name="description" content="Nitrate is DAM for agents: a shared asset system for AI media teams that sends briefs, inputs, and output contracts into agent workspaces, then collects finished work back with context.">
+  <title>nitrate — packets for AI media teams</title>
+  <meta name="description" content="Nitrate helps project leaders direct AI media creators and their clankers with structured packets: brief, inputs, assignments, output folders, returns, prompts, and review decisions in one loop.">
   <link rel="stylesheet" href="/styles/reel.css">
 </head>
 <body class="landing-dam">
   <!--
   SURFACE: landing
-  THESIS: nitrate is DAM for agents, refusing the classic DAM page that only promises storage, search, and approvals after assets already exist.
-  OWN-WORLD: an agent darkroom and dispatch ledger: physical media handling, contact sheets, routing slips, structured packets, and agent inboxes in amber, blue-black, nitrate green, and paper white.
-  STORY: media leads see why AI output breaks old DAMs, understand the packet-to-agent-to-return loop, and request plugin access.
-  FIRST VIEWPORT: huge “DAM for agents” claim, a terse contrast with old DAM, primary access CTA, and an animated dispatch wall showing one packet being pushed to Claude, Claude Code, Higgsfield, and local clankers.
-  FORM: code-led established-world rebuild, seed nitrate-agent-dam.
+  THESIS: nitrate packets let project leaders direct parallel AI media work without losing brief context, prompts, outputs, or review memory.
+  OWN-WORLD: an agent production dispatch room: packet manifests, routing slips, clanker lanes, contact-sheet returns, and review stamps in warm paper, blue-black, amber, and nitrate green.
+  STORY: project leaders recognize the coordination pain, understand the packet as the unit of control, see how creators/clankers receive and return work, and request access.
+  FIRST VIEWPORT: a large leader-facing claim beside a live-feeling packet board: one brief splits into creator lanes for Runway, Higgsfield, Claude, and local clankers, then returns to review.
+  FORM: code-led established-world rebuild, seed nitrate-packet-control.
   FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md.
   -->
   <header class="header dam-header">
@@ -28,125 +28,132 @@
   </header>
 
   <main>
-    <section class="page dam-hero" aria-labelledby="hero-title">
+    <section class="page dam-hero packet-hero" aria-labelledby="hero-title">
       <div class="dam-hero-copy">
-        <p class="dam-line">AI media teams do not need another folder.</p>
-        <h1 id="hero-title">DAM for agents.</h1>
-        <p class="lede dam-lede">Nitrate gives producers a shared asset system for agent-made media: briefs, inputs, references, folder contracts, prompts, drafts, returns, and review decisions travel together.</p>
+        <h1 id="hero-title">Turn a brief into packets your clankers can execute.</h1>
+        <p class="lede dam-lede">Nitrate gives project leaders one control surface for AI media work: package the brief, inputs, output folders, creator workspaces, tool guidance, returns, prompts, and review decisions.</p>
         <div class="dam-claim">
-          <span>Old DAMs organize approved files.</span>
-          <strong>Nitrate organizes the work before the file exists.</strong>
+          <span>AI generation became multiplayer.</span>
+          <strong>The workflow is still single-player. Nitrate fixes the handoff.</strong>
         </div>
         <div class="actions">
           <a class="button primary" href="#access">Get plugin access</a>
-          <a class="button ghost" href="/app/">Open the command center</a>
+          <a class="button ghost" href="/plugin/">See the plugin flow</a>
         </div>
       </div>
 
-      <figure class="agent-wall" aria-label="Nitrate packet moving through agent workspaces">
+      <figure class="agent-wall packet-console" aria-label="Project leader packet moving through creator clankers">
         <figcaption class="wall-top">
-          <span>Campaign packet</span>
-          <strong>Hydra launch film</strong>
+          <span>Leader packet</span>
+          <strong>Acme launch film</strong>
         </figcaption>
-        <div class="packet-strip">
-          <div><strong>Brief</strong><span>6 candidate films, neon bottle, rainy city, VO scratch</span></div>
-          <div><strong>Inputs</strong><span>product macro · city plate · brand tones · banned looks</span></div>
-          <div><strong>Return folders</strong><span>/renders /stills /prompts /notes /handoff</span></div>
+        <div class="packet-manifest">
+          <div><strong>Brief</strong><span>3 cinematic product-film directions for a 15s launch spot.</span></div>
+          <div><strong>Input assets</strong><span>hero bottle · city plate · brand rules · banned references</span></div>
+          <div><strong>Return contract</strong><span>/renders · /stills · /prompts · /notes · /handoff</span></div>
         </div>
-        <div class="agent-route" aria-hidden="true">
-          <span class="route-dot"></span>
-          <span class="route-line"></span>
-          <span class="route-dot"></span>
-          <span class="route-line"></span>
-          <span class="route-dot"></span>
+        <div class="clanker-lanes">
+          <div class="lane lane-returned"><span>Runway</span><strong>Jonas clanker</strong><small>2 controlled video variants returned</small></div>
+          <div class="lane lane-working"><span>Higgsfield Supercomputer</span><strong>Nia clanker</strong><small>12 motion tests in progress</small></div>
+          <div class="lane lane-pulled"><span>Claude Code</span><strong>Asha clanker</strong><small>folder contract pulled</small></div>
+          <div class="lane lane-waiting"><span>Claude</span><strong>Leo clanker</strong><small>waiting on input approval</small></div>
         </div>
-        <div class="agent-grid">
-          <div class="agent-card agent-ready"><strong>Claude</strong><span>Storyboard angles returned</span></div>
-          <div class="agent-card agent-working"><strong>Claude Code</strong><span>Folder contract pulled</span></div>
-          <div class="agent-card agent-ready"><strong>Higgsfield Supercomputer</strong><span>12 motion tests returned</span></div>
-          <div class="agent-card agent-waiting"><strong>Local clanker</strong><span>Assets staged for pass two</span></div>
-        </div>
-        <div class="return-dock">
-          <strong>Lead review dock</strong>
-          <span>Every return arrives with the creator, agent, prompt notes, inputs used, and decision status.</span>
+        <div class="review-ledger">
+          <div><strong>Needs review</strong><span>Jonas v2 · prompt and settings attached</span></div>
+          <div><strong>Next pass</strong><span>Push tighter logo hold back to Nia</span></div>
         </div>
       </figure>
     </section>
 
-    <section class="page dam-section split-proof" aria-labelledby="market-title">
+    <section class="page dam-section split-proof leader-pain" aria-labelledby="pain-title">
       <div>
-        <h2 id="market-title">The market built libraries. Agents need a dispatch room.</h2>
+        <h2 id="pain-title">The project leader’s problem is not generation. It is control.</h2>
       </div>
       <div class="proof-copy">
-        <p>Traditional DAM platforms are strong at storage, metadata, brand governance, usage rights, search, approvals, and distribution. That matters after a media asset becomes official.</p>
-        <p>Agent-made media creates a different mess: the useful work lives in chats, prompts, local folders, model settings, discarded drafts, and private experiments. By the time it reaches a DAM, the production context is already gone.</p>
-        <p><strong>Nitrate sits one step earlier.</strong> It turns a brief into an agent-readable packet, sends it to the tools creators already use, and brings the work back as reviewable media with context attached.</p>
+        <p>Your creators already use Claude, Claude Code, Runway, Higgsfield, Fal, Replicate, and their own local clankers. The issue is what happens around the generation.</p>
+        <p>Briefs become Slack threads. Inputs live in scattered folders. Prompts stay inside private chats. Returns arrive as links, downloads, screenshots, and mystery filenames.</p>
+        <p><strong>Nitrate turns the brief into an operating packet.</strong> The leader dictates how the work should be done, the clanker handles the packet mechanics, and every return comes back with context.</p>
       </div>
     </section>
 
-    <section class="page dam-section" aria-labelledby="system-title">
+    <section class="page dam-section packet-anatomy" aria-labelledby="packet-title">
       <div class="section-head">
-        <h2 id="system-title">What a DAM becomes when the workers are agents.</h2>
-        <p class="lede">Not just “upload, tag, approve.” Nitrate manages the operating objects that make AI media reproducible, reviewable, and team-owned.</p>
+        <h2 id="packet-title">A packet is the unit of command.</h2>
+        <p class="lede">Not a moodboard. Not a shared folder. A packet is the exact instruction object your AI media team works from.</p>
       </div>
-      <div class="dam-object-grid">
-        <article class="dam-object"><span>01</span><h3>Packet</h3><p>The brief, input assets, references, constraints, and exact output structure the lead wants back.</p></article>
-        <article class="dam-object"><span>02</span><h3>Agent inbox</h3><p>Claude, Claude Code, Higgsfield, or a local clanker receives the assignment where the creator already works.</p></article>
-        <article class="dam-object"><span>03</span><h3>Return</h3><p>Media comes back with prompts, notes, folders, tool identity, creator identity, and review state.</p></article>
-        <article class="dam-object"><span>04</span><h3>Team memory</h3><p>The next brief starts from what the team learned: winning prompts, rejected directions, useful inputs, and approved outputs.</p></article>
+      <div class="packet-anatomy-grid">
+        <article><h3>What to make</h3><p>Campaign brief, creative direction, constraints, banned looks, and review criteria.</p></article>
+        <article><h3>What to use</h3><p>Input assets, references, brand material, previous returns, and tool-specific guidance.</p></article>
+        <article><h3>Who does what</h3><p>Creator assignments mapped to the clanker or agent workspace they already use.</p></article>
+        <article><h3>How it returns</h3><p>Required folders, media files, prompt notes, tool/model context, and handoff material.</p></article>
+      </div>
+    </section>
+
+    <section class="page dam-section flow-river" aria-labelledby="flow-title">
+      <div class="section-head">
+        <h2 id="flow-title">The creator stays in charge of taste. The clanker handles the operations.</h2>
+      </div>
+      <div class="flow-board">
+        <div class="flow-card lead-card"><strong>Leader creates packet</strong><span>Brief, inputs, assignments, folders, review criteria.</span></div>
+        <div class="flow-arrow" aria-hidden="true"></div>
+        <div class="flow-card"><strong>Clanker pulls work</strong><span>Creates the workspace and reads AGENT_BRIEF.md.</span></div>
+        <div class="flow-arrow" aria-hidden="true"></div>
+        <div class="flow-card"><strong>Creator directs output</strong><span>Makes creative calls in Runway, Higgsfield, Claude, or local tools.</span></div>
+        <div class="flow-arrow" aria-hidden="true"></div>
+        <div class="flow-card return-card"><strong>Nitrate receives return</strong><span>Media, prompt, tool, notes, creator, and review status stay attached.</span></div>
       </div>
     </section>
 
     <section class="page dam-section contrast-panel" aria-labelledby="different-title">
       <div class="contrast-copy">
-        <h2 id="different-title">Different from a shared drive. Different from a classic DAM.</h2>
-        <p class="lede">A drive waits for files. A DAM waits for assets. Nitrate starts when the producer decides what the agents should make.</p>
+        <h2 id="different-title">DAM for agents means pre-production memory, not just final-asset storage.</h2>
+        <p class="lede">Classic DAMs organize finished assets. Nitrate organizes the agent work before the final file exists.</p>
       </div>
       <div class="comparison-board" role="table" aria-label="Nitrate compared with shared drives and traditional DAM">
-        <div role="row" class="comparison-row head"><span role="columnheader">System</span><span role="columnheader">What it controls</span><span role="columnheader">What it loses</span></div>
-        <div role="row" class="comparison-row"><strong role="cell">Shared drive</strong><span role="cell">Final files and folders</span><span role="cell">Prompts, intent, inputs, rejected paths, who tried what</span></div>
-        <div role="row" class="comparison-row"><strong role="cell">Classic DAM</strong><span role="cell">Approved assets, metadata, rights, distribution</span><span role="cell">Agent work-in-progress and production reasoning</span></div>
-        <div role="row" class="comparison-row nitrate-row"><strong role="cell">Nitrate</strong><span role="cell">Brief packets, agent assignments, returns, review memory</span><span role="cell">Designed to keep the context attached</span></div>
+        <div role="row" class="comparison-row head"><span role="columnheader">System</span><span role="columnheader">Where it starts</span><span role="columnheader">What the leader gets</span></div>
+        <div role="row" class="comparison-row"><strong role="cell">Shared drive</strong><span role="cell">After files exist</span><span role="cell">Folders, filenames, and manual cleanup</span></div>
+        <div role="row" class="comparison-row"><strong role="cell">Classic DAM</strong><span role="cell">After assets are approved</span><span role="cell">Metadata, rights, governance, distribution</span></div>
+        <div role="row" class="comparison-row nitrate-row"><strong role="cell">Nitrate</strong><span role="cell">When the brief is assigned</span><span role="cell">Packets, clanker status, prompts, returns, review memory</span></div>
       </div>
     </section>
 
     <section class="page dam-section use-led" aria-labelledby="use-title">
       <div class="section-head">
-        <h2 id="use-title">Use cases that old DAM language misses.</h2>
+        <h2 id="use-title">Where leaders feel the difference first.</h2>
       </div>
       <div class="use-stack">
         <article class="use-band">
-          <h3>Campaign swarm without creative drift</h3>
-          <p>A lead sends one packet to five creators running different agents. Everyone explores, but the inputs, banned looks, naming, and handoff folders stay aligned.</p>
+          <h3>Parallel exploration without creative drift</h3>
+          <p>Send one packet to multiple creators. Let one explore Higgsfield motion, another Runway control, another Claude storyboard logic — while the brief and return structure stay aligned.</p>
         </article>
         <article class="use-band">
-          <h3>Turn “that Claude thread” into team property</h3>
-          <p>The promising experiment is no longer trapped in one creator’s chat history. Returns capture the prompt notes and decision trail the team needs to reuse it.</p>
+          <h3>Recover the reasoning behind the output</h3>
+          <p>The good take is no longer separated from the prompt, tool settings, input assets, and creator notes that made it work.</p>
         </article>
         <article class="use-band">
-          <h3>Review AI media like production, not archaeology</h3>
-          <p>The producer sees which agent made each output, which assets were used, what changed since the last pass, and what is ready for client review.</p>
+          <h3>Turn review into the next pass</h3>
+          <p>Approve, reject, or request changes on the exact return. Then push the next instruction back to the clanker that should continue the work.</p>
         </article>
       </div>
     </section>
 
     <section class="page dam-section platform-rack" aria-labelledby="platforms-title">
       <div>
-        <h2 id="platforms-title">Works around the tools media teams already use.</h2>
-        <p class="lede">The main entry point is the Nitrate plugin: log in, pull packets, return work. The command center stays with the lead.</p>
+        <h2 id="platforms-title">Fits around the tools your creators already use.</h2>
+        <p class="lede">Nitrate starts as the clanker plugin: log in, pull the packet, work locally, sync the return. Direct integrations can come later without changing the operating model.</p>
       </div>
       <ul class="platform-grid dam-platforms">
-        <li class="platform-item"><strong>Claude</strong><span>Capture promising media directions before they disappear into private chats.</span></li>
-        <li class="platform-item"><strong>Claude Code</strong><span>Run structured agent workflows with a real brief and handoff contract.</span></li>
-        <li class="platform-item"><strong>Higgsfield Supercomputer</strong><span>Coordinate high-volume visual exploration without losing the producer’s direction.</span></li>
-        <li class="platform-item"><strong>Local clankers</strong><span>Give every creator the same packet, assets, and return path.</span></li>
+        <li class="platform-item"><strong>Runway</strong><span>Coordinate image-to-video and controlled video variants under one packet.</span></li>
+        <li class="platform-item"><strong>Higgsfield Supercomputer</strong><span>Capture high-volume visual exploration with producer intent attached.</span></li>
+        <li class="platform-item"><strong>Claude / Claude Code</strong><span>Turn private agent threads into team-owned outputs and handoff notes.</span></li>
+        <li class="platform-item"><strong>Fal / Replicate / local clankers</strong><span>Return generated files, prompts, settings, and notes through one shared path.</span></li>
       </ul>
     </section>
 
     <section class="page dam-section close-panel" id="access" aria-labelledby="access-title">
       <div class="close-copy">
-        <h2 id="access-title">Bring the messiest AI media project on your team.</h2>
-        <p class="lede">We’ll help you turn it into a Nitrate packet, push it to creators, and review the first agent returns in one place.</p>
+        <h2 id="access-title">Start with one messy AI media project.</h2>
+        <p class="lede">We’ll help you turn it into a packet, push it to creators, and review the first structured returns.</p>
       </div>
       <form class="form dam-form" id="waitlist-form" novalidate>
         <label class="field" for="email"><span class="visually-hidden">Work email</span><input id="email" name="email" type="email" autocomplete="email" placeholder="you@studio.com" required></label>
@@ -154,7 +161,7 @@
           <select id="teamSize" name="teamSize"><option value="">Team size</option><option>1-5</option><option>6-20</option><option>21-80</option><option>80+</option></select>
         </label>
         <label class="select visually-labelled" for="workflow"><span class="visually-hidden">Primary agent workspace</span>
-          <select id="workflow" name="workflow"><option value="">Primary agent workspace</option><option>Claude</option><option>Claude Code</option><option>Higgsfield Supercomputer</option><option>Multiple tools</option><option>Other</option></select>
+          <select id="workflow" name="workflow"><option value="">Primary agent workspace</option><option>Runway</option><option>Higgsfield Supercomputer</option><option>Claude</option><option>Claude Code</option><option>Multiple tools</option><option>Other</option></select>
         </label>
         <button class="button primary" type="submit">Request access</button>
         <p class="form-note" id="waitlist-status" role="status"></p>
@@ -163,8 +170,8 @@
   </main>
 
   <footer class="page dam-footer">
-    <p><strong>nitrate</strong><br>DAM for agents. Built for AI media teams.</p>
-    <p><a href="mailto:hello@nitrate.media">hello@nitrate.media</a> · <a href="/press/">Press kit</a> · <a href="/app/">MVP</a></p>
+    <p><strong>nitrate</strong><br>Packets for AI media teams. DAM for agents.</p>
+    <p><a href="mailto:hello@nitrate.media">hello@nitrate.media</a> · <a href="/plugin/">Plugin</a> · <a href="/app/">Command center</a></p>
   </footer>
 <script>
 document.getElementById('waitlist-form').addEventListener('submit', async event => {
