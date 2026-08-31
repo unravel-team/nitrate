@@ -17,9 +17,13 @@
     .packet-meta span { border:1px solid var(--line); border-radius:999px; padding:.22rem .45rem; font-size:.82rem; }
     .assignment-card { border:1px solid var(--line); border-radius:8px; padding:.8rem; background:var(--paper); }
     .assignment-card + .assignment-card { margin-top:.65rem; }
+    .plugin-loop { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.7rem; margin:0 0 1.2rem; }
+    .plugin-step { border:1px solid var(--line); border-radius:10px; padding:.85rem; background:color-mix(in srgb,var(--paper-2) 82%,transparent); }
+    .plugin-step strong,.plugin-step code { display:block; }
+    .plugin-step code { margin-top:.5rem; font-size:.78rem; color:var(--signal-strong); overflow-wrap:anywhere; }
     .plugin-status { display:inline-flex; align-items:center; border-radius:999px; padding:.22rem .55rem; background:color-mix(in srgb,var(--signal) 10%,transparent); color:var(--signal-strong); font-size:.82rem; font-weight:700; }
     .plugin-form-grid { display:grid; gap:.65rem; margin-top:.8rem; }
-    @media(max-width:900px){ .plugin-grid{grid-template-columns:1fr;} .plugin-panel{border-right:0;border-bottom:1px solid var(--line);} .packet-row{grid-template-columns:1fr;} }
+    @media(max-width:900px){ .plugin-grid{grid-template-columns:1fr;} .plugin-panel{border-right:0;border-bottom:1px solid var(--line);} .packet-row,.plugin-loop{grid-template-columns:1fr;} }
   </style>
 </head>
 <body>
@@ -54,7 +58,13 @@
         <section id="leader-view" aria-labelledby="leader-title">
           <div class="section-head" style="margin-bottom:1.5rem;">
             <h2 id="leader-title">Leader workflow</h2>
-            <p class="lede">Create or pick a packet, assign creators, and push it to their clankers.</p>
+            <p class="lede">The lead controls the packet. The plugin pushes the brief, assets, output contract, and task to every creator clanker.</p>
+          </div>
+          <div class="plugin-loop" aria-label="Leader activation loop">
+            <div class="plugin-step"><strong>1. Create packet</strong><span>Client brief, inputs, folders, review criteria.</span><code>nitrate init-agency</code></div>
+            <div class="plugin-step"><strong>2. Push to creators</strong><span>Each creator gets the same source of truth.</span><code>nitrate push</code></div>
+            <div class="plugin-step"><strong>3. Watch returns</strong><span>See who pulled, worked, blocked, or returned.</span><code>nitrate next</code></div>
+            <div class="plugin-step"><strong>4. Send next pass</strong><span>Turn review decisions into the next packet.</span><code>nitrate packets</code></div>
           </div>
           <div id="leader-packets"></div>
         </section>
@@ -62,7 +72,13 @@
         <section id="member-view" aria-labelledby="member-title" hidden>
           <div class="section-head" style="margin-bottom:1.5rem;">
             <h2 id="member-title">Team member workflow</h2>
-            <p class="lede">Pull assigned packets into this clanker, mark work status, and sync returned files.</p>
+            <p class="lede">The creator stays inside the clanker. Pull the packet, work the generated folder, and sync one clean return back.</p>
+          </div>
+          <div class="plugin-loop" aria-label="Team member activation loop">
+            <div class="plugin-step"><strong>1. Ask what’s next</strong><span>The plugin tells you the current assignment.</span><code>nitrate next</code></div>
+            <div class="plugin-step"><strong>2. Pull packet</strong><span>Nitrate creates folders and AGENT_BRIEF.md.</span><code>nitrate pull</code></div>
+            <div class="plugin-step"><strong>3. Mark working</strong><span>Lead sees the clanker is active.</span><code>nitrate status --status working</code></div>
+            <div class="plugin-step"><strong>4. Sync return</strong><span>Media, prompt, model, and notes go back together.</span><code>nitrate sync</code></div>
           </div>
           <div id="member-packets"></div>
         </section>

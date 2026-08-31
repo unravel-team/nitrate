@@ -50,17 +50,26 @@ The MCP server reads `~/.nitrate/config.json`, so `nitrate login` is usually eno
 
 ## Team-member loop
 
+Start with the plugin next action:
+
+```sh
+nitrate next
+```
+
+Then pull the assigned packet. If only one packet is assigned, IDs are inferred:
+
 ```sh
 nitrate packets
-nitrate pull --packet pkt_... --assignment assign_... --dir ./launch-film
-nitrate status --assignment assign_... --status working
-nitrate sync --packet pkt_... --assignment assign_... --file ./launch-film/renders/jonas-v1.mp4 --name "Jonas v1" --made-with "Claude Code" --prompt "..."
+nitrate pull --dir ./launch-film
+cd ./launch-film
+nitrate status --status working
+nitrate sync --file ./renders/jonas-v1.mp4 --name "Jonas v1" --made-with "Claude Code" --prompt "..."
 ```
 
 ## Leader loop
 
 ```sh
 nitrate login --api https://nitrate.example.workers.dev --role leader --name "Maya Chen" --email maya@studio.test --clanker maya-lead --surface "Claude Code"
-nitrate packet:create --name "Launch Film Packet" --brief "Create a 30-second launch-film direction"
+nitrate init-agency --name "Launch Film Packet" --client "Northwind" --brief "Create a 30-second launch-film direction" --creator "Jonas Reyes|jonas@studio.test|jonas-clanker|Explore the human performance beat"
 nitrate push --packet pkt_... --name "Jonas Reyes" --email jonas@studio.test --clanker jonas-clanker --task "Explore the human performance beat"
 ```

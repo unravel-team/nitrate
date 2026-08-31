@@ -116,6 +116,57 @@ function needsAttention(version) {
   return ['queued','review','changes_requested'].includes(version.status);
 }
 
+function activationModel() {
+  const project = activeProject();
+  const versions = projectVersions();
+  const assignments = project?.assignments || [];
+  const decisions = versions.flatMap(version => version.decisions || []);
+  const shares = (state.data?.shares || []).filter(share => share.scope === 'project' ? share.targetId === state.projectId : versions.some(version => version.id === share.targetId));
+  const steps = [
+    {
+      id: 'packet',
+      label: 'Create a client packet',
+      help: 'Brief, input assets, review criteria, and return folders live together.',
+      done: Boolean(project),
+      action: 'New packet',
+      event: 'new-project'
+    },
+    {
+      id: 'assign',
+      label: 'Assign creators or agents',
+      help: 'Push the packet to Claude, Claude Code, Higgsfield, Runway, or local clankers.',
+      done: assignments.length > 0,
+      action: 'Plugin login',
+      event: 'plugin-login'
+    },
+    {
+      id: 'return',
+      label: 'Receive the first return',
+      help: 'Outputs come back with prompt, model, creator, notes, and source packet.',
+      done: versions.length > 0,
+      action: 'Return work',
+      event: 'import-button'
+    },
+    {
+      id: 'decision',
+      label: 'Make a review decision',
+      help: 'Approve, reject, or request changes so the team knows what moves forward.',
+      done: decisions.length > 0 || versions.some(version => ['approved','rejected','changes_requested'].includes(version.status)),
+      action: 'Review queue',
+      event: 'review-first'
+    },
+    {
+      id: 'share',
+      label: 'Share a clean client set',
+      help: 'Send only the selected work, not the production mess.',
+      done: shares.length > 0,
+      action: 'Share',
+      event: 'share-project'
+    }
+  ];
+  return { steps, complete: steps.filter(step => step.done).length };
+}
+
 function filteredVersions() {
   const query = state.query.trim().toLowerCase();
   return projectVersions().filter(version => {
@@ -217,6 +268,35 @@ function renderRail() {
     </button></li>`).join('');
   $('#activity-list').innerHTML = state.data.activity.slice(0,7).map(event=>`
     <li><time class="mono">${formatDate(event.at)}</time><br>${escapeHtml(event.message)}</li>`).join('');
+}
+
+function renderActivation() {
+  const project = activeProject();
+  const versions = projectVersions();
+  const assignments = project?.assignments || [];
+  const approved = versions.filter(version => version.status === 'approved');
+  const review = versions.filter(needsAttention);
+  const creators = new Set(assignments.map(assignment => assignment.userId || assignment.clanker).filter(Boolean));
+  const activation = activationModel();
+  const percent = Math.round((activation.complete / activation.steps.length) * 100);
+  $('#activation-percent').textContent = `${percent}%`;
+  $('#activation-summary').textContent = percent === 100
+    ? 'This agency workspace has the complete loop: packet, creators, returns, decisions, and shareable output.'
+    : 'Finish the first client campaign loop: packet, assigned creators, returned work, review decision, and shareable set.';
+  $('#activation-steps').innerHTML = activation.steps.map(step => `
+    <li class="activation-step ${step.done ? 'done' : ''}">
+      <div>
+        <strong>${step.done ? '✓ ' : ''}${escapeHtml(step.label)}</strong>
+        <span>${escapeHtml(step.help)}</span>
+      </div>
+      <button class="button small ${step.done ? 'ghost' : 'primary'}" type="button" data-activation-action="${step.event}">
+        ${step.done ? 'Open' : escapeHtml(step.action)}
+      </button>
+    </li>`).join('');
+  $('#metric-packets').textContent = state.data.projects.length;
+  $('#metric-creators').textContent = creators.size;
+  $('#metric-review').textContent = review.length;
+  $('#metric-memory').textContent = approved.length;
 }
 
 function streakLabel() {
@@ -332,7 +412,7 @@ function fillUploadForm(options={}) {
 }
 
 function render() {
-  renderSelects(); renderRail(); renderTakes();
+  renderSelects(); renderRail(); renderActivation(); renderTakes();
   if ($('#detail-drawer').classList.contains('open')) {
     if (versionById(state.selectedId)) $('#detail-content').innerHTML = detailMarkup(state.selectedId);
     else closeDrawer();
@@ -385,6 +465,19 @@ document.addEventListener('click', async event => {
   if (button.id === 'plugin-login') { openModal('#plugin-modal'); return; }
   if (button.id === 'new-project') { openModal('#project-modal'); return; }
   if (button.id === 'share-project') { openShare({scope:'project',targetId:state.projectId}); return; }
+  if (button.dataset.activationAction) {
+    const action = button.dataset.activationAction;
+    if (action === 'new-project') return openModal('#project-modal');
+    if (action === 'plugin-login') return openModal('#plugin-modal');
+    if (action === 'import-button') { fillUploadForm(); openModal('#upload-modal'); return; }
+    if (action === 'share-project') return openShare({scope:'project',targetId:state.projectId});
+    if (action === 'review-first') {
+      const candidate = filteredVersions().find(needsAttention) || projectVersions()[0];
+      if (candidate) return openDrawer(candidate.id);
+      state.status = 'needs_attention'; render();
+      return;
+    }
+  }
   if (button.dataset.shareVersion) { openShare({scope:'version',targetId:button.dataset.shareVersion}); return; }
   if (button.dataset.template) {
     const template=state.data.templates.find(item=>item.id===button.dataset.template);

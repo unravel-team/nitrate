@@ -77,25 +77,27 @@ curl 'http://127.0.0.1:4173/api/plugin/packets?token=PLUGIN_TOKEN'
 
 ## Open-source CLI
 
-The CLI entry point is [`bin/nitrate.mjs`](bin/nitrate.mjs). It works against the Cloudflare Worker or the local prototype API where endpoints overlap.
+The CLI entry point is [`bin/nitrate.mjs`](bin/nitrate.mjs). This is the main plugin surface: agents and creators ask what is next, pull packets into a local clanker workspace, update status, and sync returned media.
 
 Leader:
 
 ```sh
 nitrate login --api https://nitrate.example.workers.dev --role leader --name "Maya Chen" --email maya@studio.test --clanker maya-lead --surface "Claude Code"
-nitrate packet:create --name "Launch Film Packet" --brief "Create a 30-second launch-film direction" --input bottle_macro.mov --folder /renders --folder /prompts --folder /notes --folder /handoff
-nitrate push --packet pkt_... --name "Jonas Reyes" --email jonas@studio.test --clanker jonas-clanker --task "Explore the human performance beat before reveal."
+nitrate next
+nitrate init-agency --name "Launch Film Packet" --client "Northwind" --brief "Create a 30-second launch-film direction" --input bottle_macro.mov --folder /renders --folder /prompts --folder /notes --folder /handoff --creator "Jonas Reyes|jonas@studio.test|jonas-clanker|Explore the human performance beat before reveal."
 ```
 
 Team member:
 
 ```sh
 nitrate login --api https://nitrate.example.workers.dev --role member --name "Jonas Reyes" --email jonas@studio.test --clanker jonas-clanker --surface "Claude Code"
-nitrate packets
-nitrate pull --packet pkt_... --assignment assign_... --dir ./launch-film
-nitrate status --assignment assign_... --status working
-nitrate sync --packet pkt_... --assignment assign_... --file ./launch-film/renders/jonas-v1.mp4 --name "Jonas v1" --made-with "Claude Code" --prompt "Prompt used for the return"
+nitrate next
+nitrate pull --dir ./launch-film
+nitrate status --status working --dir ./launch-film
+nitrate sync --dir ./launch-film --file ./launch-film/renders/jonas-v1.mp4 --name "Jonas v1" --made-with "Higgsfield Supercomputer" --prompt "Prompt used for the return"
 ```
+
+Use `NITRATE_CONFIG_FILE=/path/to/profile.json` when testing multiple plugin users on one machine.
 
 ## Codex and Claude Code plugins
 

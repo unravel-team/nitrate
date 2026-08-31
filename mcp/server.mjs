@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
 
-const CONFIG_FILE = path.join(os.homedir(), '.nitrate', 'config.json');
+const CONFIG_FILE = process.env.NITRATE_CONFIG_FILE || path.join(os.homedir(), '.nitrate', 'config.json');
 
 async function loadConfig() {
   try {
@@ -33,6 +33,11 @@ async function api(route, options = {}) {
 
 const tools = [
   {
+    name: 'nitrate_next_action',
+    description: 'Return the next best action for the logged-in nitrate plugin user.',
+    inputSchema: { type: 'object', properties: {} }
+  },
+  {
     name: 'nitrate_packets',
     description: 'List packets visible to the logged-in nitrate clanker plugin session.',
     inputSchema: { type: 'object', properties: {} }
@@ -50,6 +55,22 @@ const tools = [
     }
   },
   {
+    name: 'nitrate_create_packet',
+    description: 'As a leader, create an agency packet with brief, input assets, output folders, and review criteria.',
+    inputSchema: {
+      type: 'object',
+      required: ['name', 'brief'],
+      properties: {
+        name: { type: 'string' },
+        client: { type: 'string' },
+        brief: { type: 'string' },
+        inputAssets: { type: 'array', items: { type: 'string' } },
+        outputStructure: { type: 'array', items: { type: 'string' } },
+        reviewCriteria: { type: 'array', items: { type: 'string' } }
+      }
+    }
+  },
+  {
     name: 'nitrate_push_packet',
     description: 'As a leader, push a packet to one creator clanker.',
     inputSchema: {
@@ -63,11 +84,70 @@ const tools = [
         task: { type: 'string' }
       }
     }
+  },
+  {
+    name: 'nitrate_create_return',
+    description: 'Create a return record for a completed assignment. Use the CLI nitrate sync for media file upload.',
+    inputSchema: {
+      type: 'object',
+      required: ['assignmentId', 'name', 'madeWith', 'prompt'],
+      properties: {
+        assignmentId: { type: 'string' },
+        name: { type: 'string' },
+        madeWith: { type: 'string' },
+        prompt: { type: 'string' },
+        notes: { type: 'string' }
+      }
+    }
   }
 ];
 
+function visiblePackets(data) {
+  return Array.isArray(data?.packets)
+    ? data.packets.map(item => ({ ...item, packet: item.packet || item.project }))
+    : [];
+}
+
 async function callTool(name, args) {
+  if (name === 'nitrate_next_action') {
+    const data = await api('/api/plugin/packets');
+    const packets = visiblePackets(data);
+    if (!packets.length) {
+      return {
+        next: data.mode === 'leader'
+          ? 'Create the first agency packet, then push it to creator clankers.'
+          : 'No packets are assigned to this clanker yet.'
+      };
+    }
+    const first = packets[0];
+    const assignment = first.assignments?.[0];
+    return {
+      packet: first.packet?.name,
+      assignment: assignment?.id,
+      status: assignment?.status,
+      next: data.mode === 'leader'
+        ? 'Check assignment status and review returned work.'
+        : assignment?.status === 'delivered'
+          ? 'Pull the packet into a local workspace with nitrate pull.'
+          : assignment?.status === 'pulled'
+            ? 'Mark the assignment working, then sync a return.'
+            : 'Sync completed work back with nitrate sync.'
+    };
+  }
   if (name === 'nitrate_packets') return api('/api/plugin/packets');
+  if (name === 'nitrate_create_packet') {
+    return api('/api/packets', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: args.name,
+        client: args.client || '',
+        brief: args.brief,
+        inputAssets: args.inputAssets || [],
+        outputStructure: args.outputStructure || [],
+        reviewCriteria: args.reviewCriteria || []
+      })
+    });
+  }
   if (name === 'nitrate_assignment_status') {
     return api(`/api/plugin/assignments/${args.assignmentId}`, {
       method: 'PATCH',
@@ -80,6 +160,23 @@ async function callTool(name, args) {
       body: JSON.stringify({
         packetId: args.packetId,
         assignments: [{ email: args.email, name: args.name, clanker: args.clanker, task: args.task }]
+      })
+    });
+  }
+  if (name === 'nitrate_create_return') {
+    const packets = visiblePackets(await api('/api/plugin/packets'));
+    const entry = packets.find(item => (item.assignments || []).some(assignment => assignment.id === args.assignmentId));
+    const assignment = (entry?.assignments || []).find(item => item.id === args.assignmentId);
+    if (!assignment || !entry?.packet?.id) throw new Error('Assignment not found in this plugin session');
+    return api('/api/returns', {
+      method: 'POST',
+      body: JSON.stringify({
+        packetId: assignment.packetId || entry.packet.id,
+        assignmentId: args.assignmentId,
+        name: args.name,
+        madeWith: args.madeWith,
+        prompt: args.prompt,
+        notes: args.notes || ''
       })
     });
   }

@@ -64,6 +64,26 @@
       </aside>
 
       <main class="content" id="main" tabindex="-1">
+        <section class="activation-panel" aria-labelledby="activation-title">
+          <div class="activation-copy">
+            <p class="eyebrow">Agency activation</p>
+            <h1 id="activation-title">Run one client AI campaign through Nitrate.</h1>
+            <p id="activation-summary">Create a packet, push it to creators, receive returns, make a decision, and share a clean review set.</p>
+          </div>
+          <div class="activation-score" aria-live="polite">
+            <strong id="activation-percent">0%</strong>
+            <span>pilot setup</span>
+          </div>
+          <ol class="activation-steps" id="activation-steps"></ol>
+        </section>
+
+        <section class="retention-strip" aria-label="Agency production health">
+          <div><strong id="metric-packets">0</strong><span>active packets</span></div>
+          <div><strong id="metric-creators">0</strong><span>creators assigned</span></div>
+          <div><strong id="metric-review">0</strong><span>returns to review</span></div>
+          <div><strong id="metric-memory">0</strong><span>approved learnings</span></div>
+        </section>
+
         <div class="toolbar">
           <label class="search visually-labelled" for="search"><span class="visually-hidden">Search returns</span><input id="search" type="search" placeholder="Search returns, prompts, creators..." autocomplete="off"></label>
           <button class="button small ghost" id="compare-open" type="button" disabled>Compare</button>
