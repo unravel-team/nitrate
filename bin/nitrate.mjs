@@ -135,7 +135,7 @@ function firstActionForPacket(item, role) {
   if (role === 'team_lead') {
     if (!assignments.length) return `Push "${packet.name}" to the first creator: nitrate push --packet ${packet.id} --email <email> --name <name> --clanker <clanker> --task "<task>"`;
     const waiting = assignments.find(assignment => ['delivered', 'pulled', 'working', 'blocked'].includes(assignment.status));
-    if (waiting) return `${waiting.clanker} is ${waiting.status} on "${packet.name}". Ask for a return or adjust the packet.`;
+    if (waiting) return `${waiting.name || waiting.clanker} is ${waiting.status} on "${packet.name}". Ask for a return or adjust the packet.`;
     if (returns.some(item => item.status === 'needs_review')) return `Review returned work for "${packet.name}" in the command center.`;
     return `"${packet.name}" is clean. Start the next packet from what worked.`;
   }
@@ -196,7 +196,7 @@ async function nextAction() {
   if (!items.length) {
     console.log(data.mode === 'leader'
       ? 'Next: create your first agency packet with nitrate init-agency --name "<client campaign>" --client "<client>" --brief "<brief>"'
-      : 'No packets assigned to this clanker yet. Ask the lead to push a packet.');
+      : 'No packets assigned to this AI agent yet. Ask the lead to push a packet.');
     return;
   }
   console.log(firstActionForPacket(items[0], data.user?.role || data.mode));
@@ -250,7 +250,7 @@ async function initAgency(args) {
     });
   }
   console.log(`Created packet: ${packet.name || packet.packet?.name || packet.project?.name || args.name} (${packetId})`);
-  if (pushed) console.log(`Pushed to ${pushed.assignments.length} creator clanker(s).`);
+  if (pushed) console.log(`Pushed to ${pushed.assignments.length} creator agent(s).`);
   console.log('Activation target: one creator pulls the packet, returns one output, and the lead makes one review decision.');
   printJson({ packet, pushed });
 }

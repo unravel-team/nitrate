@@ -5,6 +5,7 @@ colors:
   electric-violet: "#6c35ff"
   bright-violet: "#815cff"
   review-orange: "#ff5038"
+  success-green: "#73e6a0"
   projection-ink: "#08080a"
   raised-ink: "#101014"
   projection-white: "#f4f2ed"
@@ -32,10 +33,22 @@ typography:
     letterSpacing: "normal"
   label:
     fontFamily: "Manrope, Helvetica Neue, sans-serif"
+    fontSize: "0.7rem"
+    fontWeight: 800
+    lineHeight: 1.2
+    letterSpacing: "0.08em"
+  micro:
+    fontFamily: "Manrope, Helvetica Neue, sans-serif"
     fontSize: "0.65rem"
     fontWeight: 800
     lineHeight: 1.2
     letterSpacing: "0.08em"
+  terminal:
+    fontFamily: "ui-monospace, SFMono-Regular, Consolas, Liberation Mono, monospace"
+    fontSize: "clamp(0.7rem, 0.76vw, 0.78rem)"
+    fontWeight: 520
+    lineHeight: 1.62
+    letterSpacing: "normal"
 rounded:
   square: "0px"
   status-dot: "50%"
@@ -162,7 +175,7 @@ At `1180px`, the review stage keeps precedence while its context column, return 
 
 ## Elevation & Depth
 
-The system is flat by default and uses no ambient card shadows. Depth comes from tonal separation, thin rules, media vignettes, and the contrast between projection-white leader surfaces and dark or violet creator-agent surfaces. The leader-to-creator round trip stays in one ruled plane so its direction is easier to follow than a stack of floating artifacts. Soft state halos belong only to tiny status dots.
+The system is flat by default and uses no ambient card shadows. Depth comes from tonal separation, thin rules, media vignettes, and the contrast between projection-white leader chrome and violet creator-agent chrome. The dual-agent CLI stage stays in one ruled plane so its direction is easier to follow than a stack of floating artifacts. Soft state halos belong only to tiny status dots.
 
 ### Shadow Vocabulary
 
@@ -223,11 +236,11 @@ A full-width banner directly below the production map makes compatibility a majo
 
 The violet problem section must diagnose fragmentation at a glance. Its declaration is “The work comes back. The context doesn’t.” A ruled ledger then shows three broken handoffs—Notion brief, Slack feedback, and Drive exports—with an orange missing-context label between each source and the review question it creates. The final ink block names the agency lead’s consequence: reconstructing creator, brief, prompt, feedback, and latest export by hand. Orange is reserved for the missing link and the human burden; Notion, Slack, and Drive remain text labels rather than another logo strip. On mobile, preserve the order declaration → evidence rows → consequence.
 
-### Leader-to-Creator Round Trip
+### Dual-Agent CLI Journey
 
-“How it works” is one large operational board with three explicit lanes: agency leader, Nitrate, and creator. It shows the real sequence rather than three disconnected feature scenes. First, the leader uses the dashboard or the Nitrate plugin in Codex or Claude Code to package the shared brief, brand rules, approved inputs, return structure, and creator-specific routes. Nitrate then pushes a focused assignment into each creator’s AI agent. The creator pulls the assignment, works in their existing media tools, and syncs the finished file with prompt, notes, source files, assignment, and version. The same result lands in leader review, where feedback is routed back to that exact creator, assignment, and version.
+“How it works” is a guided six-step emulator with two persistent terminals: Maya, the agency lead in Claude Code, and Nia, a creator in Codex. The commands match the open-source plugin’s real surface: both people log in, Maya creates one campaign packet and assigns creator-specific routes, Nia pulls a prepared workspace, marks it working, and syncs a rendered ad with its prompt and notes. Nitrate then directs Maya to visual review in the command center; review decisions are not misrepresented as CLI commands. When Maya requests another pass, the plugin pushes a new assignment back into Nia’s agent with the feedback attached.
 
-Leader surfaces use projection white; creator-agent surfaces use raised ink with violet chrome; return routes use review orange. Directional lines animate once when the board enters view, while all labels and states remain readable without motion. The only simulated control is “Accept & pull assignment,” which expands supplemental workspace details; the essential folder summary is always visible. On mobile, the board stacks in chronological order: leader sends → creator receives → creator returns → leader reviews → feedback returns to creator.
+The terminals remain fixed while the active side brightens, new lines reveal, and one directional handoff crosses the Nitrate bridge. Projection-white chrome identifies the leader, violet chrome identifies the creator, and review orange appears when work comes back for a human decision. The emulator plays once when visible and provides Previous, Play/Pause, Next, and six direct step controls. Reduced-motion mode disables autoplay and spatial animation without hiding any state. On mobile, the same chronology stacks as leader terminal → Nitrate handoff → creator terminal, with all six steps remaining directly selectable.
 
 ## Do's and Don'ts
 

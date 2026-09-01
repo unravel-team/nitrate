@@ -296,156 +296,80 @@
     <section class="workflow" id="how-it-works" aria-labelledby="workflow-title">
       <div class="workflow-heading">
         <div>
-          <p class="workflow-eyebrow">How it works</p>
-          <h2 id="workflow-title">From the leader’s brief to each creator’s AI agent—and back.</h2>
+          <h2 id="workflow-title">Watch one campaign move through both AI agents.</h2>
         </div>
-        <p>The agency lead runs the campaign from the Nitrate dashboard, Codex, or Claude Code. Creators receive a clear assignment in the AI agent they already use, then return every ad with its prompt, notes, and campaign context attached.</p>
+        <p>The agency lead sets the brief from their AI agent. Nitrate delivers it to each creator’s agent, builds the workspace, tracks progress, and returns the finished ad for review.</p>
       </div>
 
-      <div class="agent-roundtrip" data-agent-roundtrip>
-        <div class="roundtrip-topline">
-          <p><span>Example campaign</span><strong>Northwind · “Move Closer”</strong></p>
-          <p><span>One live round</span><strong>3 creators · 3 ad concepts</strong></p>
+      <div class="cli-journey" data-cli-journey data-step="0">
+        <div class="cli-demo-bar">
+          <p><span>Illustrative campaign · real plugin commands</span><strong>Northwind · “Move Closer”</strong></p>
+          <div class="cli-playback" aria-label="CLI journey playback controls">
+            <button type="button" data-cli-previous aria-label="Show previous journey step">Previous</button>
+            <button type="button" data-cli-play aria-pressed="false">Play journey</button>
+            <button type="button" data-cli-next aria-label="Show next journey step">Next</button>
+          </div>
         </div>
 
-        <div class="roundtrip-lanes" aria-hidden="true">
-          <p><span>Agency leader</span><strong>Dashboard or AI agent + Nitrate plugin</strong></p>
-          <p><span>Nitrate</span><strong>Keeps the handoff attached</strong></p>
-          <p><span>Creator</span><strong>Their AI agent + Nitrate plugin</strong></p>
+        <div class="cli-step-caption">
+          <p data-cli-counter>Step 1 of 6</p>
+          <div>
+            <h3 data-cli-title>Both agents log in once.</h3>
+            <p data-cli-description>The plugin identifies Maya as the agency lead and Nia as a creator, while letting both stay inside the AI agent they already use.</p>
+          </div>
         </div>
 
-        <ol class="roundtrip-steps">
-          <li class="roundtrip-step roundtrip-send" id="direct-flow">
-            <article class="roundtrip-surface leader-command" aria-labelledby="leader-command-title">
-              <div class="surface-topline"><span>01 · Assign</span><strong>Leader dashboard</strong></div>
-              <div class="surface-body">
-                <p class="surface-overline">Maya · Agency lead</p>
-                <h3 id="leader-command-title">Build and send the campaign once.</h3>
-                <div class="packet-block">
-                  <span>Shared with every creator</span>
-                  <ul>
-                    <li>Campaign brief</li>
-                    <li>Brand guidelines</li>
-                    <li>Approved logos + product references</li>
-                  </ul>
-                </div>
-                <div class="packet-block packet-structure">
-                  <span>Required return structure</span>
-                  <code>/renders&nbsp; /stills&nbsp; /prompts&nbsp; /notes&nbsp; /handoff</code>
-                </div>
-                <div class="assignment-list" aria-label="Creator assignments">
-                  <p><strong>Nia</strong><span>Commuter story</span></p>
-                  <p><strong>Jonas</strong><span>Product-first reveal</span></p>
-                  <p><strong>Asha</strong><span>Brand-world montage</span></p>
-                </div>
-              </div>
-              <p class="surface-action"><span>Ready to send</span><strong>Send to 3 creator agents →</strong></p>
-            </article>
-
-            <div class="handoff-route handoff-outbound" aria-label="Nitrate sends each creator a focused assignment">
-              <span>Nitrate pushes assignments</span>
-              <strong>Same campaign rules.<br>Different creative route.</strong>
-            </div>
-
-            <article class="roundtrip-surface creator-agent" aria-labelledby="creator-agent-title">
-              <div class="surface-topline"><span>01 · Receive</span><strong>Claude Code · Nitrate plugin</strong></div>
-              <div class="surface-body">
-                <p class="agent-session"><i aria-hidden="true"></i>Signed in as nia@studio.co</p>
-                <p class="surface-overline">New assignment from Maya</p>
-                <h3 id="creator-agent-title">Variant B · Tell a commuter story.</h3>
-                <p class="assignment-direction">Keep the approved craft design, “Move Closer” tagline, and logo end card intact.</p>
-                <ul class="source-chips" aria-label="Assignment source materials">
-                  <li>Brief</li>
-                  <li>Brand guide</li>
-                  <li>Approved inputs</li>
-                </ul>
-                <p class="workspace-summary"><span>Workspace created</span><strong>/inputs · /renders · /prompts · /notes · /handoff</strong></p>
-                <button type="button" data-demo-pull data-closed-label="Accept &amp; pull assignment" data-open-label="Workspace ready" aria-controls="creator-workspace">Accept &amp; pull assignment</button>
-                <div class="workspace-tree" id="creator-workspace" data-workspace-tree aria-live="polite">
-                  <div class="workspace-tree-content">
-                    <span>Assignment pulled into the agent</span>
-                    <ul>
-                      <li><code>AGENT_BRIEF.md</code> · brief + creator route</li>
-                      <li><code>/inputs</code> · approved campaign assets</li>
-                      <li><code>/renders</code> · finished videos for return</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </article>
-          </li>
-
-          <li class="roundtrip-step roundtrip-return" id="creator-flow">
-            <article class="roundtrip-surface creator-return" aria-labelledby="creator-return-title">
-              <div class="surface-topline"><span>02 · Return</span><strong>Creator’s AI agent</strong></div>
-              <div class="surface-body">
-                <p class="surface-overline">Nia · Round one complete</p>
-                <h3 id="creator-return-title">The creator’s agent syncs the finished round.</h3>
-                <div class="return-file">
-                  <img src="/assets/nitrate-demo/transit-hall.webp" width="320" height="180" alt="Still from Nia’s commuter-story ad for the fictional Northwind campaign">
-                  <p><strong>nia-commuter-v1.mp4</strong><span>Made with Higgsfield</span></p>
-                </div>
-                <ol class="return-progress" aria-label="Creator return progress">
-                  <li><span>Pull assignment</span><strong>Done</strong></li>
-                  <li><span>Mark working</span><strong>Done</strong></li>
-                  <li><span>Sync return</span><strong>Done</strong></li>
-                </ol>
-                <p class="return-context-line"><span>Attached</span><strong>Prompt · notes · source files</strong></p>
-              </div>
-              <p class="surface-action surface-action-success"><span>Return synced</span><strong>Sent to Maya ✓</strong></p>
-            </article>
-
-            <div class="handoff-route handoff-inbound" aria-label="Nitrate returns the media and its context to the leader">
-              <span>Nitrate syncs the return</span>
-              <strong>Media + prompt + notes<br>stay with the assignment.</strong>
-            </div>
-
-            <article class="roundtrip-surface leader-review" aria-labelledby="leader-review-title">
-              <div class="surface-topline"><span>02 · Review</span><strong>Leader dashboard</strong></div>
-              <div class="surface-body">
-                <p class="surface-overline">Returned to the campaign</p>
-                <h3 id="leader-review-title">The exact work lands ready to review.</h3>
-                <div class="review-return">
-                  <img src="/assets/nitrate-demo/transit-hall.webp" width="320" height="180" alt="Still from the commuter-story ad being reviewed in Nitrate">
-                  <div>
-                    <strong>Nia · Commuter story</strong>
-                    <span>Higgsfield · v1</span>
-                    <em>Needs review</em>
-                  </div>
-                </div>
-                <dl class="review-metadata">
-                  <div><dt>Prompt</dt><dd>Attached</dd></div>
-                  <div><dt>Notes</dt><dd>Attached</dd></div>
-                  <div><dt>Brand rules</dt><dd>Same source</dd></div>
-                </dl>
-                <p class="review-actions-label">Leader can</p>
-                <ul class="review-actions" aria-label="Available leader review actions">
-                  <li>Compare</li>
-                  <li>Approve</li>
-                  <li>Request changes</li>
-                  <li>Share</li>
-                </ul>
-              </div>
-            </article>
-          </li>
-
-          <li class="roundtrip-step roundtrip-feedback" id="review-flow">
-            <div class="feedback-note feedback-leader">
-              <span>03 · Leader requests a change on Nia · v1</span>
-              <strong>“Warm the grade. Keep the approved end card.”</strong>
-            </div>
-            <div class="handoff-route handoff-outbound handoff-feedback" aria-label="Nitrate routes feedback to the exact creator assignment and version">
-              <span>Nitrate routes feedback</span>
-              <strong>Exact creator.<br>Exact assignment. Exact version.</strong>
-            </div>
-            <div class="feedback-note feedback-creator">
-              <span>Nia’s agent · Feedback received</span>
-              <strong>Round two is ready to start—with the campaign context still attached.</strong>
-            </div>
-          </li>
+        <ol class="cli-step-nav" aria-label="Campaign journey steps">
+          <li><button type="button" data-cli-step="0" aria-current="step"><span>1</span><strong>Login</strong></button></li>
+          <li><button type="button" data-cli-step="1"><span>2</span><strong>Brief + assign</strong></button></li>
+          <li><button type="button" data-cli-step="2"><span>3</span><strong>Pull workspace</strong></button></li>
+          <li><button type="button" data-cli-step="3"><span>4</span><strong>Make the ad</strong></button></li>
+          <li><button type="button" data-cli-step="4"><span>5</span><strong>Sync return</strong></button></li>
+          <li><button type="button" data-cli-step="5"><span>6</span><strong>Review + revise</strong></button></li>
         </ol>
 
-        <p class="workflow-truth"><span>What the plugin handles</span> Login · assignment pull · workspace setup · status · file return. Creators keep making the media in the tools they already use.</p>
+        <div class="cli-stage">
+          <article class="cli-window cli-leader is-active" data-cli-pane="leader" aria-labelledby="leader-cli-title">
+            <div class="cli-window-bar">
+              <div class="cli-window-lights" aria-hidden="true"><i></i><i></i><i></i></div>
+              <p><span>Agency lead</span><strong id="leader-cli-title">Maya · Claude Code</strong></p>
+              <span class="cli-connection"><i aria-hidden="true"></i>Connected</span>
+            </div>
+            <div class="cli-terminal" data-cli-leader aria-label="Agency leader CLI for the current journey step">
+              <div class="cli-line cli-line-command"><span>$</span><code>nitrate login --api https://nitrate.example.workers.dev --role leader --name "Maya Chen" --email maya@northwind.agency --clanker maya-lead --surface "Claude Code"</code></div>
+              <div class="cli-line cli-line-success"><span>&gt;</span><code>Logged in as Maya Chen (team_lead) on maya-lead</code></div>
+            </div>
+          </article>
+
+          <div class="cli-bridge" data-cli-bridge data-direction="both" aria-label="Nitrate connects the leader and creator agents">
+            <span>Nitrate</span>
+            <div class="cli-transfer" aria-hidden="true"><i></i><b></b></div>
+            <p><strong data-cli-route>Roles connected</strong><span data-cli-route-detail>Each agent gets its own view.</span></p>
+          </div>
+
+          <article class="cli-window cli-creator is-active" data-cli-pane="creator" aria-labelledby="creator-cli-title">
+            <div class="cli-window-bar">
+              <div class="cli-window-lights" aria-hidden="true"><i></i><i></i><i></i></div>
+              <p><span>Team member</span><strong id="creator-cli-title">Nia · Codex</strong></p>
+              <span class="cli-connection"><i aria-hidden="true"></i>Connected</span>
+            </div>
+            <div class="cli-terminal" data-cli-creator aria-label="Team member CLI for the current journey step">
+              <div class="cli-line cli-line-command"><span>$</span><code>nitrate login --api https://nitrate.example.workers.dev --role member --name "Nia Patel" --email nia@studio.co --clanker nia-codex --surface "Codex"</code></div>
+              <div class="cli-line cli-line-success"><span>&gt;</span><code>Logged in as Nia Patel (ai_creator) on nia-codex</code></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="cli-status-summary" role="status" aria-live="polite">
+          <span data-cli-status>Both agents are ready.</span>
+          <strong data-cli-status-detail>The campaign can now move between Maya and Nia without either person leaving their own AI agent.</strong>
+        </div>
+
+        <div class="cli-journey-footer">
+          <p><span>Leader works from</span><strong>Claude Code or Codex + the review dashboard</strong></p>
+          <p><span>Creator works from</span><strong>Their AI agent + Higgsfield, Runway, or any media tool</strong></p>
+          <p><span>Nitrate keeps together</span><strong>Brief · inputs · assignment · files · prompt · notes · review</strong></p>
+        </div>
       </div>
     </section>
 
