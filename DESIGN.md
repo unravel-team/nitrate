@@ -215,7 +215,7 @@ The signature review stage combines a 16:9 media frame, attached creator/tool/st
 
 ### Production Map
 
-The workflow map is a primary explanatory object, not a progress indicator. A white project packet from one agency lead fans out along violet assignment routes to three named creators using Runway, Higgsfield Supercomputer, and Claude Code. Their separate results converge along review-orange routes into one shared review room with creator, assignment, tool, prompt, and notes attached. The routes draw once when the map enters view and can be replayed explicitly; reduced motion displays the complete static topology. On mobile, the same semantic order stacks vertically and the creator group keeps a visible branching spine.
+The workflow map is a primary explanatory object, not a progress indicator. Its fictional Northwind campaign shows Maya attaching one campaign brief, brand guide, approved assets, and mandatory brand rules, then sending that shared source of truth with three distinct ad concepts to Jonas, Nia, and Asha. The product-first reveal, commuter story, and brand-world montage fan out along violet assignment routes and converge along review-orange routes into one campaign review. Every creator lane explicitly carries the same brief and brand guide; the endpoint checks the returned variants against one brand standard. The routes draw once when the map enters view and can be replayed explicitly; reduced motion displays the complete static topology. On mobile, the same semantic order stacks vertically and the creator group keeps a visible branching spine.
 
 ### Production Sheets and Return Stack
 

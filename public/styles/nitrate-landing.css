@@ -1123,7 +1123,8 @@ a {
 }
 
 .creator-job span,
-.creator-job strong {
+.creator-job strong,
+.creator-job em {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1139,6 +1140,13 @@ a {
   font-size: clamp(0.64rem, 0.75vw, 0.76rem);
 }
 
+.creator-job em {
+  color: var(--violet-bright);
+  font-size: 0.54rem;
+  font-style: normal;
+  font-weight: 750;
+}
+
 .creator-lane img {
   width: 100%;
   grid-area: image;
@@ -1151,13 +1159,24 @@ a {
   display: flex;
   grid-area: status;
   align-items: center;
-  justify-content: flex-end;
-  gap: 0.4rem;
+  justify-content: space-between;
+  gap: 0.6rem;
   color: #aaa7b0;
   font-size: 0.53rem;
   font-weight: 750;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+.creator-lane small > span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.creator-lane small > span:last-child {
+  flex: none;
+  color: var(--paper-dim);
 }
 
 .creator-lane small i,
@@ -2162,6 +2181,20 @@ a {
   }
 }
 
+@media (min-width: 681px) and (max-width: 920px) {
+  .map-brief-card .map-card-topline {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .map-brief-card dl div {
+    grid-template-columns: 1fr;
+    gap: 0.18rem;
+    padding: 0.45rem 0;
+  }
+}
+
 @media (max-width: 680px) {
   :root {
     --page-gutter: 1rem;
@@ -2417,6 +2450,17 @@ a {
   .creator-job strong {
     white-space: normal;
     line-height: 1.25;
+  }
+
+  .creator-job em {
+    white-space: normal;
+    line-height: 1.2;
+  }
+
+  .creator-lane small {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.22rem;
   }
 
   .map-review-room {
