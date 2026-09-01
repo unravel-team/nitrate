@@ -210,29 +210,32 @@
         </div>
       </div>
 
-      <div class="works-with" aria-label="Works with Codex, Higgsfield Supercomputer, and Claude Code">
-        <p>Works with</p>
+      <section class="works-with" aria-labelledby="works-with-title">
+        <div class="works-intro">
+          <h2 id="works-with-title">Works with</h2>
+          <p>Nitrate keeps the campaign together while your creators work in the tools they already use.</p>
+        </div>
         <ul>
           <li>
-            <span class="works-icon codex-icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32"><path d="M16 4.5 25.5 10v12L16 27.5 6.5 22V10Z"/><path d="m13 11-4 5 4 5M19 11l4 5-4 5"/><path class="icon-accent" d="m17.8 9.5-3.6 13"/></svg>
+            <span class="works-logo works-logo-openai" aria-hidden="true">
+              <img src="/assets/tool-logos/openai-wordmark.svg" width="564" height="153" alt="">
             </span>
             <strong>Codex</strong>
           </li>
           <li>
-            <span class="works-icon higgsfield-icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32"><rect x="6" y="6" width="20" height="20"/><path d="M11 6v20M21 6v20M6 11h20M6 21h20"/><rect class="icon-accent" x="13" y="13" width="6" height="6"/></svg>
+            <span class="works-logo works-logo-higgsfield" aria-hidden="true">
+              <img src="/assets/tool-logos/higgsfield.png" width="300" height="300" alt="">
             </span>
             <strong>Higgsfield Supercomputer</strong>
           </li>
           <li>
-            <span class="works-icon claude-icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32"><path d="M16 4v24M4 16h24M7.5 7.5l17 17M24.5 7.5l-17 17"/><circle class="icon-accent" cx="16" cy="16" r="2.5"/></svg>
+            <span class="works-logo works-logo-claude" aria-hidden="true">
+              <img src="/assets/tool-logos/claude.png" width="32" height="32" alt="">
             </span>
             <strong>Claude Code</strong>
           </li>
         </ul>
-      </div>
+      </section>
     </section>
 
     <section class="dam-bridge" id="dam" aria-labelledby="dam-title">
@@ -261,12 +264,32 @@
 
     <section class="break-section" aria-labelledby="break-title">
       <div class="break-copy">
-        <h2 id="break-title">A brief in Notion. Feedback in Slack. Videos in Drive.</h2>
-        <p>Meanwhile, each creator works in a different AI tool. When round one arrives, you have to reconstruct which file came from whom, what direction it answers, and what changed.</p>
+        <h2 id="break-title">The work comes back. The context doesn’t.</h2>
+        <p>The brief lives in Notion. Feedback is buried in Slack. Exports land in Drive. Meanwhile, every creator is working in a different AI tool.</p>
       </div>
-      <div class="break-question">
-        <p>“Is this the latest version—and which brief, prompt, and feedback produced it?”</p>
-        <svg viewBox="0 0 380 80" aria-hidden="true"><path d="M8 44c77 17 185 20 355-9"/><path d="m337 27 27 8-18 22"/></svg>
+      <div class="problem-evidence">
+        <div class="problem-ledger" aria-label="Three broken campaign handoffs">
+          <div class="problem-row">
+            <p><span>Brief</span><strong>Notion</strong></p>
+            <span class="problem-gap" aria-hidden="true"><i></i><b>Context lost</b><i></i></span>
+            <p class="problem-question">Which version did each creator follow?</p>
+          </div>
+          <div class="problem-row">
+            <p><span>Feedback</span><strong>Slack</strong></p>
+            <span class="problem-gap" aria-hidden="true"><i></i><b>Cut unknown</b><i></i></span>
+            <p class="problem-question">Which cut is this note for?</p>
+          </div>
+          <div class="problem-row">
+            <p><span>Exports</span><strong>Drive</strong></p>
+            <span class="problem-gap" aria-hidden="true"><i></i><b>Source missing</b><i></i></span>
+            <p class="problem-question">Who made this—and what prompt produced it?</p>
+          </div>
+        </div>
+        <div class="problem-consequence">
+          <span>Round one arrives</span>
+          <h3>You reconstruct the campaign by hand.</h3>
+          <p>Creator · brief · prompt · feedback · latest export</p>
+        </div>
       </div>
     </section>
 

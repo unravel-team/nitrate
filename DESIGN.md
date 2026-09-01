@@ -217,9 +217,13 @@ The signature review stage combines a 16:9 media frame, attached creator/tool/st
 
 The workflow map is a primary explanatory object, not a progress indicator. Its fictional Northwind campaign shows Maya attaching one campaign brief, brand guide, approved assets, and mandatory brand rules, then sending that shared source of truth with three distinct ad concepts to Jonas, Nia, and Asha. The product-first reveal, commuter story, and brand-world montage fan out along violet assignment routes and converge along review-orange routes into one campaign review. Every creator lane explicitly carries the same brief and brand guide; the endpoint checks the returned variants against one brand standard. The routes draw once when the map enters view and can be replayed explicitly; reduced motion displays the complete static topology. On mobile, the same semantic order stacks vertically and the creator group keeps a visible branching spine.
 
-### Works With Strip
+### Works With Banner
 
-A full-width ruled strip directly below the production map states the supported compatibility set: Codex, Higgsfield Supercomputer, and Claude Code. Each name is paired with a custom square line icon drawn in the same review-room geometry; the names remain the primary identifiers and the icons are decorative. Do not dilute this highlight with an exhaustive tool cloud.
+A full-width banner directly below the production map makes compatibility a major proof point rather than utility metadata. A saturated violet introduction block uses a large “Works with” title and one sentence explaining that Nitrate coordinates the campaign around the tools creators already use. Three equal dark cells display Codex, Higgsfield Supercomputer, and Claude Code with official, unaltered marks on projection-white clear-space plates. The visible product names carry meaning; logo images are decorative and keep empty alt text. Do not recolor, trace, distort, animate, or expand this into an exhaustive tool cloud.
+
+### Broken Handoff Ledger
+
+The violet problem section must diagnose fragmentation at a glance. Its declaration is “The work comes back. The context doesn’t.” A ruled ledger then shows three broken handoffs—Notion brief, Slack feedback, and Drive exports—with an orange missing-context label between each source and the review question it creates. The final ink block names the agency lead’s consequence: reconstructing creator, brief, prompt, feedback, and latest export by hand. Orange is reserved for the missing link and the human burden; Notion, Slack, and Drive remain text labels rather than another logo strip. On mobile, preserve the order declaration → evidence rows → consequence.
 
 ### Production Sheets and Return Stack
 
