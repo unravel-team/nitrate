@@ -23,6 +23,7 @@
   --paper-dim: #d8d5ce;
   --violet: #6c35ff;
   --violet-bright: #815cff;
+  --violet-accessible: #a28cff;
   --review: #ff5038;
   --success: #73e6a0;
   --muted: #aaa7a2;
@@ -2018,71 +2019,300 @@ a {
 }
 
 .cli-terminal {
-  min-height: 30rem;
+  min-height: 32rem;
   overflow: hidden;
   background:
-    linear-gradient(90deg, rgba(129, 92, 255, 0.06), transparent 4rem),
+    linear-gradient(90deg, rgba(129, 92, 255, 0.055), transparent 4rem),
     var(--ink);
-  padding: 0.65rem 0;
   font-family: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
-.cli-line {
+.agent-console {
+  display: flex;
+  flex-direction: column;
+  gap: 0.62rem;
+  padding: 0.85rem;
+}
+
+.agent-turn,
+.agent-notice,
+.agent-tool {
+  min-width: 0;
+  opacity: 1;
+  transform: none;
+}
+
+.agent-turn.is-pending,
+.agent-notice.is-pending,
+.agent-tool.is-pending {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.agent-turn.is-visible,
+.agent-notice.is-visible,
+.agent-tool.is-visible {
+  opacity: 1;
+  transform: none;
+  transition: opacity 220ms linear, transform 280ms var(--ease-out);
+}
+
+.agent-turn {
   display: grid;
-  min-width: 0;
-  grid-template-columns: 2.55rem minmax(0, 1fr);
-  border-bottom: 1px solid rgba(244, 242, 237, 0.06);
-  padding: 0.58rem 0.75rem 0.58rem 0;
-}
-
-.cli-line:last-child {
-  border-bottom: 0;
-}
-
-.cli-line > span {
-  color: var(--violet-bright);
-  font-size: 0.7rem;
-  font-weight: 800;
-  text-align: center;
-}
-
-.cli-line code {
-  min-width: 0;
-  overflow-wrap: anywhere;
+  grid-template-columns: 1.25rem minmax(0, 1fr);
+  gap: 0.55rem;
+  align-items: start;
   color: var(--paper-dim);
-  font-family: inherit;
-  font-size: clamp(0.7rem, 0.76vw, 0.78rem);
-  font-weight: 520;
-  line-height: 1.62;
-  white-space: pre-wrap;
+  padding: 0.62rem 0.65rem;
 }
 
-.cli-line-command code {
+.agent-turn p {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: clamp(0.72rem, 0.8vw, 0.8rem);
+  line-height: 1.62;
+}
+
+.agent-prompt {
+  border: 1px solid rgba(244, 242, 237, 0.2);
+  background: var(--ink-soft);
   color: #fff;
 }
 
-.cli-line-comment code {
-  color: var(--muted);
-  font-style: italic;
+.agent-prompt-mark {
+  color: var(--violet-bright);
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
-.cli-line-success > span,
-.cli-line-success code {
+.agent-prompt p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.55rem;
+}
+
+.agent-prompt p strong {
+  flex: 0 0 100%;
+  color: var(--violet-accessible);
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 820;
+  letter-spacing: 0.07em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.agent-typed-text {
+  white-space: pre-wrap;
+}
+
+.agent-caret {
+  display: none;
+  width: 0.5rem;
+  height: 1.05em;
+  align-self: center;
+  background: var(--paper);
+  vertical-align: -0.14em;
+}
+
+.agent-prompt.is-typing .agent-caret {
+  display: inline-block;
+  animation: agent-caret-blink 620ms steps(1, end) infinite;
+}
+
+@keyframes agent-caret-blink {
+  0%,
+  48% { opacity: 1; }
+  49%,
+  100% { opacity: 0; }
+}
+
+.agent-response {
+  padding-top: 0.78rem;
+  padding-bottom: 0.78rem;
+}
+
+.agent-response-mark {
+  width: 0.56rem;
+  height: 0.56rem;
+  margin-top: 0.36rem;
+  background: var(--violet-bright);
+  box-shadow: 0 0 0 3px rgba(129, 92, 255, 0.12);
+}
+
+.agent-notice {
+  display: flex;
+  min-height: 4.35rem;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.32rem;
+  border: 1px dashed rgba(244, 242, 237, 0.24);
+  background: rgba(244, 242, 237, 0.025);
+  padding: 0.75rem 0.85rem;
+}
+
+.agent-notice span {
+  color: var(--violet-bright);
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 820;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.agent-notice strong {
+  overflow-wrap: anywhere;
+  color: var(--paper-dim);
+  font-size: 0.72rem;
+  font-weight: 560;
+  line-height: 1.55;
+}
+
+.agent-tool {
+  overflow: hidden;
+  border: 1px solid rgba(244, 242, 237, 0.2);
+  background: var(--ink-raised);
+  transition: border-color 180ms ease, opacity 220ms linear, transform 280ms var(--ease-out);
+}
+
+.agent-tool.is-running {
+  border-color: var(--violet-bright);
+}
+
+.agent-tool.is-done {
+  border-color: rgba(115, 230, 160, 0.55);
+}
+
+.agent-tool-head {
+  display: grid;
+  min-height: 2.65rem;
+  grid-template-columns: 0.55rem auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.55rem;
+  border-bottom: 1px solid var(--rule);
+  padding: 0.5rem 0.68rem;
+}
+
+.agent-tool-head > span {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--muted);
+}
+
+.agent-tool.is-running .agent-tool-head > span {
+  background: var(--violet-bright);
+  animation: agent-tool-running 520ms ease-in-out infinite alternate;
+}
+
+.agent-tool.is-done .agent-tool-head > span {
+  background: var(--success);
+}
+
+@keyframes agent-tool-running {
+  from { opacity: 0.4; transform: scale(0.72); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.agent-tool-head strong {
+  color: var(--paper);
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.agent-tool-head em {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.agent-tool-head b {
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 820;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
+}
+
+.agent-tool.is-running .agent-tool-head b {
+  color: var(--violet-bright);
+}
+
+.agent-tool.is-done .agent-tool-head b {
   color: var(--success);
 }
 
-.cli-line-tree code {
+.agent-tool > code {
+  display: block;
+  min-width: 0;
+  overflow-wrap: anywhere;
   color: var(--paper-dim);
+  padding: 0.68rem;
+  font-family: inherit;
+  font-size: clamp(0.7rem, 0.74vw, 0.76rem);
+  font-weight: 520;
+  line-height: 1.55;
+  white-space: pre-wrap;
 }
 
-.cli-line.is-new {
-  animation: cli-line-arrive 460ms var(--ease-out) both;
-  animation-delay: min(calc(var(--line-index) * 72ms), 360ms);
+.agent-tool-result {
+  margin: 0;
+  border-top: 1px solid var(--rule);
+  color: var(--success);
+  padding: 0.58rem 0.68rem;
+  font-size: 0.7rem;
+  font-weight: 650;
+  line-height: 1.45;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 180ms linear, transform 240ms var(--ease-out);
 }
 
-@keyframes cli-line-arrive {
-  from { opacity: 0; transform: translateY(7px); }
-  to { opacity: 1; transform: none; }
+.agent-tool.is-done .agent-tool-result {
+  opacity: 1;
+  transform: none;
+}
+
+.agent-composer {
+  display: grid;
+  min-height: 3.25rem;
+  grid-template-columns: 1.1rem minmax(0, 1fr) auto;
+  gap: 0.55rem;
+  align-items: center;
+  margin-top: auto;
+  border: 1px solid rgba(244, 242, 237, 0.22);
+  background: rgba(244, 242, 237, 0.025);
+  color: var(--muted);
+  padding: 0.58rem 0.7rem;
+}
+
+.agent-composer > span {
+  color: var(--violet-bright);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.agent-composer p {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 0.7rem;
+}
+
+.agent-composer kbd {
+  border: 1px solid rgba(244, 242, 237, 0.22);
+  background: var(--ink-soft);
+  color: var(--muted);
+  padding: 0.18rem 0.32rem;
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  font-weight: 720;
 }
 
 .cli-bridge {
@@ -3133,13 +3363,33 @@ a {
     min-height: 17rem;
   }
 
-  .cli-line {
-    grid-template-columns: 2.1rem minmax(0, 1fr);
-    padding: 0.52rem 0.55rem 0.52rem 0;
+  .agent-console {
+    gap: 0.52rem;
+    padding: 0.65rem;
   }
 
-  .cli-line code {
-    font-size: 0.7rem;
+  .agent-turn {
+    grid-template-columns: 1.05rem minmax(0, 1fr);
+    gap: 0.45rem;
+    padding: 0.58rem;
+  }
+
+  .agent-tool-head {
+    grid-template-columns: 0.5rem auto minmax(0, 1fr) auto;
+    gap: 0.4rem;
+    padding-right: 0.55rem;
+    padding-left: 0.55rem;
+  }
+
+  .agent-tool > code,
+  .agent-tool-result {
+    padding-right: 0.58rem;
+    padding-left: 0.58rem;
+  }
+
+  .agent-composer {
+    padding-right: 0.58rem;
+    padding-left: 0.58rem;
   }
 
   .cli-bridge {
@@ -3217,7 +3467,9 @@ a {
     transform: none;
   }
 
-  .cli-line.is-new {
+  .agent-turn.is-pending,
+  .agent-notice.is-pending,
+  .agent-tool.is-pending {
     opacity: 1;
     transform: none;
   }

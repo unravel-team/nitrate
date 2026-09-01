@@ -22,7 +22,7 @@ nitrate login \
   --role member \
   --name "Jonas Reyes" \
   --email jonas@studio.test \
-  --clanker jonas-clanker \
+  --agent jonas-agent \
   --surface "Claude Code"
 ```
 
@@ -69,7 +69,7 @@ nitrate sync --file ./renders/jonas-v1.mp4 --name "Jonas v1" --made-with "Claude
 ## Leader loop
 
 ```sh
-nitrate login --api https://nitrate.example.workers.dev --role leader --name "Maya Chen" --email maya@studio.test --clanker maya-lead --surface "Claude Code"
-nitrate init-agency --name "Launch Film Packet" --client "Northwind" --brief "Create a 30-second launch-film direction" --creator "Jonas Reyes|jonas@studio.test|jonas-clanker|Explore the human performance beat"
-nitrate push --packet pkt_... --name "Jonas Reyes" --email jonas@studio.test --clanker jonas-clanker --task "Explore the human performance beat"
+nitrate login --api https://nitrate.example.workers.dev --role leader --name "Maya Chen" --email maya@studio.test --agent maya-lead --surface "Claude Code"
+nitrate init-agency --name "Launch Film Packet" --client "Northwind" --brief "Create a 30-second launch-film direction" --creator "Jonas Reyes|jonas@studio.test|jonas-agent|Explore the human performance beat"
+nitrate push --packet pkt_... --name "Jonas Reyes" --email jonas@studio.test --agent jonas-agent --task "Explore the human performance beat"
 ```

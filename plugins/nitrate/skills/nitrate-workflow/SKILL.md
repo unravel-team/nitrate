@@ -5,7 +5,7 @@ description: "Use Nitrate as the primary plugin surface for AI media agency work
 
 # Nitrate workflow
 
-Nitrate is the plugin-first control layer for AI media teams. Use it when the user asks to coordinate AI media work, inspect assigned packets, prepare a local clanker workspace, or return generated media to the lead.
+Nitrate is the plugin-first control layer for AI media teams. Use it when the user asks to coordinate AI media work, inspect assigned packets, prepare a local AI coding agent workspace, or return generated media to the lead.
 
 ## Core loop
 
@@ -13,7 +13,7 @@ Leader:
 
 1. Log in with `nitrate login --role leader`.
 2. Create a client packet with `nitrate init-agency` or `nitrate packet:create`.
-3. Push the packet to creator clankers with `nitrate push`.
+3. Push the packet to creator AI coding agents with `nitrate push`.
 4. Ask `nitrate next` to see what needs attention.
 5. Review returned media in the command center only when visual review is needed.
 

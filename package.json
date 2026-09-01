@@ -2,7 +2,7 @@
   "name": "nitrate",
   "version": "0.1.0",
   "private": false,
-  "description": "nitrate - clanker plugin and collaboration layer for AI media teams.",
+  "description": "nitrate - AI coding agent plugin and collaboration layer for AI media teams.",
   "type": "commonjs",
   "bin": {
     "nitrate": "bin/nitrate.mjs"

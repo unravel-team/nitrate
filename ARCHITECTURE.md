@@ -6,9 +6,9 @@
 
 The prototype proves the nitrate loop end to end:
 
-1. Simulate the clanker plugin login as the creator entry point.
+1. Simulate the AI coding agent plugin login as the creator entry point.
 2. Create a brief packet with input assets and expected output folders.
-3. Represent creator clankers as assignments on the project.
+3. Represent creator AI coding agents as assignments on the project.
 4. Submit returned media with prompt, tool/model, seed, workflow, notes, and assignment context.
 5. Hash bytes with SHA-256 and deduplicate storage while preserving every logical return.
 6. Link child returns to parents for next-pass continuity.
@@ -19,7 +19,7 @@ Routes:
 
 - `/` marketing site
 - `/app` operator application
-- `/plugin` clanker plugin
+- `/plugin` AI coding agent plugin
 - `/use/` use-case narrative
 - `/press` press kit
 - `/api/state` workspace snapshot
@@ -44,8 +44,8 @@ The same contracts move to managed infrastructure without changing the domain mo
 - **Cloudflare Workers:** API edge, plugin login callback, request validation, and integration endpoints.
 - **D1:** teams, projects, packets, assignments, assets, returns, comments, decisions, memberships, and share grants.
 - **R2:** immutable media objects and packet input assets.
-- **Queues:** clanker dispatch jobs, return ingestion, thumbnails, filmstrips, waveforms, transcription, and C2PA inspection.
+- **Queues:** AI coding agent dispatch jobs, return ingestion, thumbnails, filmstrips, waveforms, transcription, and C2PA inspection.
 - **Durable Objects (optional):** collaborative review presence, optimistic comments, and live packet status.
-- **OpenAPI + SDK:** plugin-facing packet/return APIs for Claude Code and local clanker clients.
+- **OpenAPI + SDK:** plugin-facing packet/return APIs for Claude Code and local AI coding agent clients.
 
 Production hardening remains outside this local MVP: real identity/OIDC, signed URLs, per-tenant authorization, object lifecycle policies, malware scanning, key rotation, observability, backup/restore drills, and legal review of compliance claims.

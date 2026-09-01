@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>nitrate clanker plugin</title>
+  <title>nitrate AI coding agent plugin</title>
   <link rel="stylesheet" href="/styles/reel.css">
   <style>
     .plugin-shell { min-height:100vh; display:grid; grid-template-rows:auto 1fr; }
@@ -35,8 +35,8 @@
 
     <div class="plugin-grid">
       <aside class="plugin-panel">
-        <h1 style="font-size:2.2rem;">Clanker plugin</h1>
-        <p>This is the creator entry point. Log in, pull assigned packets, work inside the clanker, then sync returns.</p>
+        <h1 style="font-size:2.2rem;">AI coding agent plugin</h1>
+        <p>This is the creator entry point. Log in, pull assigned packets, work inside the AI coding agent, then sync returns.</p>
         <div class="mode-tabs" role="tablist" aria-label="Plugin workflow mode">
           <button class="button small primary" id="leader-mode" type="button" aria-pressed="true">Leader</button>
           <button class="button small ghost" id="member-mode" type="button" aria-pressed="false">Team member</button>
@@ -46,8 +46,8 @@
           <div class="plugin-form-grid">
             <label class="field">Name<input name="name" required value="Maya Chen"></label>
             <label class="field">Work email<input name="email" type="email" required value="maya@studio.test"></label>
-            <label class="field">Clanker name<input name="clanker" required value="maya-clanker"></label>
-            <label class="field">Creation surface<select name="surface"><option>Claude</option><option>Claude Code</option><option>Higgsfield Supercomputer</option><option>Local clanker</option></select></label>
+            <label class="field">AI coding agent name<input name="agent" required value="maya-lead"></label>
+            <label class="field">Creation surface<select name="surface"><option>Claude</option><option>Claude Code</option><option>Higgsfield Supercomputer</option><option>Local AI coding agent</option></select></label>
           </div>
           <button class="button primary" style="width:100%;margin-top:.8rem;" type="submit">Log in plugin</button>
           <p class="form-note" id="session-status" role="status"></p>
@@ -58,7 +58,7 @@
         <section id="leader-view" aria-labelledby="leader-title">
           <div class="section-head" style="margin-bottom:1.5rem;">
             <h2 id="leader-title">Leader workflow</h2>
-            <p class="lede">The lead controls the packet. The plugin pushes the brief, assets, output contract, and task to every creator clanker.</p>
+            <p class="lede">The lead controls the packet. The plugin pushes the brief, assets, output contract, and task to every creator AI coding agent.</p>
           </div>
           <div class="plugin-loop" aria-label="Leader activation loop">
             <div class="plugin-step"><strong>1. Create packet</strong><span>Client brief, inputs, folders, review criteria.</span><code>nitrate init-agency</code></div>
@@ -72,12 +72,12 @@
         <section id="member-view" aria-labelledby="member-title" hidden>
           <div class="section-head" style="margin-bottom:1.5rem;">
             <h2 id="member-title">Team member workflow</h2>
-            <p class="lede">The creator stays inside the clanker. Pull the packet, work the generated folder, and sync one clean return back.</p>
+            <p class="lede">The creator stays inside the AI coding agent. Pull the packet, work the generated folder, and sync one clean return back.</p>
           </div>
           <div class="plugin-loop" aria-label="Team member activation loop">
             <div class="plugin-step"><strong>1. Ask what’s next</strong><span>The plugin tells you the current assignment.</span><code>nitrate next</code></div>
             <div class="plugin-step"><strong>2. Pull packet</strong><span>Nitrate creates folders and AGENT_BRIEF.md.</span><code>nitrate pull</code></div>
-            <div class="plugin-step"><strong>3. Mark working</strong><span>Lead sees the clanker is active.</span><code>nitrate status --status working</code></div>
+            <div class="plugin-step"><strong>3. Mark working</strong><span>Lead sees the AI coding agent is active.</span><code>nitrate status --status working</code></div>
             <div class="plugin-step"><strong>4. Sync return</strong><span>Media, prompt, model, and notes go back together.</span><code>nitrate sync</code></div>
           </div>
           <div id="member-packets"></div>

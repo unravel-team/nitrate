@@ -134,7 +134,7 @@ function activationModel() {
     {
       id: 'assign',
       label: 'Assign creators or agents',
-      help: 'Push the packet to Claude, Claude Code, Higgsfield, Runway, or local clankers.',
+      help: 'Push the packet to Claude, Claude Code, Higgsfield, Runway, or local AI coding agents.',
       done: assignments.length > 0,
       action: 'Plugin login',
       event: 'plugin-login'
@@ -178,7 +178,7 @@ function filteredVersions() {
     const assignment = assignmentById(version.metadata.assignmentId) || {};
     const assignee = userById(assignment.userId) || {};
     return [asset.name, version.filename, version.branch, version.metadata.prompt, version.metadata.model, version.metadata.seed, version.metadata.pipeline]
-      .concat([assignment.task, assignment.clanker, assignee.name]).join(' ').toLowerCase().includes(query);
+      .concat([assignment.task, assignment.agent, assignee.name]).join(' ').toLowerCase().includes(query);
   }).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
 }
 
@@ -208,7 +208,7 @@ function takeCard(version, index) {
           <span class="eyebrow">${String(index + 1).padStart(2,'0')} · ${escapeHtml(assignee?.name || 'Unassigned')}</span>
           <div class="take-title">${escapeHtml(asset.name)}</div>
           <div class="meta-row"><span>${escapeHtml(version.metadata.model)}</span><span>${relativeTime(version.createdAt)}</span></div>
-          <div class="meta-row"><span>${escapeHtml(assignment?.clanker || 'local clanker')}</span><span>${escapeHtml(version.filename)}</span></div>
+          <div class="meta-row"><span>${escapeHtml(assignment?.agent || 'local AI coding agent')}</span><span>${escapeHtml(version.filename)}</span></div>
         </div>
       </button>
       <div class="review-actions" style="padding:0 .7rem .7rem;margin:0;">
@@ -245,14 +245,14 @@ function renderRail() {
   $('#brief-summary').textContent = project?.brief || 'No brief written yet.';
   $('#output-structure').innerHTML = (project?.outputStructure || []).map(item => `<span>${escapeHtml(item)}</span>`).join('') || '<span>/renders</span><span>/prompts</span><span>/handoff</span>';
   const assignments = project?.assignments || [];
-  $('#clanker-count').textContent = assignments.length;
-  $('#clanker-list').innerHTML = assignments.length ? assignments.map(assignment => {
+  $('#agent-count').textContent = assignments.length;
+  $('#agent-list').innerHTML = assignments.length ? assignments.map(assignment => {
     const assignee = userById(assignment.userId);
     const returned = versions.filter(version => version.metadata.assignmentId === assignment.id).length;
-    return `<li class="queue-item"><button type="button" data-clanker-search="${escapeHtml(assignment.clanker)}">
-      <strong>${escapeHtml(assignee?.name || assignment.clanker)}</strong><br><small>${escapeHtml(assignment.status)} · ${returned} returns</small>
+    return `<li class="queue-item"><button type="button" data-agent-search="${escapeHtml(assignment.agent)}">
+      <strong>${escapeHtml(assignee?.name || assignment.agent)}</strong><br><small>${escapeHtml(assignment.status)} · ${returned} returns</small>
     </button></li>`;
-  }).join('') : '<li class="timeline">No clankers assigned yet.</li>';
+  }).join('') : '<li class="timeline">No AI coding agents assigned yet.</li>';
   $('#status-list').innerHTML = statuses.map(([key,label,count]) => `
     <li class="queue-item"><button type="button" data-status="${key}" ${key===state.status?'aria-current="true"':''}>
       <strong>${label}</strong><br><small>${count} returns</small>
@@ -276,7 +276,7 @@ function renderActivation() {
   const assignments = project?.assignments || [];
   const approved = versions.filter(version => version.status === 'approved');
   const review = versions.filter(needsAttention);
-  const creators = new Set(assignments.map(assignment => assignment.userId || assignment.clanker).filter(Boolean));
+  const creators = new Set(assignments.map(assignment => assignment.userId || assignment.agent).filter(Boolean));
   const activation = activationModel();
   const percent = Math.round((activation.complete / activation.steps.length) * 100);
   $('#activation-percent').textContent = `${percent}%`;
@@ -314,7 +314,7 @@ function renderTakes() {
   const versions = filteredVersions();
   $('#result-summary').textContent = `${versions.length} returns · ${state.branch === 'all' ? 'all passes' : passLabel(state.branch)} · ${statusLabel(state.status)}`;
   $('#takes').innerHTML = versions.length ? versions.map(takeCard).join('') :
-    `<div class="empty" style="grid-column:1/-1;"><h3>No returns match this view</h3><p>Clear the filter or submit the next clanker return.</p></div>`;
+    `<div class="empty" style="grid-column:1/-1;"><h3>No returns match this view</h3><p>Clear the filter or submit the next AI coding agent return.</p></div>`;
   $('#compare-open').disabled = state.compareIds.length !== 2;
 }
 
@@ -351,7 +351,7 @@ function detailMarkup(versionId) {
     <div class="detail-grid">
       <div class="detail-item"><strong>Prompt</strong>${escapeHtml(version.metadata.prompt)}</div>
       <div class="detail-item"><strong>Model</strong>${escapeHtml(version.metadata.model)}<br>Seed: <span class="mono">${escapeHtml(version.metadata.seed||'not recorded')}</span></div>
-      <div class="detail-item"><strong>Creator</strong>${escapeHtml(assignee?.name || version.metadata.operator)}<br>${escapeHtml(assignment?.clanker || 'local clanker')}</div>
+      <div class="detail-item"><strong>Creator</strong>${escapeHtml(assignee?.name || version.metadata.operator)}<br>${escapeHtml(assignment?.agent || 'local AI coding agent')}</div>
       <div class="detail-item"><strong>Saved</strong><span class="mono">${escapeHtml(version.filename)}</span><br>${new Date(version.createdAt).toLocaleString()}</div>
       <div class="detail-item"><strong>Assignment</strong>${escapeHtml(assignment?.task || 'Return against the selected packet')}</div>
       <div class="detail-item"><strong>Expected folders</strong>${(activeProject().outputStructure || []).map(escapeHtml).join('<br>')}</div>
@@ -440,7 +440,7 @@ document.addEventListener('click', async event => {
   if (button.dataset.openVersion) return openDrawer(button.dataset.openVersion);
   if (button.dataset.status !== undefined && button.dataset.status) { state.status=button.dataset.status; renderTakes(); renderRail(); return; }
   if (button.dataset.branch !== undefined && button.dataset.branch) { state.branch=button.dataset.branch; renderTakes(); renderRail(); return; }
-  if (button.dataset.clankerSearch) { state.query=button.dataset.clankerSearch; $('#search').value=state.query; renderTakes(); return; }
+  if (button.dataset.agentSearch) { state.query=button.dataset.agentSearch; $('#search').value=state.query; renderTakes(); return; }
   if (button.id === 'all-filter') { state.status='needs_attention'; state.branch='all'; renderTakes(); renderRail(); return; }
   if (button.dataset.compare) {
     const id = button.dataset.compare;
@@ -554,12 +554,12 @@ $('#plugin-form').addEventListener('submit', event => {
   const input = Object.fromEntries(new FormData(event.currentTarget));
   state.pluginSession = {
     email: input.email,
-    clanker: input.clanker,
+    agent: input.agent,
     surface: input.surface,
     at: new Date().toISOString()
   };
   localStorage.setItem('nitrate.pluginSession', JSON.stringify(state.pluginSession));
-  $('#plugin-status').textContent = `Logged in as ${input.email}. Assigned packets will appear in ${input.clanker}.`;
+  $('#plugin-status').textContent = `Logged in as ${input.email}. Assigned packets will appear in ${input.agent}.`;
   toast('Plugin logged in. Packet sync is ready.');
 });
 

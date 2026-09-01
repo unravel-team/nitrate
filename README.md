@@ -1,6 +1,6 @@
 # nitrate
 
-nitrate is a clanker plugin and collaboration layer for AI media teams. Creators log in from the plugin, receive assigned brief packets inside their clanker, and sync finished work back for lead review.
+nitrate is an AI coding agent plugin and collaboration layer for AI media teams. Creators log in from the plugin, receive assigned brief packets inside their AI coding agent, and sync finished work back for lead review.
 
 ## Quick start
 
@@ -10,9 +10,9 @@ Requires Node 20 or newer.
 npm start
 ```
 
-Open [http://127.0.0.1:4173](http://127.0.0.1:4173) for the landing page. Open `/plugin` for the clanker plugin, `/app` for the lead command center, `/use/` for use cases, and `/press` for the press kit.
+Open [http://127.0.0.1:4173](http://127.0.0.1:4173) for the landing page. Open `/plugin` for the AI coding agent plugin, `/app` for the lead command center, `/use/` for use cases, and `/press` for the press kit.
 
-The first run creates a demo packet with four clanker assignments, a simulated plugin login flow, and six returned media items. Existing local demo data from the old prototype is automatically reseeded to the nitrate model.
+The first run creates a demo packet with four AI coding agent assignments, a simulated plugin login flow, and six returned media items. Existing local demo data from the old prototype is automatically reseeded to the nitrate model.
 
 Data lives in `.reel-data` by default for compatibility with the previous prototype. Set `REEL_DATA_DIR` to use another directory and `PORT` to change the port.
 
@@ -47,9 +47,9 @@ npm run worker:dev
 
 ## Product flow
 
-1. **Log in from the plugin.** The creator opens the nitrate clanker plugin and signs in.
+1. **Log in from the plugin.** The creator opens the nitrate AI coding agent plugin and signs in.
 2. **Create the packet.** The lead defines the brief, input assets, references, expected output folders, and project template.
-3. **Pull into clankers.** Each AI creator gets the same production context in their own Claude, Claude Code, Higgsfield Supercomputer, or local clanker workflow.
+3. **Pull into AI coding agents.** Each AI creator gets the same production context in their own Claude, Claude Code, Higgsfield Supercomputer, or local AI coding agent workflow.
 4. **Return work.** Creators submit media with prompt, tool/model, seed, workflow, notes, and assignment context.
 5. **Review.** The lead filters the return queue, compares options, leaves notes, approves, rejects, or requests changes.
 6. **Send the next pass.** Any return can become the starting point for another pass.
@@ -66,7 +66,7 @@ Plugin login:
 ```sh
 curl -X POST http://127.0.0.1:4173/api/plugin/login \
   -H 'Content-Type: application/json' \
-  -d '{"role":"member","name":"Nia Patel","email":"nia@studio.test","clanker":"nia-clanker","surface":"Claude"}'
+  -d '{"role":"member","name":"Nia Patel","email":"nia@studio.test","agent":"nia-codex","surface":"Claude"}'
 ```
 
 Pull assigned packets:
@@ -77,20 +77,20 @@ curl 'http://127.0.0.1:4173/api/plugin/packets?token=PLUGIN_TOKEN'
 
 ## Open-source CLI
 
-The CLI entry point is [`bin/nitrate.mjs`](bin/nitrate.mjs). This is the main plugin surface: agents and creators ask what is next, pull packets into a local clanker workspace, update status, and sync returned media.
+The CLI entry point is [`bin/nitrate.mjs`](bin/nitrate.mjs). This is the main plugin surface: agents and creators ask what is next, pull packets into a local AI coding agent workspace, update status, and sync returned media.
 
 Leader:
 
 ```sh
-nitrate login --api https://nitrate.example.workers.dev --role leader --name "Maya Chen" --email maya@studio.test --clanker maya-lead --surface "Claude Code"
+nitrate login --api https://nitrate.example.workers.dev --role leader --name "Maya Chen" --email maya@studio.test --agent maya-lead --surface "Claude Code"
 nitrate next
-nitrate init-agency --name "Launch Film Packet" --client "Northwind" --brief "Create a 30-second launch-film direction" --input bottle_macro.mov --folder /renders --folder /prompts --folder /notes --folder /handoff --creator "Jonas Reyes|jonas@studio.test|jonas-clanker|Explore the human performance beat before reveal."
+nitrate init-agency --name "Launch Film Packet" --client "Northwind" --brief "Create a 30-second launch-film direction" --input bottle_macro.mov --folder /renders --folder /prompts --folder /notes --folder /handoff --creator "Jonas Reyes|jonas@studio.test|jonas-agent|Explore the human performance beat before reveal."
 ```
 
 Team member:
 
 ```sh
-nitrate login --api https://nitrate.example.workers.dev --role member --name "Jonas Reyes" --email jonas@studio.test --clanker jonas-clanker --surface "Claude Code"
+nitrate login --api https://nitrate.example.workers.dev --role member --name "Jonas Reyes" --email jonas@studio.test --agent jonas-agent --surface "Claude Code"
 nitrate next
 nitrate pull --dir ./launch-film
 nitrate status --status working --dir ./launch-film
@@ -138,13 +138,13 @@ curl -X PATCH http://127.0.0.1:4173/api/versions/VERSION_ID \
 - Writes serialize through a repository lock and replace the JSON manifest atomically.
 - The UI consumes the same domain objects exposed by the API.
 
-The production target keeps these contracts while moving storage and metadata to managed services: Cloudflare Workers for the API, D1 for transactional metadata, R2 for media objects, and Queues for direct clanker sync, thumbnails, filmstrips, waveforms, transcription, and audit jobs.
+The production target keeps these contracts while moving storage and metadata to managed services: Cloudflare Workers for the API, D1 for transactional metadata, R2 for media objects, and Queues for direct AI coding agent sync, thumbnails, filmstrips, waveforms, transcription, and audit jobs.
 
 ## Prototype boundaries
 
 This is not a production deployment:
 
-- Direct clanker sync is represented by plugin login, assignments, and file-based returns.
+- Direct AI coding agent sync is represented by plugin login, assignments, and file-based returns.
 - Identity is represented by a demo user switcher, not authentication.
 - Share tokens are local review links, not Internet-safe authorization.
 - There is no multi-tenant isolation, malware scanning, signed URL expiry, rate limiting, observability, or backup orchestration.

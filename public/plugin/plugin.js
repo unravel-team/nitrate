@@ -43,11 +43,11 @@ function setMode(mode) {
   if (mode === 'leader') {
     $('#login-form').name.value = 'Maya Chen';
     $('#login-form').email.value = 'maya@studio.test';
-    $('#login-form').clanker.value = 'maya-clanker';
+    $('#login-form').agent.value = 'maya-agent';
   } else {
     $('#login-form').name.value = 'Jonas Reyes';
     $('#login-form').email.value = 'jonas@studio.test';
-    $('#login-form').clanker.value = 'jonas-clanker';
+    $('#login-form').agent.value = 'jonas-agent';
   }
   render();
 }
@@ -69,17 +69,17 @@ function leaderPacket(packet) {
         <div style="margin-top:1rem;">
           ${assignments.map(assignment => `
             <div class="assignment-card">
-              <strong>${escapeHtml(assignment.clanker)}</strong>
+              <strong>${escapeHtml(assignment.agent)}</strong>
               <p style="margin:.25rem 0;">${escapeHtml(assignment.task)}</p>
               <small>${escapeHtml(assignmentStatus(assignment.status))} · ${escapeHtml(assignment.returnedAt ? 'returned' : 'not returned')}</small>
-            </div>`).join('') || '<p>No clankers assigned yet.</p>'}
+            </div>`).join('') || '<p>No AI coding agents assigned yet.</p>'}
         </div>
       </div>
       <form class="assignment-card push-form" data-project="${project.id}">
-        <h3>Push to a clanker</h3>
+        <h3>Push to an AI coding agent</h3>
         <label class="field">Creator name<input name="name" required placeholder="Asha Kapoor"></label>
         <label class="field">Creator email<input name="email" type="email" required placeholder="asha@studio.com"></label>
-        <label class="field">Clanker<input name="clanker" required placeholder="asha-clanker"></label>
+        <label class="field">AI coding agent<input name="agent" required placeholder="asha-agent"></label>
         <label class="field">Task<textarea class="textarea" name="task" rows="3" required placeholder="Explore product macro stills and return /stills, /prompts, /notes."></textarea></label>
         <button class="button primary" style="width:100%;" type="submit">Push packet</button>
       </form>
@@ -102,7 +102,7 @@ function memberPacket(packet) {
         <div style="margin-top:1rem;">
           ${assignments.map(assignment => `
             <div class="assignment-card">
-              <strong>${escapeHtml(assignment.clanker)}</strong>
+              <strong>${escapeHtml(assignment.agent)}</strong>
               <p style="margin:.25rem 0;">${escapeHtml(assignment.task)}</p>
               <div class="review-actions">
                 <button class="button small ghost" data-status="pulled" data-assignment="${assignment.id}" type="button">Pull packet</button>
@@ -117,7 +117,7 @@ function memberPacket(packet) {
         <h3>Sync return</h3>
         <label class="field">Return name<input name="assetName" required placeholder="Jonas human beat v2"></label>
         <label class="field">Made with<input name="model" required value="Claude Code"></label>
-        <label class="field">Prompt<textarea class="textarea" name="prompt" rows="3" required placeholder="Prompt and direction used in this clanker"></textarea></label>
+        <label class="field">Prompt<textarea class="textarea" name="prompt" rows="3" required placeholder="Prompt and direction used in this AI coding agent"></textarea></label>
         <label class="field">Notes<textarea class="textarea" name="notes" rows="2" placeholder="What changed, where files live, what lead should inspect"></textarea></label>
         <label class="field">Media file<input name="file" type="file" accept="image/*,video/*,audio/*" required></label>
         <button class="button primary" style="width:100%;" type="submit">Sync return</button>
@@ -127,13 +127,13 @@ function memberPacket(packet) {
 
 function render() {
   if (!pluginState.data) {
-    $('#leader-packets').innerHTML = '<div class="empty"><h3>Log in to load leader packets</h3><p>The plugin will show packets you can push to clankers.</p></div>';
-    $('#member-packets').innerHTML = '<div class="empty"><h3>Log in to load assigned packets</h3><p>The plugin will show packets assigned to this clanker.</p></div>';
+    $('#leader-packets').innerHTML = '<div class="empty"><h3>Log in to load leader packets</h3><p>The plugin will show packets you can push to AI coding agents.</p></div>';
+    $('#member-packets').innerHTML = '<div class="empty"><h3>Log in to load assigned packets</h3><p>The plugin will show packets assigned to this AI coding agent.</p></div>';
     return;
   }
   const packets = pluginState.data.packets || [];
   $('#leader-packets').innerHTML = packets.length ? packets.map(leaderPacket).join('') : '<div class="empty"><h3>No packets yet</h3><p>Create one in the command center.</p></div>';
-  $('#member-packets').innerHTML = packets.length ? packets.map(memberPacket).join('') : '<div class="empty"><h3>No assigned packets</h3><p>Ask your lead to push a packet to this clanker.</p></div>';
+  $('#member-packets').innerHTML = packets.length ? packets.map(memberPacket).join('') : '<div class="empty"><h3>No assigned packets</h3><p>Ask your lead to push a packet to this AI coding agent.</p></div>';
   $('#session-status').textContent = `${pluginState.data.user.name} logged in as ${pluginState.data.mode}.`;
 }
 
@@ -174,7 +174,7 @@ document.addEventListener('submit', async event => {
         body:JSON.stringify({projectId, assignments:[input]})
       });
       event.target.reset();
-      toast('Packet pushed to clanker.');
+      toast('Packet pushed to AI coding agent.');
       await loadPackets();
     } catch (error) {
       toast(error.message);

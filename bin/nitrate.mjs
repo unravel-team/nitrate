@@ -11,13 +11,13 @@ function usage() {
   console.log(`nitrate
 
 Usage:
-  nitrate login --api <url> --email <email> --name <name> --role <leader|member> --clanker <name> [--surface <tool>]
+  nitrate login --api <url> --email <email> --name <name> --role <leader|member> --agent <name> [--surface <tool>]
   nitrate whoami
   nitrate next
   nitrate packets
-  nitrate init-agency --name <packet> --client <client> --brief <text> [--creator "Name|email|clanker|task"] [--input <file>] [--folder </renders>]
+  nitrate init-agency --name <packet> --client <client> --brief <text> [--creator "Name|email|agent|task"] [--input <file>] [--folder </renders>]
   nitrate packet:create --name <name> --brief <text> [--input <file>] [--folder </renders>]
-  nitrate push --packet <id> --email <email> --name <name> --clanker <name> --task <text>
+  nitrate push --packet <id> --email <email> --name <name> --agent <name> --task <text>
   nitrate pull [--packet <id>] [--assignment <id>] [--dir <path>]
   nitrate status [--assignment <id>] --status <pulled|working|blocked|returned>
   nitrate sync [--packet <id>] [--assignment <id>] --file <path> --name <name> --made-with <tool> --prompt <text> [--notes <text>]
@@ -133,9 +133,9 @@ function firstActionForPacket(item, role) {
   const assignments = item.assignments || [];
   const returns = item.returns || [];
   if (role === 'team_lead') {
-    if (!assignments.length) return `Push "${packet.name}" to the first creator: nitrate push --packet ${packet.id} --email <email> --name <name> --clanker <clanker> --task "<task>"`;
+    if (!assignments.length) return `Push "${packet.name}" to the first creator: nitrate push --packet ${packet.id} --email <email> --name <name> --agent <agent> --task "<task>"`;
     const waiting = assignments.find(assignment => ['delivered', 'pulled', 'working', 'blocked'].includes(assignment.status));
-    if (waiting) return `${waiting.name || waiting.clanker} is ${waiting.status} on "${packet.name}". Ask for a return or adjust the packet.`;
+    if (waiting) return `${waiting.name || waiting.agent} is ${waiting.status} on "${packet.name}". Ask for a return or adjust the packet.`;
     if (returns.some(item => item.status === 'needs_review')) return `Review returned work for "${packet.name}" in the command center.`;
     return `"${packet.name}" is clean. Start the next packet from what worked.`;
   }
@@ -156,8 +156,8 @@ async function login(args) {
     email: required(args, 'email'),
     name: args.name || args.email.split('@')[0],
     role: args.role || 'member',
-    clanker: required(args, 'clanker'),
-    surface: args.surface || 'Local clanker'
+    agent: required(args, 'agent'),
+    surface: args.surface || 'Local AI coding agent'
   };
   const result = await apiFetch({ apiUrl }, '/api/plugin/login', {
     method: 'POST',
@@ -169,7 +169,7 @@ async function login(args) {
     user: result.user,
     session: { ...result.session, token: undefined }
   });
-  console.log(`Logged in as ${result.user.name} (${result.user.role}) on ${result.user.clanker}`);
+  console.log(`Logged in as ${result.user.name} (${result.user.role}) on ${result.user.agent}`);
 }
 
 async function whoami() {
@@ -196,7 +196,7 @@ async function nextAction() {
   if (!items.length) {
     console.log(data.mode === 'leader'
       ? 'Next: create your first agency packet with nitrate init-agency --name "<client campaign>" --client "<client>" --brief "<brief>"'
-      : 'No packets assigned to this AI agent yet. Ask the lead to push a packet.');
+      : 'No packets assigned to this AI coding agent yet. Ask the lead to push a packet.');
     return;
   }
   console.log(firstActionForPacket(items[0], data.user?.role || data.mode));
@@ -216,12 +216,12 @@ async function createPacket(args) {
 }
 
 function parseCreator(value) {
-  const [name, email, clanker, ...taskParts] = String(value || '').split('|');
-  if (!email || !clanker) throw new Error('Creator must use "Name|email|clanker|task"');
+  const [name, email, agent, ...taskParts] = String(value || '').split('|');
+  if (!email || !agent) throw new Error('Creator must use "Name|email|agent|task"');
   return {
     name: name || email.split('@')[0],
     email,
-    clanker,
+    agent,
     task: taskParts.join('|') || 'Work this packet and return media, prompts, notes, and handoff files.'
   };
 }
@@ -250,7 +250,7 @@ async function initAgency(args) {
     });
   }
   console.log(`Created packet: ${packet.name || packet.packet?.name || packet.project?.name || args.name} (${packetId})`);
-  if (pushed) console.log(`Pushed to ${pushed.assignments.length} creator agent(s).`);
+  if (pushed) console.log(`Pushed to ${pushed.assignments.length} creator AI coding agent(s).`);
   console.log('Activation target: one creator pulls the packet, returns one output, and the lead makes one review decision.');
   printJson({ packet, pushed });
 }
@@ -262,7 +262,7 @@ async function push(args) {
     assignments: [{
       email: required(args, 'email'),
       name: args.name || args.email.split('@')[0],
-      clanker: required(args, 'clanker'),
+      agent: required(args, 'agent'),
       task: required(args, 'task')
     }]
   };

@@ -37,9 +37,9 @@
           <p id="brief-summary" style="font-size:.94rem;margin:.6rem 0;"></p>
           <div class="contract-list" id="output-structure"></div>
         </section>
-        <section class="rail-section" aria-labelledby="clanker-title">
-          <h2 class="rail-title" id="clanker-title"><span>Clankers</span><span id="clanker-count"></span></h2>
-          <ul class="queue-list" id="clanker-list"></ul>
+        <section class="rail-section" aria-labelledby="agent-title">
+          <h2 class="rail-title" id="agent-title"><span>AI coding agents</span><span id="agent-count"></span></h2>
+          <ul class="queue-list" id="agent-list"></ul>
         </section>
         <section class="rail-section" aria-labelledby="queue-title">
           <h2 class="rail-title" id="queue-title"><span>Queue</span><button class="button small ghost" id="all-filter" type="button">All</button></h2>
@@ -105,7 +105,7 @@
 
   <div class="modal" id="upload-modal" role="dialog" aria-modal="true" aria-labelledby="upload-title">
     <form class="modal-card" id="upload-form">
-      <h3 id="upload-title">Return work from a clanker</h3>
+      <h3 id="upload-title">Return work from an AI coding agent</h3>
       <p style="margin-top:.4rem;">The file, prompt, creator, and assignment stay together for lead review.</p>
       <div class="dropzone" id="dropzone">
         <p><strong>Drop media here</strong><br>or choose image, video, or audio up to 100 MB.</p>
@@ -118,7 +118,7 @@
         </label>
         <label class="field">Made with *<input name="model" list="model-options" required placeholder="Claude, Higgsfield Supercomputer, Runway..."></label>
         <label class="field">Seed<input name="seed" placeholder="184320"></label>
-        <label class="field" style="grid-column:1/-1;">Workflow<input name="pipeline" placeholder="nitrate packet / creator clanker"></label>
+        <label class="field" style="grid-column:1/-1;">Workflow<input name="pipeline" placeholder="Nitrate packet / creator AI coding agent"></label>
         <label class="field" style="grid-column:1/-1;">Prompt *<textarea class="textarea" name="prompt" rows="4" required placeholder="Use the input assets and return /renders, /stills, /prompts..."></textarea></label>
         <label class="field" style="grid-column:1/-1;">Return note<textarea class="textarea" name="notes" rows="2" placeholder="What changed, what worked, and what the lead should inspect"></textarea></label>
       </div>
@@ -130,12 +130,12 @@
 
   <div class="modal" id="plugin-modal" role="dialog" aria-modal="true" aria-labelledby="plugin-title">
     <form class="modal-card" id="plugin-form">
-      <h3 id="plugin-title">Log in from the clanker plugin</h3>
+      <h3 id="plugin-title">Log in from the AI coding agent plugin</h3>
       <p style="margin-top:.4rem;">Creators start here: authenticate the plugin, pull assigned packets, then sync finished work back to the lead.</p>
       <div class="grid" style="margin-top:1rem;">
         <label class="field">Work email<input name="email" type="email" required placeholder="creator@studio.com"></label>
-        <label class="field">Clanker name<input name="clanker" required placeholder="maya-clanker"></label>
-        <label class="field">Creation surface<select name="surface"><option>Claude</option><option>Claude Code</option><option>Higgsfield Supercomputer</option><option>Local clanker</option></select></label>
+        <label class="field">AI coding agent name<input name="agent" required placeholder="maya-agent"></label>
+        <label class="field">Creation surface<select name="surface"><option>Claude</option><option>Claude Code</option><option>Higgsfield Supercomputer</option><option>Local AI coding agent</option></select></label>
       </div>
       <div class="review-actions"><button class="button primary" type="submit">Log in plugin</button><button class="button ghost" type="button" data-close>Cancel</button></div>
       <p class="form-note" id="plugin-status" role="status"></p>

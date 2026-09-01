@@ -26,6 +26,10 @@ function normalizeEmail(value) {
   return String(value || '').trim().toLowerCase();
 }
 
+function publicAgentName(value) {
+  return String(value || 'agent').replace(/clanker/gi, 'agent');
+}
+
 function parseJsonList(value, fallback) {
   if (Array.isArray(value)) return value.map(String).filter(Boolean);
   if (typeof value === 'string' && value.trim()) return value.split(/\r?\n|,/).map(item => item.trim()).filter(Boolean);
@@ -97,7 +101,7 @@ async function currentSession(request, env) {
   if (!token) return null;
   const tokenHash = await sha256Hex(token);
   const row = await env.DB.prepare(
-    `SELECT s.*, u.email, u.name, u.role AS user_role, u.clanker AS user_clanker
+    `SELECT s.*, u.email, u.name, u.role AS user_role, u.clanker AS user_agent
      FROM plugin_sessions s JOIN users u ON u.id = s.user_id
      WHERE s.token_hash = ?`
   ).bind(tokenHash).first();
@@ -107,7 +111,8 @@ async function currentSession(request, env) {
     session: {
       id: row.id,
       userId: row.user_id,
-      clanker: row.clanker,
+      agent: publicAgentName(row.clanker),
+      storageAgent: row.clanker,
       surface: row.surface,
       role: row.role,
       createdAt: row.created_at,
@@ -118,7 +123,8 @@ async function currentSession(request, env) {
       email: row.email,
       name: row.name,
       role: row.user_role,
-      clanker: row.user_clanker
+      agent: publicAgentName(row.user_agent),
+      storageAgent: row.user_agent
     }
   };
 }
@@ -133,30 +139,37 @@ async function ensureUser(env, input) {
   const email = normalizeEmail(input.email);
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) throw Object.assign(new Error('Enter a valid work email'), { statusCode: 400 });
   const role = input.role === 'leader' || input.role === 'team_lead' ? 'team_lead' : 'ai_creator';
-  const clanker = String(input.clanker || `${email.split('@')[0]}-clanker`).trim().slice(0, 80);
+  const agent = String(input.agent || `${email.split('@')[0]}-agent`).trim().slice(0, 80);
   const existing = await env.DB.prepare('SELECT * FROM users WHERE email = ?').bind(email).first();
   if (existing) {
     await env.DB.prepare('UPDATE users SET name = ?, role = ?, clanker = ? WHERE id = ?')
-      .bind(String(input.name || existing.name).slice(0, 80), role, clanker, existing.id).run();
-    return { ...existing, name: String(input.name || existing.name).slice(0, 80), role, clanker };
+      .bind(String(input.name || existing.name).slice(0, 80), role, agent, existing.id).run();
+    return {
+      id: existing.id,
+      email: existing.email,
+      name: String(input.name || existing.name).slice(0, 80),
+      role,
+      agent,
+      created_at: existing.created_at
+    };
   }
   const user = {
     id: id('user'),
     email,
     name: String(input.name || email.split('@')[0]).slice(0, 80),
     role,
-    clanker,
+    agent,
     created_at: now()
   };
   await env.DB.prepare('INSERT INTO users (id, email, name, role, clanker, created_at) VALUES (?, ?, ?, ?, ?, ?)')
-    .bind(user.id, user.email, user.name, user.role, user.clanker, user.created_at).run();
+    .bind(user.id, user.email, user.name, user.role, user.agent, user.created_at).run();
   return user;
 }
 
 async function actorUser(request, env) {
   const name = String(request.headers.get('X-Reel-User') || 'Maya Chen').slice(0, 80).replace(/[<>\r\n]/g, '') || 'Maya Chen';
   const local = name.toLowerCase().replace(/[^a-z0-9]+/g, '.').replace(/^\.+|\.+$/g, '') || 'maya';
-  return ensureUser(env, { name, email: `${local}@nitrate.local`, role: 'leader', clanker: `${local}-lead` });
+  return ensureUser(env, { name, email: `${local}@nitrate.local`, role: 'leader', agent: `${local}-lead` });
 }
 
 async function pluginLogin(request, env) {
@@ -167,17 +180,17 @@ async function pluginLogin(request, env) {
     id: id('plug'),
     tokenHash: await sha256Hex(token),
     userId: user.id,
-    clanker: user.clanker,
-    surface: String(input.surface || 'Local clanker').slice(0, 80),
+    agent: user.agent,
+    surface: String(input.surface || 'Local AI coding agent').slice(0, 80),
     role: user.role,
     at: now()
   };
   await env.DB.prepare(
     'INSERT INTO plugin_sessions (id, token_hash, user_id, clanker, surface, role, created_at, last_seen_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
-  ).bind(session.id, session.tokenHash, session.userId, session.clanker, session.surface, session.role, session.at, session.at).run();
+  ).bind(session.id, session.tokenHash, session.userId, session.agent, session.surface, session.role, session.at, session.at).run();
   return json({
-    session: { id: session.id, token, clanker: session.clanker, surface: session.surface, role: session.role, createdAt: session.at },
-    user: { id: user.id, email: user.email, name: user.name, role: user.role, clanker: user.clanker }
+    session: { id: session.id, token, agent: session.agent, surface: session.surface, role: session.role, createdAt: session.at },
+    user: { id: user.id, email: user.email, name: user.name, role: user.role, agent: user.agent }
   }, 201);
 }
 
@@ -259,14 +272,14 @@ async function pushPacket(request, env) {
       id: id('assign'),
       packetId: packet.id,
       userId: assignee.id,
-      clanker: assignee.clanker,
+      agent: assignee.agent,
       task: String(entry.task || 'Work this packet and return media, prompts, notes, and handoff files.').slice(0, 240),
       status: 'delivered',
       pushedAt: now()
     };
     await env.DB.prepare(
       'INSERT INTO assignments (id, packet_id, user_id, clanker, task, status, pushed_at, returned_at) VALUES (?, ?, ?, ?, ?, ?, ?, NULL)'
-    ).bind(assignment.id, assignment.packetId, assignment.userId, assignment.clanker, assignment.task, assignment.status, assignment.pushedAt).run();
+    ).bind(assignment.id, assignment.packetId, assignment.userId, assignment.agent, assignment.task, assignment.status, assignment.pushedAt).run();
     created.push(assignment);
   }
   return json({ packetId: packet.id, assignments: created }, 201);
@@ -291,7 +304,7 @@ function rowAssignment(row) {
     id: row.id,
     userId: row.user_id,
     packetId: row.packet_id,
-    clanker: row.clanker,
+    agent: publicAgentName(row.clanker),
     task: row.task,
     status: row.status,
     pushedAt: row.pushed_at,
@@ -362,15 +375,15 @@ async function appState(request, env) {
     email: row.email,
     name: row.name,
     role: row.role,
-    clanker: row.clanker
+    agent: publicAgentName(row.clanker)
   }));
   const activity = [
     ...returns.slice(0, 30).map(row => ({ id: `act_${row.id}`, type: 'returned', message: `${row.name} returned from ${row.made_with}`, actor: row.user_id, at: row.created_at })),
-    ...(assignmentRows.results || []).slice(0, 30).map(row => ({ id: `act_${row.id}`, type: 'assignment', message: `${row.clanker} ${row.status} on packet`, actor: row.user_id, at: row.pushed_at || now() })),
+    ...(assignmentRows.results || []).slice(0, 30).map(row => ({ id: `act_${row.id}`, type: 'assignment', message: `${publicAgentName(row.clanker)} ${row.status} on packet`, actor: row.user_id, at: row.pushed_at || now() })),
     ...(packetRows.results || []).slice(0, 30).map(row => ({ id: `act_${row.id}`, type: 'packet', message: `${row.name} packet created`, actor: row.created_by || 'nitrate', at: row.created_at }))
   ].sort((a, b) => new Date(b.at) - new Date(a.at)).slice(0, 80);
   return json({
-    users: users.length ? users : [{ id: 'user_maya', name: 'Maya Chen', role: 'team_lead', clanker: 'maya-lead' }],
+    users: users.length ? users : [{ id: 'user_maya', name: 'Maya Chen', role: 'team_lead', agent: 'maya-lead' }],
     projects,
     assets,
     versions,
@@ -403,15 +416,15 @@ async function uploadAppReturn(request, env) {
       id: id('assign'),
       packetId: packet.id,
       userId: user.id,
-      clanker: user.clanker,
+      agent: user.agent,
       task: 'Direct return from command center',
       status: 'returned',
       at: now()
     };
     await env.DB.prepare(
       'INSERT INTO assignments (id, packet_id, user_id, clanker, task, status, pushed_at, returned_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
-    ).bind(created.id, created.packetId, created.userId, created.clanker, created.task, created.status, created.at, created.at).run();
-    assignment = { id: created.id, packet_id: created.packetId, user_id: created.userId, clanker: created.clanker };
+    ).bind(created.id, created.packetId, created.userId, created.agent, created.task, created.status, created.at, created.at).run();
+    assignment = { id: created.id, packet_id: created.packetId, user_id: created.userId, agent: created.agent };
   }
   const name = String(form.get('assetName') || file.name || 'Untitled return').slice(0, 140);
   const madeWith = String(form.get('model') || '').slice(0, 120);
@@ -443,12 +456,12 @@ async function packets(request, env) {
     : (await env.DB.prepare(
       `SELECT DISTINCT p.* FROM packets p JOIN assignments a ON a.packet_id = p.id
        WHERE a.user_id = ? OR a.clanker = ? ORDER BY p.updated_at DESC`
-    ).bind(user.id, user.clanker).all()).results;
+    ).bind(user.id, user.storageAgent || user.agent).all()).results;
   const items = [];
   for (const packetRow of packetRows) {
     const assignmentRows = leader
       ? (await env.DB.prepare('SELECT * FROM assignments WHERE packet_id = ? ORDER BY pushed_at DESC').bind(packetRow.id).all()).results
-      : (await env.DB.prepare('SELECT * FROM assignments WHERE packet_id = ? AND (user_id = ? OR clanker = ?) ORDER BY pushed_at DESC').bind(packetRow.id, user.id, user.clanker).all()).results;
+      : (await env.DB.prepare('SELECT * FROM assignments WHERE packet_id = ? AND (user_id = ? OR clanker = ?) ORDER BY pushed_at DESC').bind(packetRow.id, user.id, user.storageAgent || user.agent).all()).results;
     const returnRows = (await env.DB.prepare('SELECT * FROM returns WHERE packet_id = ? ORDER BY created_at DESC').bind(packetRow.id).all()).results;
     items.push({
       packet: rowPacket(packetRow),
@@ -456,7 +469,7 @@ async function packets(request, env) {
         id: row.id,
         packetId: row.packet_id,
         userId: row.user_id,
-        clanker: row.clanker,
+        agent: publicAgentName(row.clanker),
         task: row.task,
         status: row.status,
         pushedAt: row.pushed_at,
@@ -467,8 +480,16 @@ async function packets(request, env) {
   }
   return json({
     mode: leader ? 'leader' : 'team_member',
-    session,
-    user,
+    session: {
+      id: session.id,
+      userId: session.userId,
+      agent: session.agent,
+      surface: session.surface,
+      role: session.role,
+      createdAt: session.createdAt,
+      lastSeenAt: session.lastSeenAt
+    },
+    user: { id: user.id, email: user.email, name: user.name, role: user.role, agent: user.agent },
     packets: items
   });
 }
@@ -480,7 +501,7 @@ async function updateAssignment(request, env, assignmentId) {
   if (!STATUS.has(status)) return fail(400, 'Unsupported assignment status');
   const assignment = await env.DB.prepare('SELECT * FROM assignments WHERE id = ?').bind(assignmentId).first();
   if (!assignment) return fail(404, 'Assignment not found');
-  if (user.role !== 'team_lead' && assignment.user_id !== user.id && assignment.clanker !== user.clanker) return fail(403, 'Assignment is not assigned to this plugin');
+  if (user.role !== 'team_lead' && assignment.user_id !== user.id && assignment.clanker !== (user.storageAgent || user.agent)) return fail(403, 'Assignment is not assigned to this AI coding agent');
   await env.DB.prepare('UPDATE assignments SET status = ?, returned_at = CASE WHEN ? = "returned" THEN ? ELSE returned_at END WHERE id = ?')
     .bind(status, status, now(), assignmentId).run();
   return json({ id: assignmentId, status });
@@ -491,7 +512,7 @@ async function createReturn(request, env) {
   const input = await bodyJson(request);
   const assignment = await env.DB.prepare('SELECT * FROM assignments WHERE id = ?').bind(input.assignmentId).first();
   if (!assignment) return fail(404, 'Assignment not found');
-  if (user.role !== 'team_lead' && assignment.user_id !== user.id && assignment.clanker !== user.clanker) return fail(403, 'Assignment is not assigned to this plugin');
+  if (user.role !== 'team_lead' && assignment.user_id !== user.id && assignment.clanker !== (user.storageAgent || user.agent)) return fail(403, 'Assignment is not assigned to this AI coding agent');
   const name = String(input.name || input.assetName || '').trim();
   const prompt = String(input.prompt || '').trim();
   const madeWith = String(input.madeWith || input.model || '').trim();
@@ -520,7 +541,7 @@ async function uploadReturnBlob(request, env, returnId) {
   const item = await env.DB.prepare('SELECT * FROM returns WHERE id = ?').bind(returnId).first();
   if (!item) return fail(404, 'Return not found');
   const assignment = await env.DB.prepare('SELECT * FROM assignments WHERE id = ?').bind(item.assignment_id).first();
-  if (session.user.role !== 'team_lead' && assignment.user_id !== session.user.id && assignment.clanker !== session.user.clanker) return fail(403, 'Return is not assigned to this plugin');
+  if (session.user.role !== 'team_lead' && assignment.user_id !== session.user.id && assignment.clanker !== (session.user.storageAgent || session.user.agent)) return fail(403, 'Return is not assigned to this AI coding agent');
   const filename = new URL(request.url).searchParams.get('filename') || `${returnId}.bin`;
   const contentType = request.headers.get('Content-Type') || 'application/octet-stream';
   const key = `returns/${item.packet_id}/${returnId}/${filename.replace(/[^\w.\- ]+/g, '_')}`;

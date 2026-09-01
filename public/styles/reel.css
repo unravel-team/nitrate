@@ -262,32 +262,32 @@ a.button:visited {
   background: color-mix(in srgb, var(--paper) 74%, transparent);
 }
 .packet-main strong,
-.clanker strong {
+.coding-agent strong {
   display: block;
   margin-bottom: .25rem;
 }
 .packet-main span,
-.clanker span {
+.coding-agent span {
   color: var(--muted);
   font-size: .86rem;
   overflow-wrap: anywhere;
 }
-.clanker-grid {
+.coding-agent-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: .7rem;
   padding: 1rem;
 }
-.clanker {
+.coding-agent {
   min-height: 112px;
   padding: .9rem;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--paper);
 }
-.clanker.ready { border-color: color-mix(in srgb, var(--signal) 55%, var(--line)); }
-.clanker.working { border-color: color-mix(in srgb, var(--amber) 55%, var(--line)); }
-.clanker.waiting { opacity: .78; }
+.coding-agent.ready { border-color: color-mix(in srgb, var(--signal) 55%, var(--line)); }
+.coding-agent.working { border-color: color-mix(in srgb, var(--amber) 55%, var(--line)); }
+.coding-agent.waiting { opacity: .78; }
 .bench-bar {
   display: flex;
   align-items: center;
@@ -582,7 +582,7 @@ a.button:visited {
   .activation-panel{grid-template-columns:1fr;}
   .activation-steps,.retention-strip{grid-template-columns:1fr 1fr;}
   .frames{grid-template-columns:repeat(2,1fr);}
-  .clanker-grid{grid-template-columns:1fr;}
+  .coding-agent-grid{grid-template-columns:1fr;}
   h1{font-size:3.4rem;}
   h2{font-size:2.2rem;}
 }
@@ -595,7 +595,7 @@ a.button:visited {
   .hero,.hero > *{max-width:100%;}
   .hero .lede{max-width:31ch;}
   .dispatch-board{width:calc(100vw - 2rem);max-width:calc(100vw - 2rem);}
-  .packet, .clanker-grid{max-width:100%;}
+  .packet, .coding-agent-grid{max-width:100%;}
   .bench-bar span{max-width:100%;overflow-wrap:anywhere;}
   .provenance{flex-direction:column;gap:.25rem;}
   .activation-steps,.retention-strip{grid-template-columns:1fr;}
@@ -825,7 +825,7 @@ a.button:visited {
   font-size: .9rem;
 }
 
-.clanker-lanes {
+.coding-agent-lanes {
   position: relative;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1276,7 +1276,7 @@ a.button:visited {
   .packet-console {
     transform: none;
   }
-  .clanker-lanes,
+  .coding-agent-lanes,
   .packet-anatomy-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1332,7 +1332,7 @@ a.button:visited {
   }
   .agent-grid,
   .dam-object-grid,
-  .clanker-lanes,
+  .coding-agent-lanes,
   .packet-anatomy-grid,
   .review-ledger {
     grid-template-columns: 1fr;

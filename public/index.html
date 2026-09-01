@@ -29,7 +29,7 @@
     <nav class="site-nav" aria-label="Primary navigation">
       <a href="#how-it-works">How it works</a>
       <a href="/plugin/">Plugin</a>
-      <a class="nav-dam" href="#dam">DAM for AI agents</a>
+      <a class="nav-dam" href="#dam">DAM for AI coding agents</a>
       <a class="nav-cta" href="#pilot">Request pilot</a>
     </nav>
   </header>
@@ -240,7 +240,7 @@
 
     <section class="dam-bridge" id="dam" aria-labelledby="dam-title">
       <div class="dam-heading">
-        <h2 id="dam-title">A DAM for the work your AI agents are still making.</h2>
+        <h2 id="dam-title">A DAM for the work your AI coding agents are still making.</h2>
       </div>
       <div class="dam-explanation">
         <p>Traditional DAMs organize finished files. Nitrate keeps the brief, creator, prompt, rounds, and decisions together before the final video exists.</p>
@@ -296,14 +296,14 @@
     <section class="workflow" id="how-it-works" aria-labelledby="workflow-title">
       <div class="workflow-heading">
         <div>
-          <h2 id="workflow-title">Watch one campaign move through both AI agents.</h2>
+          <h2 id="workflow-title">Your AI coding agent runs the handoff.</h2>
         </div>
-        <p>The agency lead sets the brief from their AI agent. Nitrate delivers it to each creator’s agent, builds the workspace, tracks progress, and returns the finished ad for review.</p>
+        <p>Maya describes the campaign in Claude Code. Claude triggers Nitrate, routes the brief into each teammate’s AI coding agent, and brings every return back for review.</p>
       </div>
 
       <div class="cli-journey" data-cli-journey data-step="0">
         <div class="cli-demo-bar">
-          <p><span>Illustrative campaign · real plugin commands</span><strong>Northwind · “Move Closer”</strong></p>
+          <p><span>Illustrative campaign · real Nitrate tool calls</span><strong>Northwind · “Move Closer”</strong></p>
           <div class="cli-playback" aria-label="CLI journey playback controls">
             <button type="button" data-cli-previous aria-label="Show previous journey step">Previous</button>
             <button type="button" data-cli-play aria-pressed="false">Play journey</button>
@@ -314,17 +314,17 @@
         <div class="cli-step-caption">
           <p data-cli-counter>Step 1 of 6</p>
           <div>
-            <h3 data-cli-title>Both agents log in once.</h3>
-            <p data-cli-description>The plugin identifies Maya as the agency lead and Nia as a creator, while letting both stay inside the AI agent they already use.</p>
+            <h3 data-cli-title>Maya and Nia connect Nitrate to their AI coding agents.</h3>
+            <p data-cli-description>They ask in plain English. Claude Code and Codex handle the login and trigger Nitrate for them.</p>
           </div>
         </div>
 
         <ol class="cli-step-nav" aria-label="Campaign journey steps">
-          <li><button type="button" data-cli-step="0" aria-current="step"><span>1</span><strong>Login</strong></button></li>
+          <li><button type="button" data-cli-step="0" aria-current="step"><span>1</span><strong>Connect AI coding agents</strong></button></li>
           <li><button type="button" data-cli-step="1"><span>2</span><strong>Brief + assign</strong></button></li>
           <li><button type="button" data-cli-step="2"><span>3</span><strong>Pull workspace</strong></button></li>
           <li><button type="button" data-cli-step="3"><span>4</span><strong>Make the ad</strong></button></li>
-          <li><button type="button" data-cli-step="4"><span>5</span><strong>Sync return</strong></button></li>
+          <li><button type="button" data-cli-step="4"><span>5</span><strong>Return work</strong></button></li>
           <li><button type="button" data-cli-step="5"><span>6</span><strong>Review + revise</strong></button></li>
         </ol>
 
@@ -332,42 +332,66 @@
           <article class="cli-window cli-leader is-active" data-cli-pane="leader" aria-labelledby="leader-cli-title">
             <div class="cli-window-bar">
               <div class="cli-window-lights" aria-hidden="true"><i></i><i></i><i></i></div>
-              <p><span>Agency lead</span><strong id="leader-cli-title">Maya · Claude Code</strong></p>
-              <span class="cli-connection"><i aria-hidden="true"></i>Connected</span>
+              <p><span>Agency lead · AI coding agent</span><strong id="leader-cli-title">Maya · Claude Code</strong></p>
+              <span class="cli-connection"><i aria-hidden="true"></i>Nitrate ready</span>
             </div>
-            <div class="cli-terminal" data-cli-leader aria-label="Agency leader CLI for the current journey step">
-              <div class="cli-line cli-line-command"><span>$</span><code>nitrate login --api https://nitrate.example.workers.dev --role leader --name "Maya Chen" --email maya@northwind.agency --clanker maya-lead --surface "Claude Code"</code></div>
-              <div class="cli-line cli-line-success"><span>&gt;</span><code>Logged in as Maya Chen (team_lead) on maya-lead</code></div>
+            <div class="cli-terminal agent-console" data-cli-leader aria-label="Maya’s Claude Code console for the current journey step">
+              <div class="agent-turn agent-prompt" aria-label="Maya: Connect this Claude Code session to Nitrate as the agency lead.">
+                <span class="agent-prompt-mark" aria-hidden="true">›</span>
+                <p><strong>Maya</strong><span>Connect this Claude Code session to Nitrate as the agency lead.</span></p>
+              </div>
+              <div class="agent-turn agent-response">
+                <span class="agent-response-mark" aria-hidden="true"></span>
+                <p>I’ll connect this AI coding agent to your Nitrate account.</p>
+              </div>
+              <div class="agent-tool is-done">
+                <div class="agent-tool-head"><span aria-hidden="true"></span><strong>Nitrate</strong><em>login</em><b>Done</b></div>
+                <code>nitrate login --role leader --name "Maya Chen" --agent maya-claude --surface "Claude Code"</code>
+                <p>Connected · Maya Chen · agency lead</p>
+              </div>
+              <div class="agent-composer" aria-hidden="true"><span>›</span><p>Ask Claude Code…</p><kbd>Enter</kbd></div>
             </div>
           </article>
 
-          <div class="cli-bridge" data-cli-bridge data-direction="both" aria-label="Nitrate connects the leader and creator agents">
+          <div class="cli-bridge" data-cli-bridge data-direction="both" aria-label="Nitrate connects the leader and team member AI coding agents">
             <span>Nitrate</span>
             <div class="cli-transfer" aria-hidden="true"><i></i><b></b></div>
-            <p><strong data-cli-route>Roles connected</strong><span data-cli-route-detail>Each agent gets its own view.</span></p>
+            <p><strong data-cli-route>Roles connected</strong><span data-cli-route-detail>Each AI coding agent gets its own view.</span></p>
           </div>
 
           <article class="cli-window cli-creator is-active" data-cli-pane="creator" aria-labelledby="creator-cli-title">
             <div class="cli-window-bar">
               <div class="cli-window-lights" aria-hidden="true"><i></i><i></i><i></i></div>
-              <p><span>Team member</span><strong id="creator-cli-title">Nia · Codex</strong></p>
-              <span class="cli-connection"><i aria-hidden="true"></i>Connected</span>
+              <p><span>Team member · AI coding agent</span><strong id="creator-cli-title">Nia · Codex</strong></p>
+              <span class="cli-connection"><i aria-hidden="true"></i>Nitrate ready</span>
             </div>
-            <div class="cli-terminal" data-cli-creator aria-label="Team member CLI for the current journey step">
-              <div class="cli-line cli-line-command"><span>$</span><code>nitrate login --api https://nitrate.example.workers.dev --role member --name "Nia Patel" --email nia@studio.co --clanker nia-codex --surface "Codex"</code></div>
-              <div class="cli-line cli-line-success"><span>&gt;</span><code>Logged in as Nia Patel (ai_creator) on nia-codex</code></div>
+            <div class="cli-terminal agent-console" data-cli-creator aria-label="Nia’s Codex console for the current journey step">
+              <div class="agent-turn agent-prompt" aria-label="Nia: Connect this Codex session to Nitrate as a team member.">
+                <span class="agent-prompt-mark" aria-hidden="true">›</span>
+                <p><strong>Nia</strong><span>Connect this Codex session to Nitrate as a team member.</span></p>
+              </div>
+              <div class="agent-turn agent-response">
+                <span class="agent-response-mark" aria-hidden="true"></span>
+                <p>I’ll connect this AI coding agent to your Nitrate account.</p>
+              </div>
+              <div class="agent-tool is-done">
+                <div class="agent-tool-head"><span aria-hidden="true"></span><strong>Nitrate</strong><em>login</em><b>Done</b></div>
+                <code>nitrate login --role member --name "Nia Patel" --agent nia-codex --surface "Codex"</code>
+                <p>Connected · Nia Patel · team member</p>
+              </div>
+              <div class="agent-composer" aria-hidden="true"><span>›</span><p>Ask Codex…</p><kbd>Enter</kbd></div>
             </div>
           </article>
         </div>
 
         <div class="cli-status-summary" role="status" aria-live="polite">
-          <span data-cli-status>Both agents are ready.</span>
-          <strong data-cli-status-detail>The campaign can now move between Maya and Nia without either person leaving their own AI agent.</strong>
+          <span data-cli-status>Both AI coding agents are ready.</span>
+          <strong data-cli-status-detail>The campaign can now move between Maya and Nia without either person memorizing Nitrate commands.</strong>
         </div>
 
         <div class="cli-journey-footer">
           <p><span>Leader works from</span><strong>Claude Code or Codex + the review dashboard</strong></p>
-          <p><span>Creator works from</span><strong>Their AI agent + Higgsfield, Runway, or any media tool</strong></p>
+          <p><span>Creator works from</span><strong>Their AI coding agent + Higgsfield, Runway, or any media tool</strong></p>
           <p><span>Nitrate keeps together</span><strong>Brief · inputs · assignment · files · prompt · notes · review</strong></p>
         </div>
       </div>

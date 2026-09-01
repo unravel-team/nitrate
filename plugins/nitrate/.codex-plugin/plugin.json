@@ -1,15 +1,15 @@
 {
   "name": "nitrate",
   "version": "0.1.0+codex.20260831193810",
-  "description": "nitrate clanker plugin for packet sync and AI media collaboration",
+  "description": "nitrate AI coding agent plugin for packet sync and AI media collaboration",
   "author": {
     "name": "nitrate"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "nitrate",
-    "shortDescription": "Run AI media packet work from the clanker.",
-    "longDescription": "nitrate is the plugin-first control layer for agency AI media production. Leaders create and push client packets. Creators pull assigned packets into their clanker workspace, update status, and sync returned media with prompts, tool context, and notes attached.",
+    "shortDescription": "Run AI media packet work from the AI coding agent.",
+    "longDescription": "nitrate is the plugin-first control layer for agency AI media production. Leaders create and push client packets. Creators pull assigned packets into their AI coding agent workspace, update status, and sync returned media with prompts, tool context, and notes attached.",
     "developerName": "nitrate",
     "category": "Productivity",
     "capabilities": [

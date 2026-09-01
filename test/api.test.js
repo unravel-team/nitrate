@@ -5,7 +5,11 @@ const { after, before, describe, it } = require('node:test');
 const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
+const { promisify } = require('node:util');
+const { execFile } = require('node:child_process');
 const { start } = require('../lib/http');
+
+const execFileAsync = promisify(execFile);
 
 describe('nitrate API', () => {
   let server;
@@ -110,12 +114,12 @@ describe('nitrate API', () => {
     assert.equal(waitlist.ok, true);
   });
 
-  it('supports leader and team-member clanker plugin workflow', async () => {
+  it('supports leader and team-member AI coding agent workflow', async () => {
     const leaderLogin = await (
       await fetch(`${base}/api/plugin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role: 'leader', name: 'Maya Chen', email: 'maya@studio.test', clanker: 'maya-clanker', surface: 'Claude Code' })
+        body: JSON.stringify({ role: 'leader', name: 'Maya Chen', email: 'maya@studio.test', agent: 'maya-agent', surface: 'Claude Code' })
       })
     ).json();
     assert.equal(leaderLogin.user.role, 'team_lead');
@@ -131,7 +135,7 @@ describe('nitrate API', () => {
         headers: { 'Content-Type': 'application/json', 'X-Reel-User': 'Maya Chen' },
         body: JSON.stringify({
           projectId: 'proj_launch_film',
-          assignments: [{ name: 'Nia Patel', email: 'nia@studio.test', clanker: 'nia-clanker', task: 'Create social cutdowns and return /renders plus /notes.' }]
+          assignments: [{ name: 'Nia Patel', email: 'nia@studio.test', agent: 'nia-agent', task: 'Create social cutdowns and return /renders plus /notes.' }]
         })
       })
     ).json();
@@ -142,13 +146,13 @@ describe('nitrate API', () => {
       await fetch(`${base}/api/plugin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role: 'member', name: 'Nia Patel', email: 'nia@studio.test', clanker: 'nia-clanker', surface: 'Claude' })
+        body: JSON.stringify({ role: 'member', name: 'Nia Patel', email: 'nia@studio.test', agent: 'nia-agent', surface: 'Claude' })
       })
     ).json();
     const memberPackets = await (await fetch(`${base}/api/plugin/packets?token=${memberLogin.session.token}`)).json();
     assert.equal(memberPackets.mode, 'team_member');
     assert.equal(memberPackets.packets.length, 1);
-    assert.equal(memberPackets.packets[0].assignments[0].clanker, 'nia-clanker');
+    assert.equal(memberPackets.packets[0].assignments[0].agent, 'nia-agent');
 
     const pulled = await (
       await fetch(`${base}/api/plugin/assignments/${pushed.assignments[0].id}`, {
@@ -178,6 +182,25 @@ describe('nitrate API', () => {
     assert.equal(returned.version.metadata.assignmentId, pushed.assignments[0].id);
     const afterReturn = await (await fetch(`${base}/api/plugin/packets?token=${memberLogin.session.token}`)).json();
     assert.equal(afterReturn.packets[0].assignments[0].status, 'returned');
+  });
+
+  it('logs in the CLI with --agent and stores public agent fields', async () => {
+    const configFile = path.join(dataDir, 'cli-config.json');
+    const { stdout, stderr } = await execFileAsync(process.execPath, [
+      path.join(__dirname, '..', 'bin', 'nitrate.mjs'),
+      'login',
+      '--api', base,
+      '--email', 'cli-agent@studio.test',
+      '--name', 'CLI Agent',
+      '--role', 'member',
+      '--agent', 'cli-agent',
+      '--surface', 'Codex'
+    ], { env: { ...process.env, NITRATE_CONFIG_FILE: configFile } });
+    const config = JSON.parse(await fs.readFile(configFile, 'utf8'));
+    assert.equal(stderr, '');
+    assert.match(stdout, /Logged in as CLI Agent \(ai_creator\) on cli-agent/);
+    assert.equal(config.user.agent, 'cli-agent');
+    assert.equal(config.session.agent, 'cli-agent');
   });
 
   it('serves product surfaces and immutable media', async () => {

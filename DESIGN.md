@@ -4,6 +4,7 @@ description: A calibrated review-room system for collaborative AI video producti
 colors:
   electric-violet: "#6c35ff"
   bright-violet: "#815cff"
+  accessible-lavender: "#a28cff"
   review-orange: "#ff5038"
   success-green: "#73e6a0"
   projection-ink: "#08080a"
@@ -121,6 +122,7 @@ The palette separates the viewing room, projected argument, live production stat
 
 - **Electric Violet** (`#6c35ff`): carries the production path, large interruption fields, active states, and hard-offset emphasis.
 - **Bright Violet** (`#815cff`): supplies higher-luminance active edges, selected returns, hover states, and readable violet accents on ink.
+- **Accessible Lavender** (`#a28cff`): carries compact violet labels on raised ink where bright violet does not meet body-text contrast.
 
 ### Secondary
 
@@ -238,9 +240,9 @@ The violet problem section must diagnose fragmentation at a glance. Its declarat
 
 ### Dual-Agent CLI Journey
 
-“How it works” is a guided six-step emulator with two persistent terminals: Maya, the agency lead in Claude Code, and Nia, a creator in Codex. The commands match the open-source plugin’s real surface: both people log in, Maya creates one campaign packet and assigns creator-specific routes, Nia pulls a prepared workspace, marks it working, and syncs a rendered ad with its prompt and notes. Nitrate then directs Maya to visual review in the command center; review decisions are not misrepresented as CLI commands. When Maya requests another pass, the plugin pushes a new assignment back into Nia’s agent with the feedback attached.
+“How it works” is a guided six-step emulator with two persistent AI coding agent consoles: Maya, the agency lead in Claude Code, and Nia, a creator in Codex. Each person types a normal request; the AI coding agent responds and then exposes the real Nitrate tool call it triggers. Maya creates one campaign packet and assigns creator-specific routes, Nia pulls a prepared workspace, marks it working, and syncs a rendered ad with its prompt and notes. Nitrate then directs Maya to visual review in the command center; review decisions are not misrepresented as CLI commands. When Maya requests another pass, Claude Code triggers Nitrate again and routes the feedback back to Nia’s AI coding agent.
 
-The terminals remain fixed while the active side brightens, new lines reveal, and one directional handoff crosses the Nitrate bridge. Projection-white chrome identifies the leader, violet chrome identifies the creator, and review orange appears when work comes back for a human decision. The emulator plays once when visible and provides Previous, Play/Pause, Next, and six direct step controls. Reduced-motion mode disables autoplay and spatial animation without hiding any state. On mobile, the same chronology stacks as leader terminal → Nitrate handoff → creator terminal, with all six steps remaining directly selectable.
+The consoles remain fixed while the active user request types character by character, the AI coding agent response appears, the Nitrate tool call moves from Running to Done, and one directional handoff crosses the bridge. Projection-white chrome identifies the leader, violet chrome identifies the creator, and review orange appears when work comes back for a human decision. The emulator plays once when visible and provides Previous, Play/Pause, Next, and six direct step controls. Reduced-motion mode renders the completed conversation immediately and disables autoplay and spatial animation without hiding any state. On mobile, the same chronology stacks as leader console → Nitrate handoff → creator console, with all six steps remaining directly selectable.
 
 ## Do's and Don'ts
 

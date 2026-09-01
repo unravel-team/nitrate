@@ -39,12 +39,12 @@ const tools = [
   },
   {
     name: 'nitrate_packets',
-    description: 'List packets visible to the logged-in nitrate clanker plugin session.',
+    description: 'List packets visible to the logged-in nitrate AI coding agent session.',
     inputSchema: { type: 'object', properties: {} }
   },
   {
     name: 'nitrate_assignment_status',
-    description: 'Update a clanker assignment status.',
+    description: 'Update an AI coding agent assignment status.',
     inputSchema: {
       type: 'object',
       required: ['assignmentId', 'status'],
@@ -72,15 +72,15 @@ const tools = [
   },
   {
     name: 'nitrate_push_packet',
-    description: 'As a leader, push a packet to one creator clanker.',
+    description: 'As a leader, push a packet to one AI coding agent.',
     inputSchema: {
       type: 'object',
-      required: ['packetId', 'email', 'name', 'clanker', 'task'],
+      required: ['packetId', 'email', 'name', 'agent', 'task'],
       properties: {
         packetId: { type: 'string' },
         email: { type: 'string' },
         name: { type: 'string' },
-        clanker: { type: 'string' },
+        agent: { type: 'string' },
         task: { type: 'string' }
       }
     }
@@ -115,8 +115,8 @@ async function callTool(name, args) {
     if (!packets.length) {
       return {
         next: data.mode === 'leader'
-          ? 'Create the first agency packet, then push it to creator clankers.'
-          : 'No packets are assigned to this clanker yet.'
+          ? 'Create the first agency packet, then push it to AI coding agents.'
+          : 'No packets are assigned to this AI coding agent yet.'
       };
     }
     const first = packets[0];
@@ -159,7 +159,7 @@ async function callTool(name, args) {
       method: 'POST',
       body: JSON.stringify({
         packetId: args.packetId,
-        assignments: [{ email: args.email, name: args.name, clanker: args.clanker, task: args.task }]
+        assignments: [{ email: args.email, name: args.name, agent: args.agent, task: args.task }]
       })
     });
   }

@@ -4,9 +4,9 @@ info:
   version: 0.1.0
   description: >-
     Prototype contract for creating brief packets, collecting returned AI media
-    from creators' clankers, and recording lead review. The production API will
+    from creators' AI coding agents, and recording lead review. The production API will
     preserve these domain objects while adding authentication, tenant scoping,
-    direct clanker sync, signed uploads, and cursor pagination.
+    direct AI coding agent sync, signed uploads, and cursor pagination.
 servers:
   - url: http://127.0.0.1:4173
 paths:
@@ -42,20 +42,20 @@ paths:
         '400': { description: Invalid packet }
   /api/plugin/login:
     post:
-      summary: Log in from the clanker plugin
+      summary: Log in from the AI coding agent plugin
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [email, clanker]
+              required: [email, agent]
               properties:
                 role: { type: string, enum: [leader, member] }
                 name: { type: string }
                 email: { type: string, format: email }
-                clanker: { type: string }
-                surface: { type: string, description: Claude, Claude Code, Higgsfield Supercomputer, or local clanker }
+                agent: { type: string, description: Name of the AI coding agent }
+                surface: { type: string, description: Claude, Claude Code, Higgsfield Supercomputer, or local AI coding agent }
       responses:
         '201': { description: Plugin session created }
         '400': { description: Invalid login }
@@ -72,7 +72,7 @@ paths:
         '401': { description: Plugin login required }
   /api/plugin/push:
     post:
-      summary: Push a packet to one or more creator clankers
+      summary: Push a packet to one or more creator AI coding agents
       requestBody:
         required: true
         content:
@@ -89,10 +89,10 @@ paths:
                     properties:
                       name: { type: string }
                       email: { type: string, format: email }
-                      clanker: { type: string }
+                      agent: { type: string, description: Name of the AI coding agent }
                       task: { type: string }
       responses:
-        '201': { description: Packet pushed to clankers }
+        '201': { description: Packet pushed to AI coding agents }
         '400': { description: Invalid assignment }
   /api/plugin/assignments/{assignmentId}:
     patch:
