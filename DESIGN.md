@@ -217,6 +217,10 @@ The signature review stage combines a 16:9 media frame, attached creator/tool/st
 
 The workflow map is a primary explanatory object, not a progress indicator. Its fictional Northwind campaign shows Maya attaching one campaign brief, brand guide, approved assets, and mandatory brand rules, then sending that shared source of truth with three distinct ad concepts to Jonas, Nia, and Asha. The product-first reveal, commuter story, and brand-world montage fan out along violet assignment routes and converge along review-orange routes into one campaign review. Every creator lane explicitly carries the same brief and brand guide; the endpoint checks the returned variants against one brand standard. The routes draw once when the map enters view and can be replayed explicitly; reduced motion displays the complete static topology. On mobile, the same semantic order stacks vertically and the creator group keeps a visible branching spine.
 
+### Works With Strip
+
+A full-width ruled strip directly below the production map states the supported compatibility set: Codex, Higgsfield Supercomputer, and Claude Code. Each name is paired with a custom square line icon drawn in the same review-room geometry; the names remain the primary identifiers and the icons are decorative. Do not dilute this highlight with an exhaustive tool cloud.
+
 ### Production Sheets and Return Stack
 
 The brief sheet is a slightly rotated projection-white artifact with a violet hard offset. The creator inbox inverts that language on a violet field, while returned media overlaps in a shallow stack. Hover straightens or lifts these artifacts just enough to confirm interactivity.
