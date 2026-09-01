@@ -3,190 +3,272 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>nitrate — shared projects for AI video agencies</title>
-  <meta name="description" content="Nitrate helps AI video agencies keep briefs, files, prompts, feedback, and finished videos together when creators work in separate tools.">
-  <link rel="stylesheet" href="/styles/reel.css">
+  <title>nitrate — run AI video projects from brief to review</title>
+  <meta name="description" content="Nitrate helps AI video agency leaders set the brief, assign creators, and review every AI-generated result in one place.">
+  <meta name="theme-color" content="#08080a">
+  <link rel="preload" href="/fonts/league-gothic-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles/nitrate-landing.css">
+  <script src="/scripts/nitrate-landing.js" defer></script>
 </head>
-<body class="landing-dam">
+<body>
   <!--
-  SURFACE: landing
-  THESIS: AI video agencies create across separate tools and lose track of files, prompts, feedback, and who made what; nitrate keeps each client project organized around one brief.
-  OWN-WORLD: an AI video production dispatch room: packet manifests, routing slips, creator lanes, contact-sheet returns, and review stamps in warm paper, blue-black, amber, and nitrate green.
-  STORY: agency leads recognize the coordination pain, understand the packet as the unit of control, see how creators receive and return work, and request access.
-  FIRST VIEWPORT: a large agency-facing claim beside a live-feeling packet board: one brief splits into creator lanes for Runway, Higgsfield, Claude, and custom tools, then returns to review.
-  FORM: code-led established-world rebuild, seed nitrate-packet-control.
-  FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md.
+  THESIS: AI video creation happens individually, but agency production has to happen as a team; this page refuses the generic AI dashboard and the warm-paper DAM brochure.
+  OWN-WORLD: a calibrated agency review room in black and projection white, with electric-violet production state, red-orange review marks, compressed film-title type, timecode, hard cuts, and almost no rounded chrome.
+  STORY: the agency founder sees the exact operating loop—set the client brief, assign the team, let creators use their existing AI tools, and review every returned result with its context intact.
+  FIRST VIEWPORT: a large interactive review screen owns the left two-thirds; the founder-facing brief → assign → review promise sits at right; a single animated production rail joins brief, assignments, AI tools, and review beneath them; the pilot CTA remains above the fold.
+  FORM: comp-led Review Room, chosen direction index 5, seed be4b0602; approved comp .impeccable/mocks/nitrate-review-room-screen.png.
+  FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
   -->
-  <header class="header dam-header">
-    <a class="brand dam-brand" href="/" aria-label="nitrate home"><span class="brand-mark dam-mark" aria-hidden="true"></span><span>nitrate</span></a>
-    <nav class="nav" aria-label="Primary">
-      <a class="nav-link" href="/use/">Use cases</a>
-      <a class="nav-link" href="/plugin/">Plugin</a>
-      <a class="nav-link" href="/press/">Press</a>
-      <a class="button small primary" href="#access">Request access</a>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="wordmark" href="#top" aria-label="Nitrate home">nitrate<span aria-hidden="true">.</span></a>
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a href="#how-it-works">How it works</a>
+      <a href="/plugin/">Plugin</a>
+      <a class="nav-dam" href="#dam">DAM for AI agents</a>
+      <a class="nav-cta" href="#pilot">Request pilot</a>
     </nav>
   </header>
 
-  <main>
-    <section class="page dam-hero packet-hero" aria-labelledby="hero-title">
-      <div class="dam-hero-copy">
-        <h1 id="hero-title">Your AI video agency creates across separate tools.</h1>
-        <p class="lede dam-lede">Nitrate keeps the brief, files, prompts, feedback, and finished videos together in one shared project.</p>
-        <div class="dam-claim">
-          <span>The problem:</span>
-          <strong>you lose track of who made what, with which prompt, and what needs review.</strong>
-        </div>
-        <div class="actions">
-          <a class="button primary" href="#access">Get plugin access</a>
-          <a class="button ghost" href="/plugin/">See the plugin flow</a>
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="hero-eyebrow">For AI video agency founders and producers</p>
+        <h1 id="hero-title">
+          <span>Set the brief. Assign the team.</span>
+          <span>Review every result in one place.</span>
+        </h1>
+        <p class="hero-promise"><strong>Nitrate gives your AI video agency one collaboration workflow.</strong> Set the client brief and creator assignments, then get every video back with its creator, prompt, and notes attached.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#pilot"><span>Run your next client project</span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a>
+          <a class="text-link" href="#how-it-works">See the workflow <span aria-hidden="true">↘</span></a>
         </div>
       </div>
 
-      <figure class="agent-wall packet-console" aria-label="Nitrate keeping a brief attached to creator returns">
-        <figcaption class="wall-top">
-          <span>One project brief</span>
-          <strong>Acme launch film</strong>
-        </figcaption>
-        <div class="packet-manifest">
-          <div><strong>What to make</strong><span>3 product-film directions for a 15s launch spot.</span></div>
-          <div><strong>What to use</strong><span>hero bottle · city plate · brand rules · references</span></div>
-          <div><strong>What to return</strong><span>renders · stills · prompts · notes · handoff files</span></div>
+      <div class="review-stage" data-review-stage aria-label="Fictional Nitrate review-room demonstration">
+        <div class="stage-topline">
+          <div><strong>Northwind · 15s launch film</strong><span>Fictional demo</span></div>
+          <time class="timecode" id="demo-timecode">00:00:07:12</time>
         </div>
-        <div class="clanker-lanes">
-          <div class="lane lane-returned"><span>Runway</span><strong>Jonas</strong><small>2 videos returned</small></div>
-          <div class="lane lane-working"><span>Higgsfield</span><strong>Nia</strong><small>12 motion tests in progress</small></div>
-          <div class="lane lane-pulled"><span>Claude Code</span><strong>Asha</strong><small>workspace pulled</small></div>
-          <div class="lane lane-waiting"><span>Claude</span><strong>Leo</strong><small>waiting on feedback</small></div>
+
+        <div class="player-layout">
+          <div class="media-frame">
+            <img id="hero-still" src="/assets/nitrate-demo/coastal-city.webp" width="1280" height="720" alt="Fictional AI video frame of a futuristic coastal city and transport craft">
+            <div class="frame-vignette" aria-hidden="true"></div>
+            <div class="playback-bar" aria-hidden="true">
+              <span class="play-symbol"><svg viewBox="0 0 20 20"><path d="m7 5 7 5-7 5z"/></svg></span>
+              <span class="volume-symbol"><svg viewBox="0 0 20 20"><path d="M4 8h3l4-3v10l-4-3H4zm9-1.5a5 5 0 0 1 0 7"/></svg></span>
+              <span class="scrub-track"><span></span></span>
+              <span>00:07 / 00:15</span>
+            </div>
+          </div>
+
+          <aside class="return-context" aria-label="Selected return context">
+            <div class="context-person">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 2.8-6.5 7-6.5s7 2.5 7 6.5"/></svg>
+              <span id="return-creator">Jonas · Runway</span>
+            </div>
+            <dl class="context-list">
+              <div><dt><span class="state-dot violet"></span>Prompt</dt><dd id="return-prompt">Attached</dd></div>
+              <div><dt><span class="state-dot red"></span>Status</dt><dd id="return-status">Needs review</dd></div>
+            </dl>
+            <p class="context-note" id="return-note">Hold the craft for two more frames before the reveal.</p>
+            <button class="approve-button" id="approve-demo" type="button">Approve round</button>
+            <svg class="review-mark" viewBox="0 0 150 66" aria-hidden="true">
+              <path d="M11 35c35 7 76 5 123-8"/>
+              <path d="M94 50c18-2 32-8 43-19"/>
+              <path d="m125 28 15-1-6 14"/>
+            </svg>
+          </aside>
         </div>
-        <div class="review-ledger">
-          <div><strong>Needs review</strong><span>Jonas v2 · prompt attached</span></div>
-          <div><strong>Next step</strong><span>Ask Nia for a tighter logo hold</span></div>
+
+        <div class="return-strip" role="tablist" aria-label="Fictional creator returns">
+          <button class="return-thumb is-selected" type="button" role="tab" aria-selected="true" aria-controls="hero-still"
+            data-image="/assets/nitrate-demo/coastal-city.webp" data-alt="Fictional AI video frame of a futuristic coastal city and transport craft" data-creator="Jonas" data-tool="Runway" data-time="00:00:07:12" data-prompt="Attached" data-status="Needs review" data-note="Hold the craft for two more frames before the reveal.">
+            <img src="/assets/nitrate-demo/coastal-city.webp" width="320" height="180" alt="">
+            <span><strong>Jonas</strong><small>Runway</small></span>
+            <i aria-hidden="true"><b></b><b></b></i>
+          </button>
+          <button class="return-thumb" type="button" role="tab" aria-selected="false" aria-controls="hero-still"
+            data-image="/assets/nitrate-demo/transit-hall.webp" data-alt="Fictional AI video frame of a lone figure in a warm transit hall" data-creator="Nia" data-tool="Higgsfield" data-time="00:00:09:04" data-prompt="Attached" data-status="In progress" data-note="Testing a tighter move through the architecture.">
+            <img src="/assets/nitrate-demo/transit-hall.webp" width="320" height="180" alt="">
+            <span><strong>Nia</strong><small>Higgsfield</small></span>
+            <i aria-hidden="true"><b></b><b></b></i>
+          </button>
+          <button class="return-thumb" type="button" role="tab" aria-selected="false" aria-controls="hero-still"
+            data-image="/assets/nitrate-demo/brutalist-atrium.webp" data-alt="Fictional AI video frame of two figures in a bright brutalist atrium" data-creator="Asha" data-tool="Claude Code" data-time="00:00:11:18" data-prompt="Attached" data-status="Needs review" data-note="Compare the wider silhouette with the original brief.">
+            <img src="/assets/nitrate-demo/brutalist-atrium.webp" width="320" height="180" alt="">
+            <span><strong>Asha</strong><small>Claude Code</small></span>
+            <i aria-hidden="true"><b></b><b></b></i>
+          </button>
+          <button class="return-thumb" type="button" role="tab" aria-selected="false" aria-controls="hero-still"
+            data-image="/assets/nitrate-demo/mountain-valley.webp" data-alt="Fictional AI video frame of futuristic architecture in a mountain valley" data-creator="Milo" data-tool="fal" data-time="00:00:13:02" data-prompt="Attached" data-status="Working" data-note="Exploring the landscape direction before the next round.">
+            <img src="/assets/nitrate-demo/mountain-valley.webp" width="320" height="180" alt="">
+            <span><strong>Milo</strong><small>fal</small></span>
+            <i aria-hidden="true"><b></b><b></b></i>
+          </button>
         </div>
-      </figure>
+      </div>
+
+      <div class="production-rail" data-production-rail aria-label="Nitrate workflow from brief to review">
+        <div class="rail-line" aria-hidden="true"><span class="rail-progress"></span><span class="rail-playhead"></span></div>
+        <div class="rail-step" style="--step:0">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v5h5M10 12h5M10 16h5"/></svg>
+          <span>Brief</span>
+        </div>
+        <div class="rail-step" style="--step:1">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.3"/><path d="M3 20c0-4 2.2-6 6-6s6 2 6 6M15 15c3.8 0 6 1.8 6 5"/></svg>
+          <span>Creator assignments</span>
+        </div>
+        <div class="rail-step" style="--step:2">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="6" cy="6" r="1.6"/><circle cx="12" cy="6" r="1.6"/><circle cx="18" cy="6" r="1.6"/><circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/><circle cx="6" cy="18" r="1.6"/><circle cx="12" cy="18" r="1.6"/><circle cx="18" cy="18" r="1.6"/></svg>
+          <span>AI tools</span>
+        </div>
+        <div class="rail-step" style="--step:3">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/></svg>
+          <span>Ready to review</span>
+        </div>
+        <button class="replay-rail" type="button" aria-label="Replay the brief-to-review sequence">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 7v5h-5"/><path d="M19 12a7 7 0 1 0-2 5"/></svg>
+        </button>
+      </div>
+
+      <p class="tool-reassurance">Your creators keep working in <strong>Runway</strong>, <strong>Higgsfield Supercomputer</strong>, <strong>Claude Code</strong>, <strong>Codex</strong>, <strong>fal</strong>, <strong>Replicate</strong>, and the tools they already use.</p>
     </section>
 
-    <section class="page dam-section split-proof leader-pain" aria-labelledby="pain-title">
+    <section class="dam-bridge" id="dam" aria-labelledby="dam-title">
+      <div class="dam-heading">
+        <h2 id="dam-title">A DAM for the work your AI agents are still making.</h2>
+      </div>
+      <div class="dam-explanation">
+        <p>Traditional DAMs organize finished files. Nitrate keeps the brief, creator, prompt, rounds, and decisions together before the final video exists.</p>
+        <div class="dam-comparison" role="table" aria-label="Traditional DAM compared with Nitrate">
+          <div role="row"><strong role="rowheader">Traditional DAM</strong><span role="cell">Finished file</span><span role="cell">→</span><span role="cell">Stored asset</span></div>
+          <div role="row" class="nitrate-row"><strong role="rowheader">Nitrate</strong><span role="cell">Brief</span><span role="cell">→</span><span role="cell">Creators</span><span role="cell">→</span><span role="cell">Rounds</span><span role="cell">→</span><span role="cell">Decision</span></div>
+        </div>
+      </div>
+      <div class="dam-diagram" aria-hidden="true">
+        <svg viewBox="0 0 720 180" preserveAspectRatio="xMidYMid meet">
+          <g class="dam-node brief-node"><rect x="8" y="45" width="112" height="90"/><path d="M33 68h52M33 84h62M33 100h40"/></g>
+          <path class="dam-path" d="M120 90h76"/>
+          <g class="dam-node people-node"><circle cx="236" cy="70" r="15"/><circle cx="274" cy="70" r="15"/><circle cx="312" cy="70" r="15"/><path d="M212 120c0-24 11-36 24-36s24 12 24 36M250 120c0-24 11-36 24-36s24 12 24 36M288 120c0-24 11-36 24-36s24 12 24 36"/></g>
+          <path class="dam-path" d="M337 90h72"/>
+          <g class="dam-node rounds-node"><rect x="424" y="44" width="106" height="30"/><rect x="424" y="78" width="106" height="30"/><rect x="424" y="112" width="106" height="30"/></g>
+          <path class="dam-path" d="M530 90h72"/>
+          <g class="dam-eye"><path d="M610 90s23-34 51-34 51 34 51 34-23 34-51 34-51-34-51-34Z"/><circle cx="661" cy="90" r="12"/></g>
+        </svg>
+      </div>
+    </section>
+
+    <section class="break-section" aria-labelledby="break-title">
+      <div class="break-copy">
+        <h2 id="break-title">A brief in Notion. Feedback in Slack. Videos in Drive.</h2>
+        <p>Meanwhile, each creator works in a different AI tool. When round one arrives, you have to reconstruct which file came from whom, what direction it answers, and what changed.</p>
+      </div>
+      <div class="break-question">
+        <p>“Is this the latest version—and which brief, prompt, and feedback produced it?”</p>
+        <svg viewBox="0 0 380 80" aria-hidden="true"><path d="M8 44c77 17 185 20 355-9"/><path d="m337 27 27 8-18 22"/></svg>
+      </div>
+    </section>
+
+    <section class="workflow" id="how-it-works" aria-labelledby="workflow-title">
+      <div class="workflow-heading">
+        <h2 id="workflow-title">One project from your brief to team review.</h2>
+        <p>You decide how the project should be worked. Nitrate gives every creator a clear assignment and returns their work in a consistent, reviewable format.</p>
+      </div>
+
+      <div class="workflow-scenes">
+        <article class="scene scene-brief" id="direct-flow">
+          <div class="scene-copy">
+            <h3>Turn the client brief into clear assignments.</h3>
+            <p>Define the direction, input assets, creator responsibilities, and exactly what each person must return.</p>
+          </div>
+          <div class="brief-sheet" aria-label="Example assignment for the fictional Northwind project">
+            <div class="sheet-title"><strong>Northwind · Launch film</strong><span>3 assignments</span></div>
+            <dl>
+              <div><dt>Direction</dt><dd>Fast, cinematic product reveal. 15 seconds.</dd></div>
+              <div><dt>References</dt><dd>Brand guide · city plate · motion reference</dd></div>
+              <div><dt>Return</dt><dd>Video · key stills · prompt · notes</dd></div>
+            </dl>
+          </div>
+        </article>
+
+        <article class="scene scene-creator" id="creator-flow">
+          <div class="creator-inbox" aria-label="Example Nitrate plugin assignment">
+            <div class="inbox-bar"><span>nitrate</span><strong>1 assignment</strong></div>
+            <div class="inbox-assignment">
+              <span>Northwind · 15s launch film</span>
+              <strong>Explore the human-scale opening before the reveal.</strong>
+              <button type="button" data-demo-pull>Pull assignment</button>
+            </div>
+            <div class="workspace-tree" data-workspace-tree aria-live="polite">
+              <div class="workspace-tree-content">
+                <span>Project ready</span>
+                <ul>
+                  <li>Brief and assignment</li>
+                  <li>Input references</li>
+                  <li>Renders, prompts, notes, handoff</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="scene-copy">
+            <h3>Creators pull the work into Claude Code or Codex.</h3>
+            <p>Each creator gets their assignment and references through the Nitrate plugin, works in any AI video tool, then returns the exported files through Nitrate.</p>
+          </div>
+        </article>
+
+        <article class="scene scene-review" id="review-flow">
+          <div class="scene-copy">
+            <h3>Every result comes back ready to review.</h3>
+            <p>See the video with its creator, assignment, tool, prompt, notes, and review status—without rebuilding the project history yourself.</p>
+          </div>
+          <div class="review-stack" aria-label="Example reviewable creator returns">
+            <div class="stack-return"><img src="/assets/nitrate-demo/coastal-city.webp" width="320" height="180" alt=""><span><strong>Jonas · Runway</strong><small>Prompt attached · Needs review</small></span></div>
+            <div class="stack-return"><img src="/assets/nitrate-demo/transit-hall.webp" width="320" height="180" alt=""><span><strong>Nia · Higgsfield</strong><small>Prompt attached · Working</small></span></div>
+            <div class="stack-return"><img src="/assets/nitrate-demo/brutalist-atrium.webp" width="320" height="180" alt=""><span><strong>Asha · Claude Code</strong><small>Prompt attached · Needs review</small></span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tool-section" aria-labelledby="tools-title">
       <div>
-        <h2 id="pain-title">The handoff breaks after the brief is sent.</h2>
+        <h2 id="tools-title">Your creators keep their stack. You keep the project.</h2>
+        <p>Nitrate does not replace generation tools. It keeps the brief, assignments, exported work, prompts, feedback, and decisions together while production is still happening.</p>
       </div>
-      <div class="proof-copy">
-        <p>The project lead sends a brief. Each creator works in their own AI tool. The work comes back as files, links, screenshots, and prompt notes scattered across chats.</p>
-        <p>Now the project lead has to ask: who made this, what prompt produced it, what assets were used, and is this ready for client review?</p>
-        <p><strong>Nitrate fixes that handoff.</strong> The brief goes out as a packet. The work comes back attached to that packet.</p>
-      </div>
-    </section>
-
-    <section class="page dam-section packet-anatomy" aria-labelledby="packet-title">
-      <div class="section-head">
-        <h2 id="packet-title">Nitrate gives each project one packet.</h2>
-        <p class="lede">The packet tells every creator what to make, what files to use, where to put outputs, and what to send back.</p>
-      </div>
-      <div class="packet-anatomy-grid">
-        <article><h3>Brief</h3><p>The project goal, direction, constraints, and review criteria.</p></article>
-        <article><h3>Files</h3><p>The input assets and references every creator should use.</p></article>
-        <article><h3>People</h3><p>Who is assigned, which tool they are using, and what they are exploring.</p></article>
-        <article><h3>Returns</h3><p>The output, prompt, notes, tool, status, and feedback.</p></article>
-      </div>
-    </section>
-
-    <section class="page dam-section flow-river" aria-labelledby="flow-title">
-      <div class="section-head">
-        <h2 id="flow-title">The creator keeps making. Nitrate handles the project structure.</h2>
-      </div>
-      <div class="flow-board">
-        <div class="flow-card lead-card"><strong>Lead creates packet</strong><span>Add the brief, files, creators, and expected outputs.</span></div>
-        <div class="flow-arrow" aria-hidden="true"></div>
-        <div class="flow-card"><strong>Creator pulls work</strong><span>Nitrate creates the project folder and instructions.</span></div>
-        <div class="flow-arrow" aria-hidden="true"></div>
-        <div class="flow-card"><strong>Creator makes media</strong><span>They use Runway, Higgsfield, Claude, or any local tool.</span></div>
-        <div class="flow-arrow" aria-hidden="true"></div>
-        <div class="flow-card return-card"><strong>Work comes back</strong><span>The output, prompt, notes, creator, and status stay together.</span></div>
-      </div>
-    </section>
-
-    <section class="page dam-section contrast-panel" aria-labelledby="different-title">
-      <div class="contrast-copy">
-        <h2 id="different-title">A shared drive stores files. Nitrate organizes the work.</h2>
-        <p class="lede">You can still use your drive. Nitrate adds the missing context around every AI output.</p>
-      </div>
-      <div class="comparison-board" role="table" aria-label="Nitrate compared with shared drives and traditional DAM">
-        <div role="row" class="comparison-row head"><span role="columnheader">System</span><span role="columnheader">What it shows</span><span role="columnheader">What is missing</span></div>
-        <div role="row" class="comparison-row"><strong role="cell">Shared drive</strong><span role="cell">Files and folders</span><span role="cell">Who made it, prompt, feedback, next step</span></div>
-        <div role="row" class="comparison-row"><strong role="cell">Chat</strong><span role="cell">Discussion and links</span><span role="cell">Clean project structure and review state</span></div>
-        <div role="row" class="comparison-row nitrate-row"><strong role="cell">Nitrate</strong><span role="cell">Brief, files, prompts, returns, feedback</span><span role="cell">Nothing to reconstruct at review time</span></div>
-      </div>
-    </section>
-
-    <section class="page dam-section use-led" aria-labelledby="use-title">
-      <div class="section-head">
-        <h2 id="use-title">What stops getting lost.</h2>
-      </div>
-      <div class="use-stack">
-        <article class="use-band">
-          <h3>Who made what</h3>
-          <p>Each return is tied to the creator and tool that made it.</p>
-        </article>
-        <article class="use-band">
-          <h3>The prompt</h3>
-          <p>The output stays attached to the prompt and notes that produced it.</p>
-        </article>
-        <article class="use-band">
-          <h3>The next step</h3>
-          <p>The leader can review, approve, or ask for changes from the exact return.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="page dam-section platform-rack" aria-labelledby="platforms-title">
-      <div>
-        <h2 id="platforms-title">Creators keep using their AI tools.</h2>
-        <p class="lede">Nitrate sits around those tools. It gives each creator the project packet and collects their work back for review.</p>
-      </div>
-      <ul class="platform-grid dam-platforms">
-        <li class="platform-item"><strong>Runway</strong><span>Send the brief, get video options back with prompts and notes.</span></li>
-        <li class="platform-item"><strong>Higgsfield</strong><span>Keep high-volume motion tests tied to the project brief.</span></li>
-        <li class="platform-item"><strong>Claude / Claude Code</strong><span>Turn private AI work into shared project work.</span></li>
-        <li class="platform-item"><strong>Fal / Replicate / custom tools</strong><span>Bring generated files back into the same review flow.</span></li>
+      <ul aria-label="Tools used alongside Nitrate">
+        <li>Runway</li>
+        <li>Higgsfield Supercomputer</li>
+        <li>Claude Code</li>
+        <li>Codex</li>
+        <li>fal</li>
+        <li>Replicate</li>
+        <li>Custom tools</li>
       </ul>
     </section>
 
-    <section class="page dam-section close-panel" id="access" aria-labelledby="access-title">
-      <div class="close-copy">
-        <h2 id="access-title">Try it on one active client video project.</h2>
-        <p class="lede">We’ll help you create the packet, send it to creators, and review the first organized returns.</p>
+    <section class="pilot" id="pilot" aria-labelledby="pilot-title">
+      <div class="pilot-copy">
+        <h2 id="pilot-title">Run one live client project through Nitrate.</h2>
+        <p>We’ll help you set up the brief, assign your creators, collect the first round, and review every result in one organized project.</p>
       </div>
-      <form class="form dam-form" id="waitlist-form" novalidate>
-        <label class="field" for="email"><span class="visually-hidden">Work email</span><input id="email" name="email" type="email" autocomplete="email" placeholder="you@studio.com" required></label>
-        <label class="select visually-labelled" for="teamSize"><span class="visually-hidden">Team size</span>
-          <select id="teamSize" name="teamSize"><option value="">Team size</option><option>1-5</option><option>6-20</option><option>21-80</option><option>80+</option></select>
-        </label>
-        <label class="select visually-labelled" for="workflow"><span class="visually-hidden">Primary agent workspace</span>
-          <select id="workflow" name="workflow"><option value="">Primary agent workspace</option><option>Runway</option><option>Higgsfield Supercomputer</option><option>Claude</option><option>Claude Code</option><option>Multiple tools</option><option>Other</option></select>
-        </label>
-        <button class="button primary" type="submit">Request access</button>
-        <p class="form-note" id="waitlist-status" role="status"></p>
+      <form class="pilot-form" id="waitlist-form" novalidate>
+        <label for="email">Work email<input id="email" name="email" type="email" autocomplete="email" placeholder="you@agency.com" required></label>
+        <label for="teamSize">Agency team size<select id="teamSize" name="teamSize" required><option value="">Choose a size</option><option>1-5</option><option>6-20</option><option>21-80</option><option>80+</option></select></label>
+        <label for="workflow">Primary creator workflow<select id="workflow" name="workflow" required><option value="">Choose a workflow</option><option>Runway</option><option>Higgsfield Supercomputer</option><option>Claude Code</option><option>Codex</option><option>Multiple tools</option><option>Other</option></select></label>
+        <button class="button button-primary" type="submit"><span>Request a pilot</span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+        <p class="form-status" id="waitlist-status" role="status"></p>
       </form>
     </section>
   </main>
 
-  <footer class="page dam-footer">
-    <p><strong>nitrate</strong><br>Keep every AI video agency project together.</p>
-    <p><a href="mailto:hello@nitrate.media">hello@nitrate.media</a> · <a href="/plugin/">Plugin</a> · <a href="/app/">Command center</a></p>
+  <footer class="site-footer">
+    <p><strong>nitrate.</strong><span>Collaboration for AI video agencies.</span></p>
+    <p><a href="mailto:hello@nitrate.media">hello@nitrate.media</a><a href="/plugin/">Plugin</a><a href="/press/">Press</a></p>
   </footer>
-<script>
-document.getElementById('waitlist-form').addEventListener('submit', async event => {
-  event.preventDefault();
-  const form = event.currentTarget;
-  const status = document.getElementById('waitlist-status');
-  const data = Object.fromEntries(new FormData(form));
-  status.textContent = 'Submitting...';
-  try {
-    const response = await fetch('/api/waitlist', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
-    const result = await response.json();
-    status.textContent = response.ok ? result.message : result.error;
-    if (response.ok) form.reset();
-  } catch { status.textContent = 'Network unavailable. Email hello@nitrate.media.'; }
-});
-</script>
 </body>
 </html>

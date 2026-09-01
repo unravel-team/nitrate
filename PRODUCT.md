@@ -12,17 +12,17 @@ The working prototype uses dependency-free Node.js HTTP APIs plus static HTML/CS
 
 ## Users
 
-Primary users are team leads, producers, creative directors, and AI creators on media teams. These teams create image, video, and audio work in Claude, Claude Code, Higgsfield Supercomputer, and local AI workspaces called clankers.
+Primary users are agency owners, producers, creative directors, and AI creators at AI video agencies. These teams create client video work across Claude, Claude Code, Runway, Higgsfield Supercomputer, Fal, Replicate, and custom AI workflows.
 
 Secondary users are clients, agency reviewers, GTM teams, and automated workflows that need controlled access to returned work.
 
 ## Product Purpose
 
-nitrate is a clanker plugin and collaboration layer for AI media teams. The creator entry point is the plugin: it asks the creator to log in, pulls assigned packets into the clanker, and syncs finished work back. Team leaders use the command center to define brief packets, input assets, references, constraints, creator assignments, and expected output folders.
+nitrate is a plugin-first collaboration layer for AI video agencies. The creator entry point is the plugin: it asks the creator to log in, pulls assigned project work into their AI workspace, and returns finished work for review. Team leaders use the command center to define briefs, input references, constraints, creator assignments, and expected output folders.
 
 ## Positioning
 
-nitrate is DAM for agents: the asset system for AI media work before the final file exists. Traditional DAMs organize approved assets after production; nitrate starts inside the clanker before generation by asking the creator to log in, pulling the team packet, and making the brief, inputs, folder contract, agent workspace, return path, prompts, notes, and review decisions explicit. It does not replace Claude, Claude Code, Higgsfield Supercomputer, or local creator workflows. It coordinates them.
+nitrate is the collaboration layer for AI video agencies and a DAM for the work their AI agents are still making. Traditional DAMs organize approved assets after production; nitrate starts before the final file exists by making the brief, creator assignment, expected return, prompt, notes, and review decision part of one project. It does not replace Claude, Claude Code, Runway, Higgsfield Supercomputer, Fal, Replicate, or custom creator workflows. It coordinates the work around them.
 
 ## Operating Context
 
@@ -55,8 +55,13 @@ Prototype boundaries:
 
 - Product name: nitrate.
 - Working contact: hello@nitrate.media.
-- Voice: direct, media-team-first, practical, and operational.
-- Avoid engineer-only terms in buyer-facing copy. Do not lead with SHA, repositories, commits, or provenance when talking to media teams.
+- Voice: direct, agency-first, visual, practical, and operational.
+- Primary buyer: AI video agency founders, producers, and production leads.
+- Hero message: “Set the brief. Assign the team. Review every result in one place.”
+- Supporting role: “Nitrate gives your AI video agency one collaboration workflow.”
+- Category bridge: “A DAM for the work your AI agents are still making.”
+- Workflow framing: start from the founder’s real handoff—brief in Notion, feedback in Slack, videos in Drive, and creators in separate AI tools—then show one project staying intact through review.
+- Avoid engineer-only terms in buyer-facing copy. Do not lead with clankers, SHA, repositories, commits, packets, or provenance when talking to agency buyers.
 
 ## Product Principles
 
