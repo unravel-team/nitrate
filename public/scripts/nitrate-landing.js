@@ -158,8 +158,10 @@
   pullButton?.setAttribute('aria-expanded', 'false');
   pullButton?.addEventListener('click', () => {
     const open = pullButton.getAttribute('aria-expanded') !== 'true';
+    const closedLabel = pullButton.dataset.closedLabel || 'Pull assignment';
+    const openLabel = pullButton.dataset.openLabel || 'Assignment ready';
     pullButton.setAttribute('aria-expanded', String(open));
-    pullButton.textContent = open ? 'Assignment ready' : 'Pull assignment';
+    pullButton.textContent = open ? openLabel : closedLabel;
     workspaceTree?.classList.toggle('is-visible', open);
   });
 
@@ -169,10 +171,7 @@
     '.break-copy',
     '.problem-evidence',
     '.workflow-heading',
-    '.scene-copy',
-    '.brief-sheet',
-    '.creator-inbox',
-    '.review-stack',
+    '.agent-roundtrip',
     '.tool-section > div',
     '.tool-section > ul',
     '.pilot-copy',

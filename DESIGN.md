@@ -162,12 +162,10 @@ At `1180px`, the review stage keeps precedence while its context column, return 
 
 ## Elevation & Depth
 
-The system is flat by default and uses no ambient card shadows. Depth comes from tonal separation, thin rules, media vignettes, overlapping review returns, and deliberate hard-offset production sheets. The brief sheet uses a violet offset (`18px 18px 0`, compacting to `9px 9px 0` on mobile); the creator inbox uses the same geometry in translucent ink. Soft state halos belong only to tiny status dots.
+The system is flat by default and uses no ambient card shadows. Depth comes from tonal separation, thin rules, media vignettes, and the contrast between projection-white leader surfaces and dark or violet creator-agent surfaces. The leader-to-creator round trip stays in one ruled plane so its direction is easier to follow than a stack of floating artifacts. Soft state halos belong only to tiny status dots.
 
 ### Shadow Vocabulary
 
-- **Hard Violet Offset** (`18px 18px 0 #6c35ff`): makes the white brief sheet feel like a physical production artifact.
-- **Hard Ink Offset** (`18px 18px 0 rgba(8, 8, 10, 0.22)`): separates the creator inbox from a saturated violet field.
 - **Frame Vignette** (`inset 0 -5rem 5rem rgba(0, 0, 0, 0.46)`): preserves playback-control contrast over media.
 - **Focus Underline** (`0 2px 0 #6c35ff`): reinforces the active border on light form fields.
 
@@ -225,9 +223,11 @@ A full-width banner directly below the production map makes compatibility a majo
 
 The violet problem section must diagnose fragmentation at a glance. Its declaration is “The work comes back. The context doesn’t.” A ruled ledger then shows three broken handoffs—Notion brief, Slack feedback, and Drive exports—with an orange missing-context label between each source and the review question it creates. The final ink block names the agency lead’s consequence: reconstructing creator, brief, prompt, feedback, and latest export by hand. Orange is reserved for the missing link and the human burden; Notion, Slack, and Drive remain text labels rather than another logo strip. On mobile, preserve the order declaration → evidence rows → consequence.
 
-### Production Sheets and Return Stack
+### Leader-to-Creator Round Trip
 
-The brief sheet is a slightly rotated projection-white artifact with a violet hard offset. The creator inbox inverts that language on a violet field, while returned media overlaps in a shallow stack. Hover straightens or lifts these artifacts just enough to confirm interactivity.
+“How it works” is one large operational board with three explicit lanes: agency leader, Nitrate, and creator. It shows the real sequence rather than three disconnected feature scenes. First, the leader uses the dashboard or the Nitrate plugin in Codex or Claude Code to package the shared brief, brand rules, approved inputs, return structure, and creator-specific routes. Nitrate then pushes a focused assignment into each creator’s AI agent. The creator pulls the assignment, works in their existing media tools, and syncs the finished file with prompt, notes, source files, assignment, and version. The same result lands in leader review, where feedback is routed back to that exact creator, assignment, and version.
+
+Leader surfaces use projection white; creator-agent surfaces use raised ink with violet chrome; return routes use review orange. Directional lines animate once when the board enters view, while all labels and states remain readable without motion. The only simulated control is “Accept & pull assignment,” which expands supplemental workspace details; the essential folder summary is always visible. On mobile, the board stacks in chronological order: leader sends → creator receives → creator returns → leader reviews → feedback returns to creator.
 
 ## Do's and Don'ts
 
