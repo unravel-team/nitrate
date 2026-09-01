@@ -3,42 +3,29 @@
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  const rail = document.querySelector('[data-production-rail]');
-  const railLine = rail?.querySelector('.rail-line');
-  const playhead = rail?.querySelector('.rail-playhead');
-  const replay = rail?.querySelector('.replay-rail');
-  let railHasPlayed = false;
+  const productionMap = document.querySelector('[data-production-map]');
+  const replayMap = productionMap?.querySelector('.replay-map');
+  let mapHasPlayed = false;
 
-  const measureRail = () => {
-    if (!railLine || !playhead) return;
-    const travel = Math.max(0, railLine.clientWidth - playhead.offsetWidth + 5);
-    rail.style.setProperty('--rail-travel', `${travel}px`);
+  const playProductionMap = () => {
+    if (!productionMap || reducedMotion.matches) return;
+    productionMap.classList.remove('is-running');
+    void productionMap.offsetWidth;
+    productionMap.classList.add('is-running');
+    mapHasPlayed = true;
   };
 
-  const playRail = () => {
-    if (!rail) return;
-    measureRail();
-    rail.classList.remove('is-running');
-    void rail.offsetWidth;
-    rail.classList.add('is-running');
-    railHasPlayed = true;
-  };
+  if (productionMap) {
+    replayMap?.addEventListener('click', playProductionMap);
 
-  if (rail) {
-    measureRail();
-    window.addEventListener('resize', measureRail, { passive: true });
-    replay?.addEventListener('click', playRail);
-
-    if (reducedMotion.matches) {
-      rail.classList.add('is-running');
-    } else {
-      const railObserver = new IntersectionObserver(entries => {
-        if (entries.some(entry => entry.isIntersecting) && !railHasPlayed) {
-          playRail();
-          railObserver.disconnect();
+    if (!reducedMotion.matches) {
+      const mapObserver = new IntersectionObserver(entries => {
+        if (entries.some(entry => entry.isIntersecting) && !mapHasPlayed) {
+          playProductionMap();
+          mapObserver.disconnect();
         }
-      }, { threshold: 0.4 });
-      railObserver.observe(rail);
+      }, { threshold: 0.24 });
+      mapObserver.observe(productionMap);
     }
   }
 

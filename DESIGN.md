@@ -154,9 +154,9 @@ The palette separates the viewing room, projected argument, live production stat
 
 ## Layout
 
-The desktop landing page uses a 12-column editorial grid with a fluid page gutter (`clamp(1rem, 2.4vw, 2.5rem)`) and generous section padding (`clamp(5rem, 10vw, 9rem)`). The hero gives the review stage visual priority, positions the promise beside it, and uses a full-width production rail below. Major sections alternate between dark viewing space, a projection-white category bridge, and full-violet interruption fields. Thin horizontal rules, rather than card gutters, organize long sequences.
+The desktop landing page uses a 12-column editorial grid with a fluid page gutter (`clamp(1rem, 2.4vw, 2.5rem)`) and generous section padding (`clamp(5rem, 10vw, 9rem)`). The hero gives the review stage visual priority, positions the promise beside it, and follows with a full-width production map. That map uses a one-to-many-to-one topology—agency lead, parallel creators, shared review room—so the collaboration model reads before the labels do. Major sections alternate between dark viewing space, a projection-white category bridge, and full-violet interruption fields. Thin horizontal rules, rather than card gutters, organize long sequences.
 
-At `1180px`, the review stage keeps precedence while its context column and return thumbnails compact. At `920px`, content becomes a single-column reading order and nonessential navigation links disappear. At `680px`, the composition becomes truly screen-first: the compact player, return context, and horizontally scrollable return strip precede the hero copy; the workflow rail compresses to four equal steps; controls become full width; and the page gutter resolves to `1rem`. The minimum supported viewport is `320px`.
+At `1180px`, the review stage keeps precedence while its context column, return thumbnails, and production-map columns compact. At `920px`, content becomes a single-column reading order and nonessential navigation links disappear. At `680px`, the composition becomes truly screen-first: the compact player, return context, and horizontally scrollable return strip precede the hero copy; the production map reflows vertically as brief → branched creator lanes → review; controls become full width; and the page gutter resolves to `1rem`. The minimum supported viewport is `320px`.
 
 **The Screen-First Rule.** On phones, prove the review workflow before presenting the marketing claim; do not move the hero copy back above the player.
 
@@ -213,9 +213,9 @@ The sticky dark header uses the League Gothic wordmark, compact uppercase Manrop
 
 The signature review stage combines a 16:9 media frame, attached creator/tool/status context, an approve action, and a four-return selection strip. The selected still changes with a fast, interruptible fade and restrained scale; user click, focus, or keyboard navigation takes control from the automatic first-run sequence. Arrow, Home, and End keys navigate the tablist.
 
-### Production Rail
+### Production Map
 
-Four steps—brief, creator assignments, AI tools, and ready to review—share one thin rule. A violet progress line and orange playhead run once when the rail enters view and can be replayed explicitly. Reduced motion renders the completed path immediately.
+The workflow map is a primary explanatory object, not a progress indicator. A white project packet from one agency lead fans out along violet assignment routes to three named creators using Runway, Higgsfield Supercomputer, and Claude Code. Their separate results converge along review-orange routes into one shared review room with creator, assignment, tool, prompt, and notes attached. The routes draw once when the map enters view and can be replayed explicitly; reduced motion displays the complete static topology. On mobile, the same semantic order stacks vertically and the creator group keeps a visible branching spine.
 
 ### Production Sheets and Return Stack
 
