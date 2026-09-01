@@ -1385,22 +1385,31 @@ a {
 .dam-bridge {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-  gap: clamp(2.5rem, 7vw, 8rem);
+  grid-template-areas:
+    "heading explanation"
+    "heading diagram";
+  grid-template-columns: minmax(19rem, 0.82fr) minmax(0, 1.18fr);
+  column-gap: clamp(2.5rem, 6vw, 6rem);
+  row-gap: clamp(1.5rem, 2vw, 2rem);
   overflow: hidden;
   background: var(--paper);
   color: var(--ink);
-  padding: clamp(4rem, 6vw, 6rem) var(--page-gutter) clamp(4rem, 8vw, 7rem);
+  padding: clamp(3.5rem, 5vw, 5rem) var(--page-gutter);
 }
 
 .dam-bridge::before {
   position: absolute;
   top: 0;
-  left: 33%;
+  left: 41%;
   width: 1px;
   height: 100%;
   background: rgba(8, 8, 10, 0.07);
   content: "";
+}
+
+.dam-heading {
+  grid-area: heading;
+  align-self: center;
 }
 
 .dam-heading h2 {
@@ -1410,8 +1419,9 @@ a {
 }
 
 .dam-explanation {
+  grid-area: explanation;
   align-self: end;
-  padding-top: 1.5rem;
+  padding-top: 0;
 }
 
 .dam-explanation > p {
@@ -1452,13 +1462,14 @@ a {
 }
 
 .dam-diagram {
-  grid-column: 1 / -1;
-  padding-top: clamp(1rem, 3vw, 2.5rem);
+  grid-area: diagram;
+  align-self: start;
+  padding-top: 0;
 }
 
 .dam-diagram svg {
   width: 100%;
-  max-height: 11rem;
+  max-height: 9rem;
 }
 
 .dam-node,
@@ -2740,15 +2751,10 @@ a {
     grid-template-columns: 2rem minmax(0, 1fr) 4.4rem;
   }
 
-  .dam-bridge,
   .break-section,
   .workflow-heading,
   .pilot {
     grid-template-columns: 1fr;
-  }
-
-  .dam-bridge::before {
-    display: none;
   }
 
   .break-section::before {
@@ -2865,6 +2871,10 @@ a {
 }
 
 @media (min-width: 681px) and (max-width: 920px) {
+  .dam-bridge {
+    grid-template-columns: minmax(17rem, 0.78fr) minmax(0, 1.22fr);
+  }
+
   .map-brief-card .map-card-topline {
     align-items: flex-start;
     flex-direction: column;
@@ -2886,6 +2896,29 @@ a {
 
   html {
     scroll-padding-top: 4rem;
+  }
+
+  .dam-bridge {
+    grid-template-areas:
+      "heading"
+      "explanation"
+      "diagram";
+    grid-template-columns: 1fr;
+    gap: clamp(1.5rem, 7vw, 2.5rem);
+    padding-top: clamp(3rem, 12vw, 4rem);
+    padding-bottom: clamp(3rem, 12vw, 4rem);
+  }
+
+  .dam-bridge::before {
+    display: none;
+  }
+
+  .dam-heading {
+    align-self: start;
+  }
+
+  .dam-diagram svg {
+    max-height: 7.5rem;
   }
 
   .site-header {
