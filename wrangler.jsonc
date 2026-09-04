@@ -3,12 +3,12 @@
   "name": "nitrate",
   "account_id": "109e58aae44502c4009b0028538fc329",
   "main": "worker/index.mjs",
-  "compatibility_date": "2026-08-26",
+  "compatibility_date": "2026-09-03",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
-    "run_worker_first": ["/api/*", "/healthz"]
+    "run_worker_first": ["/api/*", "/mcp", "/healthz"]
   },
   "observability": {
     "enabled": true,

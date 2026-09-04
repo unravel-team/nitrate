@@ -27,9 +27,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: npm
 
-      - name: Test
-        run: npm test
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify product and plugins
+        run: npm run verify
 
       - name: Check Cloudflare token
         if: env.CLOUDFLARE_API_TOKEN == ''
@@ -38,7 +42,7 @@ jobs:
           exit 1
 
       - name: Apply D1 migrations
-        run: npx wrangler@4.126.0 d1 migrations apply nitrate --remote
+        run: npm exec -- wrangler d1 migrations apply nitrate --remote
 
       - name: Deploy Worker and assets
-        run: npx wrangler@4.126.0 deploy
+        run: npm exec -- wrangler deploy

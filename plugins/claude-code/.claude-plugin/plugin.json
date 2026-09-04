@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "nitrate",
+  "displayName": "Nitrate",
+  "version": "0.2.0",
+  "description": "Collaboration for AI video agencies: send one campaign brief to creators and review every result with context.",
+  "author": {
+    "name": "Unravel",
+    "url": "https://github.com/unravel-team"
+  },
+  "homepage": "https://github.com/unravel-team/nitrate#readme",
+  "repository": "https://github.com/unravel-team/nitrate",
+  "license": "Apache-2.0",
+  "keywords": [
+    "ai-media",
+    "creative-operations",
+    "handoff",
+    "review"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}

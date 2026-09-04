@@ -16,6 +16,7 @@
   </main>
 <script>
 const token = location.pathname.split('/').pop();
+const mediaUrl = id => `/api/media/${encodeURIComponent(id)}?share=${encodeURIComponent(token)}`;
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 const label = {queued:'New',review:'Needs review',approved:'Approved',rejected:'Rejected',changes_requested:'Changes requested'};
 fetch(`/api/shared/${token}`).then(async response => {
@@ -24,10 +25,10 @@ fetch(`/api/shared/${token}`).then(async response => {
   const versions = data.versions.map(version => {
     const asset = data.assets.find(item => item.id === version.assetId) || {};
     return `<article class="card" style="margin-bottom:1rem;">
-      <div class="preview-frame"><img src="/api/media/${version.id}" alt="${escape(asset.name || version.filename)} preview"></div>
+      <div class="preview-frame"><img src="${mediaUrl(version.id)}" alt="${escape(asset.name || version.filename)} preview"></div>
       <div style="display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;">
         <div><h3>${escape(asset.name || version.filename)}</h3><p class="eyebrow">${escape(version.branch)} - ${label[version.status] || version.status}</p></div>
-        ${data.share.allowDownload ? `<a class="button small ghost" href="/api/media/${version.id}" download="${escape(version.filename)}">Download</a>` : ''}
+        ${data.share.allowDownload ? `<a class="button small ghost" href="${mediaUrl(version.id)}" download="${escape(version.filename)}">Download</a>` : ''}
       </div>
       <p style="margin-top:.8rem;"><strong>Return context:</strong> ${escape(version.metadata.prompt)}<br><span class="eyebrow">${escape(version.metadata.model)} - seed ${escape(version.metadata.seed || 'not recorded')}</span></p>
     </article>`;

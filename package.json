@@ -1,8 +1,8 @@
 {
-  "name": "nitrate",
-  "version": "0.1.0",
+  "name": "@unravel-team/nitrate",
+  "version": "0.2.0",
   "private": false,
-  "description": "nitrate - AI coding agent plugin and collaboration layer for AI media teams.",
+  "description": "Collaboration for AI video agencies: one campaign brief out, every creator result back in context.",
   "type": "commonjs",
   "bin": {
     "nitrate": "bin/nitrate.mjs"
@@ -12,6 +12,7 @@
   },
   "files": [
     "bin/",
+    "lib/nitrate-client.mjs",
     "mcp/",
     "plugins/",
     "worker/",
@@ -27,10 +28,14 @@
     "start": "node server.js",
     "dev": "node --watch server.js",
     "test": "node --test",
+    "build:pages": "node scripts/build-agent-pages.mjs",
+    "build:plugins": "node scripts/build-plugin-bundles.mjs",
+    "verify:plugins": "node scripts/verify-plugins.mjs",
+    "verify:worker": "node scripts/verify-worker.mjs",
+    "verify": "npm run build:pages && npm test && npm run verify:plugins && npm run verify:worker",
+    "prepack": "npm run build:plugins && npm run verify:plugins",
     "worker:dev": "wrangler dev",
-    "worker:deploy": "wrangler deploy",
-    "db:migrate:local": "wrangler d1 migrations apply nitrate --local",
-    "db:migrate:remote": "wrangler d1 migrations apply nitrate --remote"
+    "db:migrate:local": "wrangler d1 migrations apply nitrate --local"
   },
   "keywords": [
     "ai-media",
@@ -41,5 +46,22 @@
     "codex",
     "mcp"
   ],
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/unravel-team/nitrate#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unravel-team/nitrate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/unravel-team/nitrate/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/server": "2.0.0",
+    "agents": "^0.22.0",
+    "zod": "^4.5.4",
+    "wrangler": "^4.128.0"
+  }
 }

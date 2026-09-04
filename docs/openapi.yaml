@@ -1,210 +1,953 @@
 openapi: 3.0.3
 info:
-  title: nitrate AI Media Collaboration API
-  version: 0.1.0
+  title: Nitrate AI Media Collaboration API
+  version: 0.2.0
   description: >-
-    Prototype contract for creating brief packets, collecting returned AI media
-    from creators' AI coding agents, and recording lead review. The production API will
-    preserve these domain objects while adding authentication, tenant scoping,
-    direct AI coding agent sync, signed uploads, and cursor pagination.
+    Authenticated contract for the Nitrate workflow: a lead creates a packet,
+    uploads real input files, hands it to an invited creator, the creator pulls
+    verified context and returns real media, and the lead records a decision.
+    Inputs and returns use metadata reservation followed by a raw byte upload.
 servers:
   - url: http://127.0.0.1:4173
+    description: Local reference service
+security:
+  - bearerAuth: []
+tags:
+  - name: Session
+  - name: Remote MCP
+  - name: Packets
+  - name: Inputs
+  - name: Assignments
+  - name: Returns
 paths:
   /healthz:
     get:
+      tags: [Session]
       summary: Check service health
+      security: []
       responses:
-        '200': { description: Service is ready }
-  /api/state:
-    get:
-      summary: Read the demo packet workspace snapshot
-      responses:
-        '200': { description: Workspace packets, assets, returns, assignments, templates, and activity }
-  /api/projects:
+        '200':
+          description: Service is ready
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok]
+                properties:
+                  ok: { type: boolean }
+                  versions: { type: integer }
+  /mcp:
     post:
-      summary: Create a brief packet
+      tags: [Remote MCP]
+      summary: Use Nitrate through remote Streamable HTTP MCP
+      description: >-
+        A standards-compliant MCP JSON-RPC transport for production workspaces
+        with custom remote MCP support. Send only a dedicated, expiring nmc_
+        connection token minted by POST /api/plugin/mcp-connections. Ordinary
+        plugin session tokens are rejected here, and this connection token is
+        rejected on ordinary REST routes. This OpenAPI operation documents the
+        HTTP transport; MCP initialization and tool input schemas are negotiated
+        by the MCP protocol rather than modelled as REST resources. The server
+        exposes only tools allowed by the active connection's role-scoped
+        capabilities: nitrate_whoami, nitrate_list_work,
+        nitrate_pull_assignment, nitrate_submit_return_from_url, and
+        nitrate_review_return.
+      security:
+        - mcpConnectionAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required: [name]
-              properties:
-                name: { type: string, minLength: 2, maxLength: 80 }
-                client: { type: string, maxLength: 100 }
-                brief: { type: string, maxLength: 600 }
-                inputAssets: { type: string, description: Newline-separated input assets }
-                outputStructure: { type: string, description: Newline-separated expected output folders }
-                templateId: { type: string }
+              $ref: '#/components/schemas/McpJsonRpcRequest'
       responses:
-        '201': { description: Packet created }
-        '400': { description: Invalid packet }
+        '200':
+          description: MCP JSON-RPC response over the Streamable HTTP transport.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/McpJsonRpcResponse' }
+        '401':
+          description: A valid, unexpired, unrevoked Nitrate MCP connection token is required.
+          headers:
+            WWW-Authenticate:
+              schema: { type: string, example: Bearer }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '413':
+          description: MCP JSON request exceeds the 256 KiB transport limit.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
   /api/plugin/login:
     post:
-      summary: Log in from the AI coding agent plugin
+      tags: [Session]
+      summary: Start a lead plugin session
+      description: >-
+        Bootstrap login for a team lead. Creators receive a scoped session by
+        accepting the one-time invite created during handoff. Production
+        deployments require the agency setup code in the bootstrap header; the
+        CLI sends --setup-code through this header and never saves it.
+      security: []
+      parameters:
+        - name: X-Nitrate-Bootstrap-Secret
+          in: header
+          required: true
+          description: Sensitive agency setup code for the first lead login.
+          schema: { type: string, minLength: 1 }
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required: [email, agent]
-              properties:
-                role: { type: string, enum: [leader, member] }
-                name: { type: string }
-                email: { type: string, format: email }
-                agent: { type: string, description: Name of the AI coding agent }
-                surface: { type: string, description: Claude, Claude Code, Higgsfield Supercomputer, or local AI coding agent }
+              $ref: '#/components/schemas/LeadLoginInput'
       responses:
-        '201': { description: Plugin session created }
-        '400': { description: Invalid login }
+        '201':
+          description: Lead session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResult'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '503':
+          description: Lead bootstrap is not configured for this deployment.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+  /api/plugin/invites/{token}/accept:
+    post:
+      tags: [Session]
+      summary: Accept a one-time creator handoff invite
+      description: Creates a creator session scoped to the invited assignment. A token can be accepted once.
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/InviteToken'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                name: { type: string, maxLength: 80 }
+                agent: { type: string, maxLength: 80 }
+                surface: { type: string, maxLength: 80 }
+      responses:
+        '200':
+          description: Invite accepted and creator session created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SessionResult'
+                  - type: object
+                    properties:
+                      project: { $ref: '#/components/schemas/Packet' }
+                      assignment: { $ref: '#/components/schemas/Assignment' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '410':
+          description: Invite expired
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+  /api/plugin/mcp-connections:
+    post:
+      tags: [Remote MCP]
+      summary: Create a dedicated remote MCP connection
+      description: >-
+        Requires an ordinary Nitrate plugin session. Mints a separately scoped,
+        expiring, independently revocable nmc_ bearer credential for POST /mcp.
+        The raw token is returned exactly once and is never included in later
+        list responses. Clients derive the endpoint from their API origin plus
+        /mcp; nitrate mcp:connect prints a paste-ready endpoint and Authorization
+        line without saving the secret locally.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/McpConnectionCreateInput' }
+      responses:
+        '201':
+          description: Connection created; save the raw token in the remote connector now because it cannot be retrieved again.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/McpConnectionCreateResult' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '422': { $ref: '#/components/responses/Unprocessable' }
+    get:
+      tags: [Remote MCP]
+      summary: List the current user's remote MCP connections
+      description: >-
+        Requires an ordinary Nitrate plugin session. Returns only connection
+        metadata owned by the current user in their agency; bearer secrets and
+        token hashes are never returned.
+      responses:
+        '200':
+          description: Connection metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [connections]
+                properties:
+                  connections:
+                    type: array
+                    items: { $ref: '#/components/schemas/McpConnection' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/plugin/mcp-connections/{connectionId}:
+    delete:
+      tags: [Remote MCP]
+      summary: Revoke a dedicated remote MCP connection
+      description: >-
+        Requires the owning ordinary Nitrate plugin session. Revocation is
+        idempotent and prevents future /mcp calls and signed asset capability
+        redemption for that connection.
+      parameters:
+        - $ref: '#/components/parameters/McpConnectionId'
+      responses:
+        '200':
+          description: Connection metadata after revocation
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [connection]
+                properties:
+                  connection: { $ref: '#/components/schemas/McpConnection' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /api/packets:
+    post:
+      tags: [Packets]
+      summary: Create a packet as a lead
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePacketInput'
+      responses:
+        '201':
+          description: Packet created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Packet' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
   /api/plugin/packets:
     get:
-      summary: Pull packets available to the logged-in plugin
+      tags: [Packets]
+      summary: List packets visible to the plugin session
+      description: >-
+        A lead sees owned packets and all their assignments and returns. A creator
+        sees only assigned packets, downloadable verified inputs, and related returns.
       parameters:
         - name: token
           in: query
-          required: true
+          required: false
+          deprecated: true
+          description: Compatibility alternative to the Authorization header.
           schema: { type: string }
       responses:
-        '200': { description: Plugin session, user, mode, packets, assignments, and returns }
-        '401': { description: Plugin login required }
+        '200':
+          description: Session inbox and activation state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PacketInbox'
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/plugin/packets/{packetId}/inputs:
+    post:
+      tags: [Inputs]
+      summary: Reserve a packet input upload
+      description: >-
+        Lead-only phase one. The client computes size and SHA-256 before sending
+        metadata, then PUTs the original bytes to the returned uploadPath.
+      parameters:
+        - $ref: '#/components/parameters/PacketId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileReservationInput'
+      responses:
+        '201':
+          description: Input reserved; uploadPath is ready for raw bytes
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/InputReservation' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '413': { $ref: '#/components/responses/TooLarge' }
+  /api/plugin/inputs/{inputId}/raw:
+    put:
+      tags: [Inputs]
+      summary: Upload reserved packet input bytes
+      description: Lead-only phase two. Size and SHA-256 must match the reservation. A completed reservation is immutable.
+      parameters:
+        - $ref: '#/components/parameters/InputId'
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema: { type: string, format: binary }
+      responses:
+        '200':
+          description: Input bytes verified and committed
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PacketInput' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '413': { $ref: '#/components/responses/TooLarge' }
+    get:
+      tags: [Inputs]
+      summary: Download a verified packet input
+      description: Available only to the packet's owning lead and assigned creator.
+      parameters:
+        - $ref: '#/components/parameters/InputId'
+      responses:
+        '200':
+          description: Immutable input bytes
+          headers:
+            Content-Disposition:
+              schema: { type: string }
+          content:
+            application/octet-stream:
+              schema: { type: string, format: binary }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
   /api/plugin/push:
     post:
-      summary: Push a packet to one or more creator AI coding agents
+      tags: [Assignments]
+      summary: Hand a packet to one or more creators
+      description: >-
+        Lead-only. The packet must already have at least one verified input. Each
+        assignment receives a hashed, expiring, one-time invite whose raw token
+        is returned only in this response.
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [projectId, assignments]
+              additionalProperties: false
+              required: [packetId, assignments]
               properties:
-                projectId: { type: string }
+                packetId: { type: string }
+                projectId: { type: string, description: Compatibility alias for packetId }
                 assignments:
                   type: array
-                  items:
-                    type: object
-                    properties:
-                      name: { type: string }
-                      email: { type: string, format: email }
-                      agent: { type: string, description: Name of the AI coding agent }
-                      task: { type: string }
+                  minItems: 1
+                  maxItems: 20
+                  items: { $ref: '#/components/schemas/CreateAssignmentInput' }
       responses:
-        '201': { description: Packet pushed to AI coding agents }
-        '400': { description: Invalid assignment }
+        '201':
+          description: Assignments and one-time invites created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [packetId, assignments, invitations]
+                properties:
+                  packetId: { type: string }
+                  project: { $ref: '#/components/schemas/Packet' }
+                  assignments:
+                    type: array
+                    items: { $ref: '#/components/schemas/Assignment' }
+                  invitations:
+                    type: array
+                    items: { $ref: '#/components/schemas/Invitation' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/Unprocessable' }
   /api/plugin/assignments/{assignmentId}:
     patch:
-      summary: Update assignment status from the plugin
+      tags: [Assignments]
+      summary: Update an assigned creator's workflow status
+      description: >-
+        A creator can update only their own assignment. Marking returned directly
+        is rejected; a successful raw return upload records that state.
       parameters:
-        - name: assignmentId
-          in: path
-          required: true
-          schema: { type: string }
+        - $ref: '#/components/parameters/AssignmentId'
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
+              additionalProperties: false
               required: [status]
               properties:
-                status: { type: string, enum: [delivered, pulled, working, returned, blocked] }
+                status:
+                  type: string
+                  enum: [delivered, pulled, working, returned, blocked]
       responses:
-        '200': { description: Assignment status updated }
-        '400': { description: Invalid status }
-  /api/uploads:
+        '200':
+          description: Assignment updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  project: { $ref: '#/components/schemas/Packet' }
+                  assignment: { $ref: '#/components/schemas/Assignment' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /api/plugin/assignments/{assignmentId}/returns:
     post:
-      summary: Submit a returned media file and its context
+      tags: [Returns]
+      summary: Reserve a returned media upload
+      description: >-
+        Creator phase one. Validates the assignment, media type, expected output
+        path, prompt, and tool before issuing uploadPath.
+      parameters:
+        - $ref: '#/components/parameters/AssignmentId'
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
-              type: object
-              required: [projectId, file, prompt, model]
-              properties:
-                projectId: { type: string }
-                assetId: { type: string }
-                assetName: { type: string }
-                filename: { type: string }
-                mime: { type: string }
-                branch: { type: string }
-                prompt: { type: string }
-                model: { type: string }
-                seed: { type: string }
-                pipeline: { type: string }
-                notes: { type: string }
-                parentVersionId: { type: string }
-                file:
-                  type: string
-                  format: binary
+              $ref: '#/components/schemas/ReturnReservationInput'
       responses:
-        '201': { description: Return submitted; identical bytes are deduplicated }
-        '400': { description: Invalid media or incomplete prompt/model context }
-        '413': { description: Upload exceeds 100 MiB }
-  /api/versions/{versionId}:
-    parameters:
-      - name: versionId
-        in: path
+        '201':
+          description: Return reserved; uploadPath is ready for raw media bytes
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReturnReservation' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '413': { $ref: '#/components/responses/TooLarge' }
+        '422': { $ref: '#/components/responses/Unprocessable' }
+  /api/plugin/returns/{returnId}/raw:
+    put:
+      tags: [Returns]
+      summary: Upload reserved return bytes
+      description: Creator phase two. Commits an immutable return only when size and SHA-256 match the reservation.
+      parameters:
+        - $ref: '#/components/parameters/ReturnId'
+      requestBody:
         required: true
-        schema: { type: string }
-    get:
-      summary: Read one returned media item
+        content:
+          application/octet-stream:
+            schema: { type: string, format: binary }
       responses:
-        '200': { description: Return found }
-        '404': { description: Return not found }
+        '201':
+          description: Return bytes verified and committed for lead review
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  asset: { $ref: '#/components/schemas/Asset' }
+                  version: { $ref: '#/components/schemas/Return' }
+                  deduplicated: { type: boolean }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '413': { $ref: '#/components/responses/TooLarge' }
+  /api/plugin/returns/{returnId}:
     patch:
-      summary: Add a comment, edit return metadata, or record a review decision
+      tags: [Returns]
+      summary: Record a lead review decision
+      description: Lead-only. The decision attaches to the exact immutable return.
+      parameters:
+        - $ref: '#/components/parameters/ReturnId'
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
+              additionalProperties: false
+              required: [action]
               properties:
                 action:
                   type: string
-                  enum: [approve, reject, request_changes, reopen]
-                note: { type: string }
-                comment: { type: string }
-                metadata:
-                  type: object
-                  properties:
-                    prompt: { type: string }
-                    model: { type: string }
-                    seed: { type: string }
-                    pipeline: { type: string }
-                    notes: { type: string }
+                  enum: [approve, request_changes, reject, reopen]
+                note: { type: string, maxLength: 2000 }
       responses:
-        '200': { description: Return updated }
-        '400': { description: Invalid update }
-        '404': { description: Return not found }
-  /api/shares:
-    post:
-      summary: Create a local tokenized share
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [scope, targetId]
-              properties:
-                scope: { type: string, enum: [version, project] }
-                targetId: { type: string }
-                allowDownload: { type: boolean }
-      responses:
-        '201': { description: Share created }
-  /api/shared/{token}:
-    get:
-      summary: Read a shared view
-      parameters:
-        - name: token
-          in: path
-          required: true
-          schema: { type: string }
-      responses:
-        '200': { description: Shared returns and assets }
-        '404': { description: Share unavailable }
+        '200':
+          description: Decision recorded
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Return' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '422': { $ref: '#/components/responses/Unprocessable' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: opaque plugin session token
+      description: Ordinary Nitrate plugin/CLI session token. It cannot authenticate POST /mcp.
+    mcpConnectionAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: nmc_ opaque remote MCP connection token
+      description: Dedicated, role-scoped, expiring and revocable token accepted only by POST /mcp.
+  parameters:
+    PacketId:
+      name: packetId
+      in: path
+      required: true
+      schema: { type: string }
+    AssignmentId:
+      name: assignmentId
+      in: path
+      required: true
+      schema: { type: string }
+    InputId:
+      name: inputId
+      in: path
+      required: true
+      schema: { type: string }
+    ReturnId:
+      name: returnId
+      in: path
+      required: true
+      schema: { type: string }
+    InviteToken:
+      name: token
+      in: path
+      required: true
+      schema: { type: string, minLength: 20 }
+    McpConnectionId:
+      name: connectionId
+      in: path
+      required: true
+      schema: { type: string, minLength: 3, maxLength: 120 }
+  responses:
+    BadRequest:
+      description: Invalid request or byte verification failed
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unauthorized:
+      description: Plugin login required
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Forbidden:
+      description: Session cannot access this packet or action
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: Record unavailable
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Conflict:
+      description: One-time action already completed or state no longer accepts the operation
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    TooLarge:
+      description: File exceeds the service upload limit
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unprocessable:
+      description: Handoff or return is missing required production context
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+  schemas:
+    McpConnectionScope:
+      type: string
+      enum:
+        - identity:read
+        - work:read
+        - assets:read
+        - assignments:pull
+        - returns:submit
+        - returns:review
+    McpConnectionCreateInput:
+      type: object
+      description: >-
+        Scope values must be a non-empty subset allowed for the caller's role.
+        Creator scopes may include identity:read, work:read, assets:read,
+        assignments:pull, and returns:submit. Lead scopes may include
+        identity:read, work:read, assets:read, and returns:review.
+      properties:
+        label:
+          type: string
+          minLength: 1
+          maxLength: 100
+          default: Higgsfield Supercomputer
+        client:
+          type: string
+          minLength: 1
+          maxLength: 100
+          default: Higgsfield Supercomputer
+        expiresInSeconds:
+          type: integer
+          minimum: 300
+          maximum: 2592000
+          default: 604800
+          description: Default seven days; maximum 30 days.
+        scopes:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items: { $ref: '#/components/schemas/McpConnectionScope' }
+    McpConnection:
+      type: object
+      required: [id, agencyId, userId, label, client, audience, scopes, createdAt, expiresAt, revokedAt, lastUsedAt]
+      properties:
+        id: { type: string }
+        agencyId: { type: string }
+        userId: { type: string }
+        label: { type: string }
+        client: { type: string }
+        audience: { type: string, enum: [nitrate-mcp] }
+        scopes:
+          type: array
+          items: { $ref: '#/components/schemas/McpConnectionScope' }
+        createdAt: { type: string, format: date-time }
+        expiresAt: { type: string, format: date-time }
+        revokedAt: { type: string, format: date-time, nullable: true }
+        lastUsedAt: { type: string, format: date-time, nullable: true }
+    McpConnectionCreateResult:
+      type: object
+      required: [connection, token]
+      properties:
+        connection: { $ref: '#/components/schemas/McpConnection' }
+        token:
+          type: string
+          writeOnly: true
+          pattern: '^nmc_[A-Za-z0-9_-]+$'
+          description: "Returned exactly once. The CLI displays Authorization: Bearer nmc_… and never persists it."
+    McpJsonRpcRequest:
+      type: object
+      required: [jsonrpc, method]
+      description: Generic MCP JSON-RPC request. Tool argument schemas are returned by MCP tools/list.
+      properties:
+        jsonrpc: { type: string, enum: ['2.0'] }
+        id:
+          description: JSON-RPC request identifier, if the message expects a response.
+        method: { type: string, example: tools/call }
+        params: { type: object, additionalProperties: true }
+      additionalProperties: false
+    McpJsonRpcResponse:
+      type: object
+      required: [jsonrpc]
+      description: Generic MCP JSON-RPC response. Successful tool results may contain structuredContent.
+      properties:
+        jsonrpc: { type: string, enum: ['2.0'] }
+        id:
+          description: JSON-RPC response identifier.
+        result: { type: object, additionalProperties: true }
+        error:
+          type: object
+          properties:
+            code: { type: integer }
+            message: { type: string }
+            data: { type: object, additionalProperties: true }
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+    User:
+      type: object
+      required: [id, name, role]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        email: { type: string, format: email }
+        role: { type: string, enum: [team_lead, ai_creator] }
+        agent: { type: string }
+    PluginSession:
+      type: object
+      required: [id, userId, agent, surface, role, createdAt]
+      properties:
+        id: { type: string }
+        token: { type: string, writeOnly: true }
+        userId: { type: string }
+        agent: { type: string }
+        surface: { type: string }
+        role: { type: string, enum: [team_lead, ai_creator] }
+        createdAt: { type: string, format: date-time }
+        lastSeenAt: { type: string, format: date-time }
+    SessionResult:
+      type: object
+      required: [session, user]
+      properties:
+        session: { $ref: '#/components/schemas/PluginSession' }
+        user: { $ref: '#/components/schemas/User' }
+    LeadLoginInput:
+      type: object
+      additionalProperties: false
+      required: [email, agent]
+      properties:
+        role:
+          type: string
+          enum: [leader, team_lead]
+          default: leader
+        name: { type: string, maxLength: 80 }
+        email: { type: string, format: email }
+        agent: { type: string, maxLength: 80 }
+        surface: { type: string, maxLength: 80 }
+    CreatePacketInput:
+      type: object
+      additionalProperties: false
+      required: [name, brief]
+      properties:
+        name: { type: string, minLength: 2, maxLength: 80 }
+        client: { type: string, maxLength: 100 }
+        brief: { type: string, maxLength: 12000 }
+        inputAssets:
+          type: array
+          description: Optional display names; real files are uploaded separately.
+          maxItems: 50
+          items: { type: string }
+        outputStructure:
+          type: array
+          maxItems: 30
+          items:
+            type: string
+            description: Safe relative output folder, for example renders or notes.
+        reviewCriteria:
+          type: array
+          maxItems: 30
+          items: { type: string }
+        templateId: { type: string, nullable: true }
+    Packet:
+      type: object
+      required: [id, name, brief, outputStructure, reviewCriteria, assignments, createdAt]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        client: { type: string }
+        brief: { type: string }
+        inputAssets:
+          type: array
+          items: { type: string }
+        outputStructure:
+          type: array
+          items: { type: string }
+        reviewCriteria:
+          type: array
+          items: { type: string }
+        assignments:
+          type: array
+          items: { $ref: '#/components/schemas/Assignment' }
+        inputs:
+          type: array
+          items: { $ref: '#/components/schemas/PacketInput' }
+        createdByUserId: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+    PacketInput:
+      type: object
+      required: [id, projectId, filename, mime, size, hash, createdAt]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        name: { type: string }
+        filename: { type: string }
+        mime: { type: string }
+        size: { type: integer, minimum: 1 }
+        hash: { type: string, pattern: '^[a-f0-9]{64}$' }
+        createdBy: { type: string }
+        createdAt: { type: string, format: date-time }
+        uploadedAt: { type: string, format: date-time, nullable: true }
+        downloadPath: { type: string }
+        deduplicated: { type: boolean }
+    FileReservationInput:
+      type: object
+      required: [filename, mime, size, sha256]
+      properties:
+        name: { type: string, maxLength: 140 }
+        filename: { type: string, maxLength: 255 }
+        mime: { type: string, maxLength: 120 }
+        size: { type: integer, minimum: 1 }
+        sha256: { type: string, pattern: '^[a-f0-9]{64}$' }
+    InputReservation:
+      allOf:
+        - $ref: '#/components/schemas/PacketInput'
+        - type: object
+          required: [uploadPath]
+          properties:
+            uploadPath: { type: string }
+    CreateAssignmentInput:
+      type: object
+      additionalProperties: false
+      required: [email]
+      properties:
+        name: { type: string, maxLength: 80 }
+        email: { type: string, format: email }
+        agent: { type: string, maxLength: 80 }
+        task: { type: string, maxLength: 240 }
+    Assignment:
+      type: object
+      required: [id, userId, agent, status, task, pushedAt]
+      properties:
+        id: { type: string }
+        userId: { type: string }
+        agent: { type: string }
+        status: { type: string, enum: [delivered, pulled, working, returned, blocked] }
+        task: { type: string }
+        pushedAt: { type: string, format: date-time }
+        acceptedAt: { type: string, format: date-time, nullable: true }
+        pulledAt: { type: string, format: date-time, nullable: true }
+        returnedAt: { type: string, format: date-time, nullable: true }
+        assignee:
+          allOf:
+            - $ref: '#/components/schemas/User'
+          nullable: true
+        invitation:
+          type: object
+          nullable: true
+          properties:
+            status: { type: string, enum: [pending, accepted, expired] }
+            expiresAt: { type: string, format: date-time }
+            acceptedAt: { type: string, format: date-time, nullable: true }
+    Invitation:
+      type: object
+      required: [id, assignmentId, token, inviteUrl, expiresAt]
+      properties:
+        id: { type: string }
+        assignmentId: { type: string }
+        token: { type: string, writeOnly: true }
+        inviteUrl: { type: string, format: uri }
+        expiresAt: { type: string, format: date-time }
+    ReturnReservationInput:
+      allOf:
+        - $ref: '#/components/schemas/FileReservationInput'
+        - type: object
+          required: [prompt, madeWith, relativePath]
+          properties:
+            prompt: { type: string, minLength: 1, maxLength: 4000 }
+            madeWith: { type: string, minLength: 1, maxLength: 120 }
+            notes: { type: string, maxLength: 2000 }
+            relativePath: { type: string }
+            branch: { type: string, maxLength: 80 }
+            parentVersionId: { type: string, nullable: true }
+    ReturnReservation:
+      type: object
+      required: [id, projectId, assignmentId, filename, mime, size, hash, prompt, madeWith, relativePath, uploadPath]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        assignmentId: { type: string }
+        filename: { type: string }
+        mime: { type: string }
+        size: { type: integer }
+        hash: { type: string, pattern: '^[a-f0-9]{64}$' }
+        prompt: { type: string }
+        madeWith: { type: string }
+        notes: { type: string }
+        relativePath: { type: string }
+        uploadPath: { type: string }
+        validation: { $ref: '#/components/schemas/ReturnValidation' }
+    ReturnValidation:
+      type: object
+      required: [hasMedia, hasPrompt, hasTool, inOutputFolder, complete, missing]
+      properties:
+        hasMedia: { type: boolean }
+        hasPrompt: { type: boolean }
+        hasTool: { type: boolean }
+        inOutputFolder: { type: boolean }
+        complete: { type: boolean }
+        missing:
+          type: array
+          items: { type: string }
+    Asset:
+      type: object
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        name: { type: string }
+        filename: { type: string }
+        mime: { type: string }
+        createdAt: { type: string, format: date-time }
+    Return:
+      type: object
+      required: [id, projectId, assetId, hash, size, mime, status, createdAt]
+      properties:
+        id: { type: string }
+        projectId: { type: string }
+        assetId: { type: string }
+        hash: { type: string, pattern: '^[a-f0-9]{64}$' }
+        size: { type: integer }
+        mime: { type: string }
+        status: { type: string, enum: [review, needs_review, approved, changes_requested, rejected] }
+        metadata:
+          type: object
+          properties:
+            prompt: { type: string }
+            model: { type: string }
+            notes: { type: string }
+            assignmentId: { type: string }
+            relativePath: { type: string }
+            parentVersionId: { type: string, nullable: true }
+        validation: { $ref: '#/components/schemas/ReturnValidation' }
+        decisions:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string }
+              action: { type: string, enum: [approve, request_changes, reject, reopen] }
+              note: { type: string }
+              actor: { type: string }
+              at: { type: string, format: date-time }
+        createdAt: { type: string, format: date-time }
+    Activation:
+      type: object
+      required: [uploadedInputCount, ahaReached, closedLoop]
+      properties:
+        packetCreatedAt: { type: string, format: date-time, nullable: true }
+        firstAssignmentAt: { type: string, format: date-time, nullable: true }
+        firstPullAt: { type: string, format: date-time, nullable: true }
+        firstReturnAt: { type: string, format: date-time, nullable: true }
+        firstDecisionAt: { type: string, format: date-time, nullable: true }
+        uploadedInputCount: { type: integer, minimum: 0 }
+        ahaReached: { type: boolean }
+        closedLoop: { type: boolean }
+    PacketInbox:
+      type: object
+      required: [user, mode, packets]
+      properties:
+        session: { $ref: '#/components/schemas/PluginSession' }
+        user: { $ref: '#/components/schemas/User' }
+        mode: { type: string, enum: [leader, team_member] }
+        packets:
+          type: array
+          items:
+            type: object
+            required: [project, assignments, returns, activation]
+            properties:
+              project: { $ref: '#/components/schemas/Packet' }
+              assignments:
+                type: array
+                items: { $ref: '#/components/schemas/Assignment' }
+              returns:
+                type: array
+                items: { $ref: '#/components/schemas/Return' }
+              activation: { $ref: '#/components/schemas/Activation' }

@@ -1,159 +1,342 @@
 # nitrate
 
-nitrate is an AI coding agent plugin and collaboration layer for AI media teams. Creators log in from the plugin, receive assigned brief packets inside their AI coding agent, and sync finished work back for lead review.
+Nitrate gives AI video agencies one collaboration loop from brief to approved work.
 
-## Quick start
+A production lead sends the brief, real source files, required folders, and review criteria as one handoff. Each creator pulls that handoff into Codex or Claude Code, makes the work with tools such as Higgsfield Supercomputer or Runway, and returns the finished media with its prompt and notes. The lead reviews the exact returned file.
 
-Requires Node 20 or newer.
+Think of it as a DAM for work that your AI tools are still making: the shared context starts before the final asset exists.
+
+## The five-step workflow
+
+```text
+LEAD                              CREATOR                         LEAD
+
+login → handoff ── one-time invite ──→ pull → make → return ──→ review
+          brief + real inputs       verified local workspace       file + prompt
+          folders + criteria                                      + tool + notes
+```
+
+1. **Login.** The agency lead signs in from the Nitrate CLI or plugin.
+2. **Handoff.** The lead chooses a brief file, adds real input files, defines the required output folders and review criteria, and assigns a creator. Nitrate uploads the bytes before it creates a one-time invite.
+3. **Pull.** The creator gives that invite to Nitrate inside Codex or Claude Code. Nitrate signs the creator in, downloads every input, verifies its SHA-256 digest and size, creates the required folders, writes the brief, and records a pull receipt.
+4. **Return.** The creator or their agent returns a real image, video, or audio file from the pulled workspace. The return includes the prompt, the tool used, notes, and its expected relative path.
+5. **Review.** The lead approves, requests changes, rejects, or reopens the exact returned file. That decision closes the first collaboration loop.
+
+The creator stays in their own tools. Nitrate carries the production context between people.
+
+## Run locally
+
+Requires Node.js 20 or newer.
 
 ```sh
+npm install
 npm start
 ```
 
-Open [http://127.0.0.1:4173](http://127.0.0.1:4173) for the landing page. Open `/plugin` for the AI coding agent plugin, `/app` for the lead command center, `/use/` for use cases, and `/press` for the press kit.
-
-The first run creates a demo packet with four AI coding agent assignments, a simulated plugin login flow, and six returned media items. Existing local demo data from the old prototype is automatically reseeded to the nitrate model.
-
-Data lives in `.reel-data` by default for compatibility with the previous prototype. Set `REEL_DATA_DIR` to use another directory and `PORT` to change the port.
-
-## Cloudflare backend
-
-The deployable backend is in [`worker/index.mjs`](worker/index.mjs). It uses:
-
-- Cloudflare Workers for the API.
-- D1 for users, plugin sessions, packets, assignments, returns, and comments.
-- R2 for input assets and returned media.
-
-Create the resources:
+The local API and product site run at [http://127.0.0.1:4173](http://127.0.0.1:4173). The first run creates demo media-team data in `.reel-data`. To test a clean workspace, set a separate data directory:
 
 ```sh
-wrangler d1 create nitrate
-wrangler r2 bucket create nitrate-media
+REEL_DATA_DIR=/tmp/nitrate-local npm start
 ```
 
-Put the returned D1 `database_id` into [`wrangler.jsonc`](wrangler.jsonc), then run:
+Useful product routes:
+
+- `/` — landing page
+- `/app` — lead command center
+- `/plugin` — plugin story
+- `/for/` — agent landing-page hub
+- `/for/codex/` — Codex five-minute handoff story
+- `/for/claude-code/` — Claude Code five-minute handoff story
+- `/for/claude-desktop/` — Claude Desktop private-preview story
+- `/for/higgsfield-supercomputer/` — Higgsfield Supercomputer connector-pilot story
+- `/use/` — use cases
+- `/press` — press kit
+- `/healthz` — service health
+
+## Complete the loop from the CLI
+
+The executable is `nitrate`. During repository development, use `node bin/nitrate.mjs` in place of `nitrate`, or install/link the package locally.
+
+Use a separate config file for each person when testing two users on one machine:
 
 ```sh
-npm run db:migrate:remote
-npm run worker:deploy
+export NITRATE_CONFIG_FILE=/tmp/nitrate-lead.json
 ```
 
-For local Worker development:
+### 1. Lead login
 
 ```sh
-npm run db:migrate:local
-npm run worker:dev
+nitrate login \
+  --api http://127.0.0.1:4173 \
+  --email maya@northstar.studio \
+  --name "Maya Chen" \
+  --agent "Maya's Codex" \
+  --surface Codex
 ```
 
-## Product flow
-
-1. **Log in from the plugin.** The creator opens the nitrate AI coding agent plugin and signs in.
-2. **Create the packet.** The lead defines the brief, input assets, references, expected output folders, and project template.
-3. **Pull into AI coding agents.** Each AI creator gets the same production context in their own Claude, Claude Code, Higgsfield Supercomputer, or local AI coding agent workflow.
-4. **Return work.** Creators submit media with prompt, tool/model, seed, workflow, notes, and assignment context.
-5. **Review.** The lead filters the return queue, compares options, leaves notes, approves, rejects, or requests changes.
-6. **Send the next pass.** Any return can become the starting point for another pass.
-7. **Share.** Create a local tokenized view for one return or a project.
-
-Keyboard shortcuts in the app: `J` and `K` move through the filtered queue, `A` approves, `R` rejects, `C` requests changes, `I` opens return upload, and `Esc` closes the current surface.
-
-## API
-
-The local API is intended for agents and integrations. See [`docs/openapi.yaml`](docs/openapi.yaml).
-
-Plugin login:
+The local reference service accepts this login directly. A production deployment also asks the first agency lead for its workspace setup code:
 
 ```sh
-curl -X POST http://127.0.0.1:4173/api/plugin/login \
-  -H 'Content-Type: application/json' \
-  -d '{"role":"member","name":"Nia Patel","email":"nia@studio.test","agent":"nia-codex","surface":"Claude"}'
+nitrate login --api https://YOUR_NITRATE_HOST --email maya@northstar.studio --setup-code "$NITRATE_SETUP_CODE"
 ```
 
-Pull assigned packets:
+The CLI sends that code only with the login request and never saves it. Creators do not need the setup code, choose a role, or create an unrelated account; they join through the handoff invite.
+
+### 2. Lead handoff
 
 ```sh
-curl 'http://127.0.0.1:4173/api/plugin/packets?token=PLUGIN_TOKEN'
+nitrate handoff \
+  --name "Northwind summer social" \
+  --client Northwind \
+  --brief "Create three 9:16 launch concepts from the supplied brand system." \
+  --input ./campaign/brief.md \
+  --input ./campaign/brand-guide.pdf \
+  --input ./campaign/product-shot.png \
+  --folder renders \
+  --folder prompts \
+  --folder notes \
+  --review "Logo stays readable" \
+  --review "Safe for 9:16 crop" \
+  --creator "Nia Patel|nia@northstar.studio|Nia's Claude|Create three 9:16 concepts"
 ```
 
-## Open-source CLI
+The command prints a one-time invite URL. Send that URL only to the assigned creator. `--json` returns the machine-readable packet, assignment, input-upload, and invite records.
 
-The CLI entry point is [`bin/nitrate.mjs`](bin/nitrate.mjs). This is the main plugin surface: agents and creators ask what is next, pull packets into a local AI coding agent workspace, update status, and sync returned media.
-
-Leader:
+### 3. Creator pull
 
 ```sh
-nitrate login --api https://nitrate.example.workers.dev --role leader --name "Maya Chen" --email maya@studio.test --agent maya-lead --surface "Claude Code"
-nitrate next
-nitrate init-agency --name "Launch Film Packet" --client "Northwind" --brief "Create a 30-second launch-film direction" --input bottle_macro.mov --folder /renders --folder /prompts --folder /notes --folder /handoff --creator "Jonas Reyes|jonas@studio.test|jonas-agent|Explore the human performance beat before reveal."
+export NITRATE_CONFIG_FILE=/tmp/nitrate-nia.json
+
+nitrate pull 'http://127.0.0.1:4173/join/ONE_TIME_TOKEN' \
+  --dir ./northwind-social \
+  --name "Nia Patel" \
+  --agent "Nia's Claude" \
+  --surface "Claude Code"
 ```
 
-Team member:
+The invite is accepted once. Pull refuses an unsafe path or a non-empty destination, downloads real inputs to the workspace, verifies every byte, and stores an assignment receipt under `.nitrate/`.
+
+### 4. Creator return
+
+After making the media, return it from anywhere inside the pulled workspace:
 
 ```sh
-nitrate login --api https://nitrate.example.workers.dev --role member --name "Jonas Reyes" --email jonas@studio.test --agent jonas-agent --surface "Claude Code"
-nitrate next
-nitrate pull --dir ./launch-film
-nitrate status --status working --dir ./launch-film
-nitrate sync --dir ./launch-film --file ./launch-film/renders/jonas-v1.mp4 --name "Jonas v1" --made-with "Higgsfield Supercomputer" --prompt "Prompt used for the return"
+cd northwind-social
+
+nitrate return \
+  --file renders/northwind-vertical-v1.mp4 \
+  --made-with "Higgsfield Supercomputer" \
+  --prompt "Bright summer product reveal, vertical composition, preserve the wordmark" \
+  --notes "Kept the logo inside the 9:16 safe area."
 ```
 
-Use `NITRATE_CONFIG_FILE=/path/to/profile.json` when testing multiple plugin users on one machine.
+Nitrate reserves the return metadata first and then uploads the raw bytes. It rejects empty media, a checksum or size mismatch, a missing prompt/tool, and files outside the packet's required output structure.
 
-## Codex and Claude Code plugins
-
-- Codex plugin wrapper: [`plugins/nitrate`](plugins/nitrate)
-- Claude Code setup: [`plugins/claude-code/README.md`](plugins/claude-code/README.md)
-- Shared MCP server: [`mcp/server.mjs`](mcp/server.mjs)
-
-Both wrappers use the same CLI login state in `~/.nitrate/config.json`, and the same Worker API.
-
-Submit a returned file:
+### 5. Lead review
 
 ```sh
-curl -X POST http://127.0.0.1:4173/api/uploads \
-  -H 'X-Reel-User: Maya Chen' \
-  -F projectId=proj_launch_film \
-  -F 'assetName=Maya hero opening' \
-  -F 'prompt=Use the packet inputs and return /renders, /stills, /prompts, /notes, /handoff' \
-  -F 'model=Claude Code + Higgsfield Supercomputer' \
-  -F seed=184320 \
-  -F 'branch=Launch' \
-  -F 'file=@return.mov'
+export NITRATE_CONFIG_FILE=/tmp/nitrate-lead.json
+
+nitrate packets --json
+nitrate review RETURN_ID --decision approve \
+  --note "On brief and ready for client review."
 ```
 
-Approve it:
+Valid decisions are `approve`, `request_changes`, `reject`, and `reopen`.
+
+Compatibility aliases may remain available while the CLI evolves, but the supported activation path is `login → handoff → pull → return → review`.
+
+## Packet data
+
+A packet is plain data plus immutable input files. The API returns the packet and its inputs together:
+
+```json
+{
+  "project": {
+    "id": "proj_123",
+    "name": "Northwind summer social",
+    "client": "Northwind",
+    "brief": "Create three 9:16 launch concepts.",
+    "outputStructure": ["renders", "prompts", "notes"],
+    "reviewCriteria": ["Logo stays readable", "Safe for 9:16 crop"],
+    "inputs": [
+      {
+        "id": "input_123",
+        "filename": "brand-guide.pdf",
+        "mime": "application/pdf",
+        "size": 482103,
+        "hash": "<64-character-sha256>",
+        "downloadPath": "/api/plugin/inputs/input_123/raw"
+      }
+    ]
+  },
+  "assignments": [
+    {
+      "id": "assign_123",
+      "task": "Create three 9:16 concepts",
+      "status": "delivered",
+      "acceptedAt": null,
+      "pulledAt": null,
+      "returnedAt": null
+    }
+  ],
+  "returns": [],
+  "activation": {
+    "uploadedInputCount": 1,
+    "ahaReached": false,
+    "closedLoop": false
+  }
+}
+```
+
+The creator sees only their assigned packet, files, task, expected folders, review criteria, and their returns. The lead sees their packets, every assignment and invite state, all returned work, review state, and activation milestones.
+
+## Authentication and byte transfer
+
+All workflow routes except lead login and one-time invite acceptance use:
+
+```http
+Authorization: Bearer <plugin-session-token>
+```
+
+Inputs and returns use a two-phase transfer:
+
+1. Send JSON metadata containing `filename`, MIME type, byte `size`, and `sha256` to reserve an object.
+2. `PUT` the raw file bytes to the returned `uploadPath` with the same bearer token.
+
+The service verifies size and checksum before making the object available. A return becomes visible only after the byte upload succeeds. See [docs/openapi.yaml](docs/openapi.yaml) for the full contract.
+
+| Workflow action | Method and route | Who |
+| --- | --- | --- |
+| Lead login | `POST /api/plugin/login` | Lead |
+| Accept invite | `POST /api/plugin/invites/:token/accept` | Assigned creator |
+| Create packet | `POST /api/packets` | Lead |
+| Reserve input | `POST /api/plugin/packets/:packetId/inputs` | Lead |
+| Upload/download input | `PUT` / `GET /api/plugin/inputs/:inputId/raw` | Lead / packet member |
+| Create assignments and invites | `POST /api/plugin/push` | Lead |
+| Read inbox | `GET /api/plugin/packets` | Lead or creator, scoped |
+| Mark pull/work state | `PATCH /api/plugin/assignments/:assignmentId` | Assigned creator |
+| Reserve return | `POST /api/plugin/assignments/:assignmentId/returns` | Assigned creator |
+| Upload return | `PUT /api/plugin/returns/:returnId/raw` | Assigned creator |
+| Review return | `PATCH /api/plugin/returns/:returnId` | Lead |
+
+## Codex plugin
+
+The self-contained Codex bundle lives in `plugins/nitrate`, with a repository marketplace at `.agents/plugins/marketplace.json`.
+
+From this repository:
 
 ```sh
-curl -X PATCH http://127.0.0.1:4173/api/versions/VERSION_ID \
-  -H 'Content-Type: application/json' \
-  -H 'X-Reel-User: Maya Chen' \
-  -d '{"action":"approve","note":"Lead selected this return for client review."}'
+codex plugin marketplace add "$(pwd)"
+codex plugin add nitrate@nitrate-local
+codex plugin list
 ```
 
-## How it works
+Start a new Codex thread after installation. Then ask naturally:
 
-- Media bytes are hashed with SHA-256 and stored under `REEL_DATA_DIR/blobs/`.
-- `REEL_DATA_DIR/db.json` stores projects, assets, returned versions, metadata, comments, decisions, shares, templates, assignments, and activity.
-- Identical bytes are stored once, while logical returns remain independent.
-- Writes serialize through a repository lock and replace the JSON manifest atomically.
-- The UI consumes the same domain objects exposed by the API.
+- “Package this brief and send it to Nia.”
+- “Pull my Nitrate assignment into this workspace.”
+- “Return this draft to the campaign lead.”
+- “Show me the work waiting for review.”
 
-The production target keeps these contracts while moving storage and metadata to managed services: Cloudflare Workers for the API, D1 for transactional metadata, R2 for media objects, and Queues for direct AI coding agent sync, thumbnails, filmstrips, waveforms, transcription, and audit jobs.
+## Remote MCP for production workspaces
 
-## Prototype boundaries
+Nitrate exposes a standards-compliant, remote Streamable HTTP MCP endpoint. It never uses the normal plugin or CLI session as a remote credential. Instead, create a dedicated, independently revocable connection:
 
-This is not a production deployment:
+```sh
+nitrate mcp:connect --name "Higgsfield Supercomputer" --days 7
+```
 
-- Direct AI coding agent sync is represented by plugin login, assignments, and file-based returns.
-- Identity is represented by a demo user switcher, not authentication.
-- Share tokens are local review links, not Internet-safe authorization.
-- There is no multi-tenant isolation, malware scanning, signed URL expiry, rate limiting, observability, or backup orchestration.
-- C2PA and EU AI Act reporting are roadmap goals, not certifications.
+The command prints the only two values a compatible static-bearer connector needs:
 
-## Tests
+```text
+Endpoint: https://YOUR_NITRATE_HOST/mcp
+Authorization (shown once): Bearer nmc_…
+```
+
+```http
+POST https://YOUR_NITRATE_HOST/mcp
+Authorization: Bearer nmc_…
+```
+
+`nmc_…` is shown exactly once and is never saved in the Nitrate CLI configuration. Keep it in the connector's secret store; do not put it in a brief, chat, ticket, or committed configuration. The default lifetime is seven days and the CLI permits up to 30 days. Manage connections with:
+
+```sh
+nitrate mcp:list
+nitrate mcp:disconnect CONNECTION_ID
+```
+
+The connection token works only at `/mcp`; ordinary Nitrate REST routes reject it. Conversely, `/mcp` rejects normal plugin-session tokens. This lets a creator or lead remove a remote connection without signing out their local Codex or Claude Code plugin.
+
+It is ready to connect from a production workspace wherever custom remote MCP servers are supported. That includes a Higgsfield Supercomputer workflow when that workspace has custom remote MCP enabled; Nitrate does not assume or document a specific Higgsfield connection screen, OAuth flow, or native connector UI.
+
+The remote endpoint keeps the same role boundaries as the CLI and local plugins:
+
+- `nitrate_whoami` — confirm the signed-in Nitrate identity.
+- `nitrate_list_work` — show the caller's scoped work.
+- `nitrate_pull_assignment` — creator-only; retrieve the brief, task, output structure, review criteria, and signed input links.
+- `nitrate_submit_return_from_url` — creator-only; bring a finished asset from an approved HTTPS source URL into the assignment.
+- `nitrate_review_return` — lead-only; approve, request changes, reject, or reopen a returned asset.
+
+Each connection receives only the role-appropriate scopes. A creator can be granted identity/work/assets plus assignment pull and return submission; a lead can be granted identity/work/assets plus return review. A deliberately narrowed connection exposes only the matching MCP tools.
+
+Input links are short-lived signed permissions, not public URLs. Each link is bound to the connection, expires no later than that connection, and rechecks that the connection is unrevoked, unexpired, has `assets:read`, and still has access to the packet when opened.
+
+For `nitrate_submit_return_from_url`, the creator supplies a stable Higgsfield `externalAssetId`. Nitrate preflights the assignment, output path, and optional parent return before it downloads anything; the external ID makes a completed import retry-safe and prevents attaching the same provider asset to different work. The Worker then fetches only an exact allowlisted HTTPS origin, without credentials or redirects, and streams verified media into R2. Cleanup after a failure is best-effort, so production operations must expire and reconcile the `mcp-staging/` R2 prefix. The local Codex and Claude Code plugins remain available as self-contained stdio MCP bundles; remote MCP is an additional surface, not a replacement.
+
+## Claude Code plugin
+
+The self-contained Claude Code bundle lives in `plugins/claude-code`, with a repository marketplace at `.claude-plugin/marketplace.json`.
+
+```sh
+claude plugin marketplace add . --scope local
+claude plugin install nitrate@nitrate-local --scope local
+claude plugin list
+```
+
+Restart Claude Code after installation. Codex and Claude Code use the same Nitrate API and local login state. Each bundle contains its own MCP runtime, so a marketplace cache does not depend on files outside the installed plugin directory.
+
+## Activation
+
+Nitrate records two honest milestones:
+
+- **Aha reached:** the lead uploaded at least one real input file and a creator pulled that packet. This proves that shared production context moved intact to a different creator.
+- **Closed loop:** aha is reached, the creator uploaded a real returned media file, and the lead recorded a review decision. A manual status change cannot fake this milestone.
+
+## Verification
 
 ```sh
 npm test
+npm pack --dry-run --json
+node scripts/build-plugin-bundles.mjs
+node scripts/verify-plugins.mjs
+claude plugin validate plugins/claude-code
 ```
 
-The integration suite verifies seeded packet state, required prompt/model context, byte deduplication, decisions, comments, shares, project creation, waitlist capture, product routes, and immutable media delivery.
+The end-to-end suite uses isolated lead and creator config files and verifies real input bytes, one-time invite acceptance, safe workspace creation, checksums, a real return upload, authorization boundaries, a leader decision, and both activation milestones.
+
+## Cloudflare backend
+
+The production-shaped backend in `worker/index.mjs` uses a Cloudflare Worker for the API, D1 for packet and workflow records, and R2 for packet inputs and returned media. Migrations live in `migrations/`.
+
+For local Worker verification only, use the repository's test scripts or `npm run worker:dev` after applying migrations to a local D1 simulation. Production deployment is owned by GitHub Actions. Do not deploy this project with local Wrangler, and always confirm the target Cloudflare account before enabling or running any deployment workflow.
+
+No Cloudflare deployment was performed as part of this implementation.
+
+### Production Worker configuration
+
+Set these values as Worker secrets or environment configuration in the deployment system—never in the repository or an agent prompt:
+
+| Name | Purpose |
+| --- | --- |
+| `NITRATE_BOOTSTRAP_SECRET` | Protects the initial lead-session bootstrap flow; give its value to the agency lead as their workspace setup code. |
+| `NITRATE_MCP_ASSET_SIGNING_KEY` | Signs the short-lived, permission-rechecked media links issued by remote MCP. |
+| `NITRATE_MCP_IMPORT_ORIGINS` | Comma-separated exact HTTPS origins from which remote MCP may import a creator's finished asset. |
+
+The Worker fails closed when `NITRATE_BOOTSTRAP_SECRET` is absent. The CLI accepts the matching value through `--setup-code` or `NITRATE_SETUP_CODE`, sends it as a protected request header, and does not persist it.
+
+`NITRATE_MCP_IMPORT_ORIGINS` should contain only storage or generation domains the agency trusts. It is an allowlist, not a wildcard convenience setting. Imports use a 30-minute lease so an interrupted request can be reclaimed safely. Configure an R2 lifecycle rule and a reconciliation job for repeatedly failed `mcp-staging/` cleanup; the D1 import record retains the staging key and cleanup error for that purpose.
+
+## Prototype boundaries
+
+The local Node service is for product and contract verification. Its lead login is a bootstrap flow, not production identity. Before a public launch, add external identity/OIDC, durable tenant membership, token expiry and rotation, upload rate limits, malware scanning, object lifecycle policies, observability, and backup/restore drills. Local demo share links are not Internet-safe authorization. C2PA and regulatory reporting remain roadmap goals, not certifications.

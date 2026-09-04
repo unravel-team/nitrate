@@ -157,46 +157,39 @@
   if (cliJourney) {
     const cliSteps = [
       {
-        title: 'Maya and Nia connect Nitrate to their AI coding agents.',
-        description: 'They ask in plain English. Claude Code and Codex handle the login and trigger Nitrate for them.',
+        title: 'Maya connects Nitrate; Nia joins through one invite.',
+        description: 'The leader logs in once. A creator’s one-time invite is the entry point to her own AI coding agent workspace.',
         direction: 'both',
         handoffDelay: 3000,
-        route: 'Nitrate connected',
-        routeDetail: 'Each person keeps their own AI coding agent.',
-        status: 'Both AI coding agents are ready.',
-        statusDetail: 'The campaign can move between Maya and Nia without either person memorizing Nitrate commands.',
-        active: ['leader', 'creator'],
-        startDelay: { leader: 80, creator: 1500 },
+        route: 'Leader connected',
+        routeDetail: 'Nia will join from Maya’s one-time invite.',
+        status: 'Maya is ready to hand off a real campaign.',
+        statusDetail: 'Nia needs no separate setup: the invite will create her working folder when she pulls it.',
+        active: ['leader'],
+        startDelay: { leader: 80 },
         leader: [
           { kind: 'prompt', speaker: 'Maya', text: 'Connect this Claude Code session to Nitrate as the agency lead.' },
           { kind: 'response', text: 'I’ll connect this AI coding agent to your Nitrate account.' },
           {
             kind: 'tool',
             action: 'login',
-            command: 'nitrate login --role leader --name "Maya Chen" --email maya@northwind.agency --agent maya-claude --surface "Claude Code"',
+            command: 'nitrate login --email maya@northwind.agency --role leader --surface "Claude Code"',
             result: 'Connected · Maya Chen · agency lead'
           }
         ],
         creator: [
-          { kind: 'prompt', speaker: 'Nia', text: 'Connect this Codex session to Nitrate as a team member.' },
-          { kind: 'response', text: 'I’ll connect this AI coding agent to your Nitrate account.' },
-          {
-            kind: 'tool',
-            action: 'login',
-            command: 'nitrate login --role member --name "Nia Patel" --email nia@studio.co --agent nia-codex --surface "Codex"',
-            result: 'Connected · Nia Patel · team member'
-          }
+          { kind: 'notice', label: 'Nitrate', text: 'Waiting for Maya’s one-time campaign invite.' }
         ]
       },
       {
-        title: 'Maya asks Claude Code to set up the campaign.',
-        description: 'She describes the outcome once. Claude Code turns it into a structured Nitrate assignment for every creator.',
+        title: 'Maya hands off the brief, real files, and one creative route.',
+        description: 'Her AI coding agent uploads the actual brand guide and product reference, then makes a single-use invite for Nia.',
         direction: 'out',
         handoffDelay: 2100,
-        route: '3 assignments delivered',
-        routeDetail: 'One shared brief, three creative routes.',
-        status: 'Maya defines the campaign in plain English.',
-        statusDetail: 'Claude Code triggers Nitrate and turns her direction into three focused assignments.',
+        route: 'Brief + real inputs + one invite',
+        routeDetail: 'Nia gets exactly the campaign context she needs.',
+        status: 'Maya creates one source of truth for the route.',
+        statusDetail: 'The campaign cannot be handed off until real input files are attached and verified.',
         active: ['leader'],
         startDelay: { leader: 80 },
         leader: [
@@ -208,86 +201,73 @@
           { kind: 'response', text: 'I’ll package the shared rules once, then give each creator their own route.' },
           {
             kind: 'tool',
-            action: 'init-agency',
+            action: 'handoff',
             command: [
-              'nitrate init-agency --name "Northwind · Move Closer" --client "Northwind"',
-              '  --brief "Create three 15s launch ads."',
+              'nitrate handoff --name "Northwind · Move Closer"',
+              '  --brief "Create a 15s commuter-story launch ad."',
               '  --input brand-guide.pdf --input product-refs.zip',
-              '  --creator "Nia Patel|nia@studio.co|nia-codex|Tell the commuter story."',
-              '  --creator "Jonas Reyes|jonas@studio.co|jonas-claude|Lead with the product reveal."',
-              '  --creator "Asha Kapoor|asha@studio.co|asha-codex|Build the brand-world montage."'
+              '  --to nia@studio.co --task "Tell the commuter story."',
+              '  --folder /renders --folder /prompts --folder /notes'
             ].join('\n'),
-            result: 'Campaign created · 3 assignments delivered'
+            result: 'Handoff ready · inputs verified · one-time invite created'
           }
         ],
         creator: [
-          { kind: 'notice', label: 'Nitrate inbox', text: 'Waiting for Maya to assign the next campaign.' }
+          { kind: 'notice', label: 'Nitrate invite', text: 'Northwind · Move Closer · one-time invite ready' }
         ]
       },
       {
-        title: 'Nia asks Codex what to work on next.',
-        description: 'Codex checks Nitrate, finds her route, and pulls a complete working folder without Nia hunting through chat or Drive.',
+        title: 'Nia opens the invite and pulls a ready-to-work folder.',
+        description: 'The one-time invite signs her in, downloads the verified input files, and writes the brief, folders, and receipts locally.',
         direction: 'out',
         handoffDelay: 2700,
-        route: 'Brief + inputs delivered',
-        routeDetail: 'Nia’s route opens inside Codex.',
-        status: 'Nia receives exactly her part of the campaign.',
-        statusDetail: 'The shared brand rules and her commuter-story direction arrive together.',
+        route: 'Creator pull acknowledged',
+        routeDetail: 'The leader can see that Nia has the source material.',
+        status: 'Nia receives the complete handoff, not another link to chase.',
+        statusDetail: 'The brief, exact source files, and expected output folders arrive together—with proof that nothing went missing.',
         active: ['creator'],
         startDelay: { creator: 80 },
         leader: [
-          { kind: 'notice', label: 'Nitrate campaign', text: 'Nia · commuter story · assignment delivered' }
+          { kind: 'notice', label: 'Nitrate handoff', text: 'Nia · commuter story · invite opened' }
         ],
         creator: [
-          { kind: 'prompt', speaker: 'Nia', text: 'What should I work on next for Northwind?' },
-          { kind: 'response', text: 'I found one new assignment in Nitrate. I’ll pull it into this workspace.' },
-          {
-            kind: 'tool',
-            action: 'next',
-            command: 'nitrate next',
-            result: 'Northwind · Move Closer · commuter story'
-          },
+          { kind: 'prompt', speaker: 'Nia', text: 'Open Maya’s Northwind invite and set up the campaign workspace.' },
+          { kind: 'response', text: 'I’ll accept the one-time invite and pull the verified source files into this workspace.' },
           {
             kind: 'tool',
             action: 'pull',
-            command: 'nitrate pull --packet pkt_move_closer --assignment asn_nia_01 --dir ./move-closer',
-            result: 'Workspace ready · AGENT_BRIEF.md + 6 folders'
+            command: 'nitrate pull https://nitrate.media/join/one-time-invite --dir ./move-closer',
+            result: 'Workspace ready · inputs verified · AGENT_BRIEF.md + folders'
           }
         ]
       },
       {
-        title: 'Codex keeps the assignment active while Nia creates.',
-        description: 'Nia makes the ad in Higgsfield. Her AI coding agent keeps the brief beside the work and tells Nitrate that the route is underway.',
+        title: 'Nia creates in Higgsfield with the campaign beside the work.',
+        description: 'Nitrate does not replace her media tool. It preserves the exact brand rules and output contract while she creates the ad.',
         direction: 'in',
         handoffDelay: 2100,
-        route: 'Working status',
-        routeDetail: 'Maya can see that Nia has started.',
+        route: 'Creation stays in Nia’s tool',
+        routeDetail: 'Nitrate keeps the working context intact.',
         status: 'Creation stays with the creator.',
-        statusDetail: 'Nitrate coordinates the work around Higgsfield, Runway, or whichever media tool Nia chooses.',
+        statusDetail: 'Nitrate coordinates the handoff around Higgsfield, Runway, or whichever media tool Nia chooses.',
         active: ['creator'],
         startDelay: { creator: 80 },
         leader: [
-          { kind: 'notice', label: 'Nitrate campaign', text: 'Nia · commuter story · working in Higgsfield' }
+          { kind: 'notice', label: 'Nitrate campaign', text: 'Nia pulled the campaign · source files verified' }
         ],
         creator: [
           {
             kind: 'prompt',
             speaker: 'Nia',
-            text: 'Start the commuter-story route and keep the Northwind brand rules beside the work.'
+            text: 'Make the commuter-story route in Higgsfield. Keep the Northwind brief and source files beside the work.'
           },
-          { kind: 'response', text: 'I’ll mark the assignment active and use AGENT_BRIEF.md as the source of truth.' },
-          {
-            kind: 'tool',
-            action: 'status',
-            command: 'nitrate status --dir ./move-closer --status working',
-            result: 'Assignment active · visible to Maya'
-          },
+          { kind: 'response', text: 'I’ll use AGENT_BRIEF.md as the source of truth and keep the final render in /renders.' },
           { kind: 'notice', label: 'Creation tool', text: 'Higgsfield Supercomputer · nia-commuter-v1.mp4' }
         ]
       },
       {
-        title: 'Nia asks Codex to return the finished ad.',
-        description: 'Codex triggers Nitrate and sends the render back with its prompt, notes, creation tool, and assignment still attached.',
+        title: 'Nia returns the actual draft with the context Maya needs.',
+        description: 'Her AI coding agent uploads the render and keeps the prompt, creation tool, notes, path, and assignment joined to the same return.',
         direction: 'in',
         handoffDelay: 2200,
         route: 'Ad + prompt + notes',
@@ -308,11 +288,11 @@
           { kind: 'response', text: 'I’ll attach the render, prompt, notes, tool, and assignment before sending it back.' },
           {
             kind: 'tool',
-            action: 'sync',
+            action: 'return',
             command: [
-              'nitrate sync --dir ./move-closer',
-              '  --file ./move-closer/renders/nia-commuter-v1.mp4',
-              '  --name "Nia commuter v1" --made-with "Higgsfield Supercomputer"',
+              'nitrate return ./move-closer/renders/nia-commuter-v1.mp4',
+              '  --dir ./move-closer --name "Nia commuter v1"',
+              '  --tool "Higgsfield Supercomputer"',
               '  --prompt "Quiet commute; approved craft; warm graphite grade."',
               '  --notes "Approved tagline and logo end card preserved."'
             ].join('\n'),
@@ -321,14 +301,14 @@
         ]
       },
       {
-        title: 'Maya reviews the return and sends the change back.',
-        description: 'Claude Code finds the exact version in Nitrate, opens it for visual review, and routes Maya’s decision back to Nia’s AI coding agent.',
+        title: 'Maya reviews the exact return, then opens the next pass.',
+        description: 'The decision stays with Nia’s draft. If Maya requests changes, Nia returns a second pass to the same campaign rather than starting a new thread.',
         direction: 'loop',
         handoffDelay: 2900,
-        route: 'Review decision → round 2',
-        routeDetail: 'The feedback stays with Nia’s return.',
+        route: 'Review decision → same return',
+        routeDetail: 'The feedback stays with Nia’s actual draft.',
         status: 'Round one closes without losing the thread.',
-        statusDetail: 'Nia’s next assignment arrives with the campaign context and Maya’s change request attached.',
+        statusDetail: 'Nia’s next pass keeps the campaign context and Maya’s change request attached.',
         active: ['leader', 'creator'],
         startDelay: { leader: 80, creator: 3000 },
         leader: [
@@ -337,22 +317,16 @@
             speaker: 'Maya',
             text: 'Show me Nia’s return. Ask her to warm the grade and keep the approved end card.'
           },
-          { kind: 'response', text: 'Nia’s v1 is ready in the Nitrate command center. I’ll send your review decision to the same assignment.' },
+          { kind: 'response', text: 'Nia’s v1 is ready to review with its prompt and notes. I’ll record your decision on this return.' },
           {
             kind: 'tool',
-            action: 'next',
-            command: 'nitrate next',
-            result: 'Review ready · Nia commuter v1 · prompt + notes attached'
-          },
-          {
-            kind: 'tool',
-            action: 'push',
-            command: 'nitrate push --packet pkt_move_closer --email nia@studio.co --name "Nia Patel" --agent nia-codex --task "Round 2: warm the grade; keep the approved end card."',
-            result: 'Round 2 delivered to Nia · feedback attached'
+            action: 'review',
+            command: 'nitrate review rtn_nia_01 --decision request-changes --note "Warm the grade; keep the approved end card."',
+            result: 'Changes requested · Nia can return a second pass to this campaign'
           }
         ],
         creator: [
-          { kind: 'notice', label: 'Nitrate inbox', text: 'Round 2 assigned · warm the grade · approved end card locked' }
+          { kind: 'notice', label: 'Nitrate review', text: 'Changes requested · warm the grade · approved end card locked' }
         ]
       }
     ];

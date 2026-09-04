@@ -3,90 +3,110 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>nitrate AI coding agent plugin</title>
-  <link rel="stylesheet" href="/styles/reel.css">
+  <title>Install Nitrate — collaboration for AI video agencies</title>
+  <meta name="description" content="Set up Nitrate in Codex or Claude Code and run a real AI video handoff from leader brief to creator return and review.">
+  <meta name="theme-color" content="#08080a">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles/nitrate-landing.css">
+  <script src="/plugin/plugin.js" defer></script>
   <style>
-    .plugin-shell { min-height:100vh; display:grid; grid-template-rows:auto 1fr; }
-    .plugin-grid { display:grid; grid-template-columns:360px minmax(0,1fr); min-height:calc(100vh - 66px); }
-    .plugin-panel { border-right:1px solid var(--line); padding:1rem; background:color-mix(in srgb,var(--paper-2) 74%,transparent); }
-    .plugin-main { padding:1.2rem; overflow:auto; }
-    .mode-tabs { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; margin:1rem 0; }
-    .login-card { border:1px solid var(--line); border-radius:10px; padding:1rem; background:var(--paper-2); }
-    .packet-row { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:1rem; align-items:start; border:1px solid var(--line); border-radius:10px; padding:1rem; background:var(--paper-2); margin-bottom:1rem; }
-    .packet-meta { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.65rem; }
-    .packet-meta span { border:1px solid var(--line); border-radius:999px; padding:.22rem .45rem; font-size:.82rem; }
-    .assignment-card { border:1px solid var(--line); border-radius:8px; padding:.8rem; background:var(--paper); }
-    .assignment-card + .assignment-card { margin-top:.65rem; }
-    .plugin-loop { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.7rem; margin:0 0 1.2rem; }
-    .plugin-step { border:1px solid var(--line); border-radius:10px; padding:.85rem; background:color-mix(in srgb,var(--paper-2) 82%,transparent); }
-    .plugin-step strong,.plugin-step code { display:block; }
-    .plugin-step code { margin-top:.5rem; font-size:.78rem; color:var(--signal-strong); overflow-wrap:anywhere; }
-    .plugin-status { display:inline-flex; align-items:center; border-radius:999px; padding:.22rem .55rem; background:color-mix(in srgb,var(--signal) 10%,transparent); color:var(--signal-strong); font-size:.82rem; font-weight:700; }
-    .plugin-form-grid { display:grid; gap:.65rem; margin-top:.8rem; }
-    @media(max-width:900px){ .plugin-grid{grid-template-columns:1fr;} .plugin-panel{border-right:0;border-bottom:1px solid var(--line);} .packet-row,.plugin-loop{grid-template-columns:1fr;} }
+    .plugin-page { width:100%; max-width:1180px; margin:0 auto; padding:clamp(2rem,5vw,5rem) var(--page-gutter) var(--section-pad); }
+    .plugin-hero { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(18rem,.8fr); gap:clamp(2rem,5vw,5rem); align-items:end; padding-bottom:clamp(3rem,7vw,6rem); border-bottom:1px solid var(--rule); }
+    .plugin-hero h1,.plugin-section h2 { margin:.6rem 0 0; font-family:var(--display); font-size:clamp(3.4rem,5.2vw,5.3rem); font-weight:400; line-height:.83; }
+    .plugin-hero p { max-width:42rem; color:var(--paper-dim); font-size:clamp(1rem,1.25vw,1.18rem); }
+    .plugin-fact { border-left:1px solid var(--review); padding:1rem 0 1rem 1.1rem; color:var(--paper-dim); }
+    .plugin-fact strong { display:block; color:var(--paper); font-size:.7rem; letter-spacing:.09em; text-transform:uppercase; }
+    .plugin-section { padding:clamp(3.75rem,8vw,7rem) 0; border-bottom:1px solid var(--rule); }
+    .plugin-section > p { max-width:44rem; color:var(--paper-dim); }
+    .install-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; margin-top:2rem; }
+    .role-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; margin-top:2rem; }
+    .plugin-hero > *,.plugin-section,.install-card,.role-card { min-width:0; }
+    .install-card,.role-card { min-height:100%; border:1px solid var(--rule); background:var(--ink-raised); padding:1.25rem; }
+    .install-card h3,.role-card h3 { margin:0; font-size:1rem; }
+    .install-card p,.role-card p { color:var(--paper-dim); font-size:clamp(0.7rem,.76vw,.78rem); }
+    .code-row { position:relative; width:100%; max-width:100%; margin-top:1rem; padding:1rem 3.3rem 1rem 1rem; overflow:auto; background:#050506; color:#d8d5ce; font:600 .78rem/1.55 ui-monospace,SFMono-Regular,Menlo,monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
+    .copy-command { position:absolute; top:.55rem; right:.55rem; border:1px solid var(--rule); background:var(--ink-soft); color:var(--paper); padding:.4rem .55rem; font:800 .62rem/1 var(--sans); letter-spacing:.08em; text-transform:uppercase; cursor:pointer; }
+    .copy-command:hover,.copy-command:focus-visible { border-color:var(--violet-accessible); color:#fff; }
+    .flow { counter-reset:step; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:1px; margin-top:2rem; background:var(--rule); border:1px solid var(--rule); padding:0; }
+    .flow li { min-height:12rem; list-style:none; padding:1rem; background:var(--ink); }
+    .flow li::before { counter-increment:step; content:"0" counter(step); display:block; margin-bottom:2rem; color:var(--violet-accessible); font:800 .7rem/1 var(--sans); letter-spacing:.1em; }
+    .flow strong { display:block; font-size:1rem; }
+    .flow span { display:block; margin-top:.5rem; color:var(--muted); font-size:.78rem; line-height:1.5; }
+    .tool-strip { display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1.6rem; }
+    .tool-strip span { border:1px solid var(--rule); padding:.65rem .8rem; color:var(--paper); font-size:.78rem; font-weight:800; }
+    .tool-strip span::before { display:inline-block; width:.45rem; height:.45rem; margin-right:.5rem; background:var(--violet); content:""; vertical-align:middle; }
+    .plugin-note { margin-top:1.5rem; padding:1rem 1.1rem; border-left:1px solid var(--violet); background:rgba(108,53,255,.08); color:var(--paper-dim); font-size:clamp(0.7rem,.76vw,.78rem); }
+    .platform-story-link { display:inline-block; margin-top:1rem; color:var(--violet-accessible); font-size:.68rem; font-weight:800; letter-spacing:.06em; text-underline-offset:.25rem; text-transform:uppercase; }
+    @media (max-width:800px) {
+      .plugin-hero,.install-grid,.role-grid,.flow { grid-template-columns:minmax(0,1fr); }
+      .plugin-hero h1,.plugin-section h2 { font-size:clamp(3.4rem,5.2vw,5.3rem); line-height:.9; text-wrap:wrap; }
+      .plugin-hero p,.plugin-fact,.plugin-section > p,.plugin-note { overflow-wrap:anywhere; }
+      .flow li { min-width:0; min-height:0; display:grid; grid-template-columns:3rem minmax(0,1fr); column-gap:1rem; }
+      .flow li::before { margin:0; grid-row:span 2; }
+    }
   </style>
 </head>
 <body>
-  <div class="plugin-shell">
-    <header class="topbar">
-      <a class="brand" href="/" aria-label="nitrate home"><span class="brand-mark" aria-hidden="true"></span><span>nitrate plugin</span></a>
-      <div class="actions"><a class="button small ghost" href="/app">Command center</a><a class="button small ghost" href="/">Product</a></div>
-    </header>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="wordmark" href="/" aria-label="Nitrate home">nitrate<span aria-hidden="true">.</span></a>
+    <nav class="site-nav" aria-label="Primary navigation"><a href="/for/">For your agent</a><a href="/#how-it-works">How it works</a><a href="/#dam">DAM for AI agents</a><a class="nav-cta" href="/#pilot">Request pilot</a></nav>
+  </header>
+  <main class="plugin-page" id="main">
+    <section class="plugin-hero" aria-labelledby="plugin-title">
+      <div>
+        <h1 id="plugin-title">Put the handoff inside the AI coding agent.</h1>
+        <p>Nitrate is collaboration for AI video agencies: a leader sends one real brief and its source files; a creator pulls them into the agent they already use; the returned draft arrives ready to review.</p>
+      </div>
+      <aside class="plugin-fact"><strong>The fast path to value</strong>Attach one actual input file, send one creator invite, and watch their AI coding agent pull a verified workspace. That is the first proof the campaign is now shared.</aside>
+    </section>
 
-    <div class="plugin-grid">
-      <aside class="plugin-panel">
-        <h1 style="font-size:2.2rem;">AI coding agent plugin</h1>
-        <p>This is the creator entry point. Log in, pull assigned packets, work inside the AI coding agent, then sync returns.</p>
-        <div class="mode-tabs" role="tablist" aria-label="Plugin workflow mode">
-          <button class="button small primary" id="leader-mode" type="button" aria-pressed="true">Leader</button>
-          <button class="button small ghost" id="member-mode" type="button" aria-pressed="false">Team member</button>
-        </div>
-        <form class="login-card" id="login-form">
-          <h3>Plugin login</h3>
-          <div class="plugin-form-grid">
-            <label class="field">Name<input name="name" required value="Maya Chen"></label>
-            <label class="field">Work email<input name="email" type="email" required value="maya@studio.test"></label>
-            <label class="field">AI coding agent name<input name="agent" required value="maya-lead"></label>
-            <label class="field">Creation surface<select name="surface"><option>Claude</option><option>Claude Code</option><option>Higgsfield Supercomputer</option><option>Local AI coding agent</option></select></label>
-          </div>
-          <button class="button primary" style="width:100%;margin-top:.8rem;" type="submit">Log in plugin</button>
-          <p class="form-note" id="session-status" role="status"></p>
-        </form>
-      </aside>
+    <section class="plugin-section" aria-labelledby="install-title">
+      <h2 id="install-title">Use the agent workspace your team already has.</h2>
+      <div class="install-grid">
+        <article class="install-card"><h3>Codex</h3><p>Add the Nitrate marketplace, then install the self-contained plugin. The handoff commands and connection stay inside Codex.</p><pre class="code-row"><code>codex plugin marketplace add unravel-team/nitrate
+codex plugin add nitrate@nitrate-local</code><button class="copy-command" type="button" data-copy="codex plugin marketplace add unravel-team/nitrate&#10;codex plugin add nitrate@nitrate-local">Copy</button></pre><a class="platform-story-link" href="/for/codex/">See the 5-minute Codex story →</a></article>
+        <article class="install-card"><h3>Claude Code</h3><p>Add the same Nitrate marketplace and install its Claude Code bundle. It carries the identical team workflow.</p><pre class="code-row"><code>claude plugin marketplace add unravel-team/nitrate
+claude plugin install nitrate@nitrate-local</code><button class="copy-command" type="button" data-copy="claude plugin marketplace add unravel-team/nitrate&#10;claude plugin install nitrate@nitrate-local">Copy</button></pre><a class="platform-story-link" href="/for/claude-code/">See the 5-minute Claude Code story →</a></article>
+        <article class="install-card"><h3>Higgsfield Supercomputer</h3><p>Create an expiring connection from your logged-in Nitrate CLI. It gives you the endpoint and one-time credential to add as a remote MCP.</p><pre class="code-row"><code>nitrate mcp:connect --days 7</code><button class="copy-command" type="button" data-copy="nitrate mcp:connect --days 7">Copy</button></pre><a class="platform-story-link" href="/for/higgsfield-supercomputer/">See the 5-minute Supercomputer story →</a></article>
+      </div>
+      <div class="tool-strip" aria-label="Nitrate supported agent workspaces"><span>Codex</span><span>Higgsfield Supercomputer</span><span>Claude Code</span></div>
+      <p class="plugin-note">Nitrate is the collaboration layer and working DAM for AI agents. Your creators still make media in Higgsfield, Runway, fal, Replicate, or any other tool; Nitrate carries the brief, inputs, output structure, prompt, notes, and review decision around that work.</p>
+    </section>
 
-      <main class="plugin-main">
-        <section id="leader-view" aria-labelledby="leader-title">
-          <div class="section-head" style="margin-bottom:1.5rem;">
-            <h2 id="leader-title">Leader workflow</h2>
-            <p class="lede">The lead controls the packet. The plugin pushes the brief, assets, output contract, and task to every creator AI coding agent.</p>
-          </div>
-          <div class="plugin-loop" aria-label="Leader activation loop">
-            <div class="plugin-step"><strong>1. Create packet</strong><span>Client brief, inputs, folders, review criteria.</span><code>nitrate init-agency</code></div>
-            <div class="plugin-step"><strong>2. Push to creators</strong><span>Each creator gets the same source of truth.</span><code>nitrate push</code></div>
-            <div class="plugin-step"><strong>3. Watch returns</strong><span>See who pulled, worked, blocked, or returned.</span><code>nitrate next</code></div>
-            <div class="plugin-step"><strong>4. Send next pass</strong><span>Turn review decisions into the next packet.</span><code>nitrate packets</code></div>
-          </div>
-          <div id="leader-packets"></div>
-        </section>
+    <section class="plugin-section" aria-labelledby="flow-title">
+      <h2 id="flow-title">Leader → creator → review.</h2>
+      <ol class="flow">
+        <li><strong>Leader logs in</strong><span>Connect Nitrate from Codex or Claude Code.</span></li>
+        <li><strong>Handoff real work</strong><span>Attach the client brief, source files, expected folders, and review rules.</span></li>
+        <li><strong>Creator pulls invite</strong><span>A single-use invite writes a verified workspace and AGENT_BRIEF.md.</span></li>
+        <li><strong>Creator returns draft</strong><span>The actual render returns with its prompt, tool, notes, and agreed destination attached.</span></li>
+        <li><strong>Leader decides</strong><span>Approve, reject, or request changes on the exact returned work.</span></li>
+      </ol>
+    </section>
 
-        <section id="member-view" aria-labelledby="member-title" hidden>
-          <div class="section-head" style="margin-bottom:1.5rem;">
-            <h2 id="member-title">Team member workflow</h2>
-            <p class="lede">The creator stays inside the AI coding agent. Pull the packet, work the generated folder, and sync one clean return back.</p>
-          </div>
-          <div class="plugin-loop" aria-label="Team member activation loop">
-            <div class="plugin-step"><strong>1. Ask what’s next</strong><span>The plugin tells you the current assignment.</span><code>nitrate next</code></div>
-            <div class="plugin-step"><strong>2. Pull packet</strong><span>Nitrate creates folders and AGENT_BRIEF.md.</span><code>nitrate pull</code></div>
-            <div class="plugin-step"><strong>3. Mark working</strong><span>Lead sees the AI coding agent is active.</span><code>nitrate status --status working</code></div>
-            <div class="plugin-step"><strong>4. Sync return</strong><span>Media, prompt, model, and notes go back together.</span><code>nitrate sync</code></div>
-          </div>
-          <div id="member-packets"></div>
-        </section>
-      </main>
-    </div>
-  </div>
-
-  <div id="toast" class="toast" role="status" hidden></div>
-  <script src="/plugin/plugin.js"></script>
+    <section class="plugin-section" aria-labelledby="commands-title">
+      <h2 id="commands-title">What each person asks their agent to do.</h2>
+      <div class="role-grid">
+        <article class="role-card">
+          <h3>Agency lead</h3>
+          <p>Login once, then hand off the actual campaign. Nitrate will not create an invite until at least one real input file is uploaded and verified.</p>
+          <pre class="code-row"><code>nitrate login --email maya@agency.com --role leader
+nitrate handoff --name "Northwind launch" --brief "Create a 15s launch ad" --input ./brand-guide.pdf --input ./product-reference.mov --to nia@agency.com --task "Make the commuter-story route"</code><button class="copy-command" type="button" data-copy="nitrate login --email maya@agency.com --role leader">Copy</button></pre>
+        </article>
+        <article class="role-card">
+          <h3>Creator</h3>
+          <p>Open the one-time invite in Codex or Claude Code. Build in your preferred media tool, then return the finished file with the creation context.</p>
+          <pre class="code-row"><code>nitrate pull &lt;one-time-invite-url&gt; --dir ./northwind
+nitrate return ./northwind/renders/commuter-v1.mp4 --dir ./northwind --tool "Higgsfield Supercomputer" --prompt "…the prompt used…" --notes "…what the lead should review…"</code><button class="copy-command" type="button" data-copy="nitrate pull &lt;one-time-invite-url&gt; --dir ./northwind">Copy</button></pre>
+        </article>
+        <article class="role-card">
+          <h3>Leader review</h3>
+          <p>Every draft has its creator, prompt, tool, notes, and source handoff intact. Record the decision directly on the returned work.</p>
+          <pre class="code-row"><code>nitrate review &lt;return-id&gt; --decision request-changes --note "Warm the grade; keep the approved end card."</code><button class="copy-command" type="button" data-copy="nitrate review &lt;return-id&gt; --decision request-changes">Copy</button></pre>
+        </article>
+      </div>
+    </section>
+  </main>
 </body>
 </html>

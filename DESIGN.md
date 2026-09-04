@@ -236,6 +236,14 @@ The workflow map is a primary explanatory object, not a progress indicator. Its 
 
 A full-width banner directly below the production map makes compatibility a major proof point rather than utility metadata. A saturated violet introduction block uses a large “Works with” title and one sentence explaining that Nitrate coordinates the campaign around the tools creators already use. Three equal dark cells display Codex, Higgsfield Supercomputer, and Claude Code with official, unaltered marks on projection-white clear-space plates. The visible product names carry meaning; logo images are decorative and keep empty alt text. Do not recolor, trace, distort, animate, or expand this into an exhaustive tool cloud.
 
+### Agent Routing Wall and Handoff Reel
+
+The `/for/` landing-page family extends the Review Room into two linked proof objects. The hub page is a one-brief-to-many routing wall, not an integration directory: one lead-owned campaign packet visibly routes into four named creator workspaces and returns to one review queue. Keep the brief, rails, platform stamps, and review destination in a single first-viewport composition so the collaboration model reads before any feature copy does.
+
+Each agent-specific page turns that same proof into a five-minute Handoff Reel. The hero pairs one plain-language promise with a two-pane lead-to-creator console and a five-step timeline: Assign, Invite, Pull, Verify, Shared. The activation proof at 5:00 is narrow on purpose: the creator has the exact assignment inside their native agent and the lead has a pull receipt. Media generation and return belong to the follow-on retention story, not the initial aha claim.
+
+Platform maturity is part of the interface, not footnote copy. Every platform stamp, directory entry, and setup section must carry a visible truth label that matches actual readiness: available now for Codex and Claude Code, private preview for Claude Desktop, and compatibility-gated pilot for Higgsfield Supercomputer. Do not imply parity, native partnership, or universal availability where the product path is still scoped or account-gated.
+
 ### Broken Handoff Ledger
 
 The violet problem section must diagnose fragmentation at a glance. Its declaration is “The work comes back. The context doesn’t.” A ruled ledger then shows three broken handoffs—Notion brief, Slack feedback, and Drive exports—with an orange missing-context label between each source and the review question it creates. The final ink block names the agency lead’s consequence: reconstructing creator, brief, prompt, feedback, and latest export by hand. Orange is reserved for the missing link and the human burden; Notion, Slack, and Drive remain text labels rather than another logo strip. On mobile, preserve the order declaration → evidence rows → consequence.
